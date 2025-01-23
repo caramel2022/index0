@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تمارين همزة الوصل والقطع</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Changa&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* استيراد خطوط عربية واضحة ومقروءة */
+        @import url('https://fonts.googleapis.com/css2?family=Amiri&family=Changa&family=Tajawal:wght@300;400;700&display=swap');
+
+        /* تعريف الأساسيات */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Changa', Arial, sans-serif;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f4f4f8;
+            line-height: 1.8;
+            direction: rtl;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        /* عناوين واضحة ومقروءة */
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-family: 'Amiri', serif;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* تخطيط التمرينين جنبا إلى جنب */
+        .quizzes-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .quiz-section {
+            flex: 1;
+            width: 48%;
+            min-width: 300px;
+        }
+
+        /* تصميم الأقسام */
+        .quiz-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px; /* تقليل البادينج قليلاً */
+            margin: 10px 0; /* تقليل الهامش */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-height: 500px; /* تحديد الارتفاع الأقصى */
+            overflow-y: auto; /* إضافة تمرير عمودي إذا تجاوز المحتوى */
+            position: relative; /* للتحكم في موضع العناصر */
+        }
+
+        /* تقسيم متساوٍ للمحتوى داخل القسم */
+        .question-container {
+            flex: 0 0 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .options-container {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .result-container {
+            flex: 0 0 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        /* الأسئلة */
+        .question {
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 1.4em;
+            color: #2c3e50;
+            font-family: 'Changa', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* الخيارات */
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* تصميم الأزرار المتطور */
+        .option, .restart-btn {
+            position: relative;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 1.1em;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 500px;
+        }
+
+        .option {
+            background-image: linear-gradient(to right, #3498db 0%, #2980b9 51%, #3498db 100%);
+            margin: 10px 0;
+            backface-visibility: hidden;
+        }
+
+        .restart-btn {
+            background-image: linear-gradient(to right, #27ae60 0%, #2ecc71 51%, #27ae60 100%);
+            margin: 20px auto;
+            display: block;
+            width: fit-content;
+        }
+
+        /* تأثيرات التحريك والتفاعل */
+        .option:before, .restart-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.6s;
+        }
+
+        .option:hover:before, .restart-btn:hover:before {
+            left: 100%;
+        }
+
+        .option:hover, .restart-btn:hover {
+            background-position: right center;
+            box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+            transform: translateY(-3px) rotateX(5deg);
+        }
+
+        .option:active, .restart-btn:active {
+            transform: translateY(1px) rotateX(-5deg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .option.disabled, .restart-btn.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* تأثيرات الأصوات والإجابات */
+        .option.correct {
+            background-image: linear-gradient(to right, #2ecc71 0%, #27ae60 51%, #2ecc71 100%) !important;
+            animation: correctAnswer 0.5s ease;
+        }
+
+        .option.incorrect {
+            background-image: linear-gradient(to right, #e74c3c 0%, #c0392b 51%, #e74c3c 100%) !important;
+            animation: incorrectAnswer 0.5s ease;
+        }
+
+        @keyframes correctAnswer {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes incorrectAnswer {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* استجابة للشاشات الصغيرة */
+        @media screen and (max-width: 768px) {
+            .option, .restart-btn {
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+        }
+
+        /* النتائج */
+        #result, .result-summary {
+            margin-top: 30px;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #2c3e50;
+            font-family: 'Changa', sans-serif;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #34495e;
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Tajawal', sans-serif;
+            line-height: 1.7;
+        }
+
+        /* زر إعادة المحاولة */
+        .restart-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: block; /* تأكد من ظهور الزر دائماً */
+            margin: 20px auto; /* توسيط الزر */
+            width: fit-content; /* تعديل العرض ليناسب المحتوى */
+            opacity: 1; /* تأكد من الشفافية الكاملة */
+            visibility: visible; /* تأكد من ظهور الزر */
+        }
+
+        .restart-btn:hover {
+            background-color: #2ecc71;
+            transform: scale(1.05);
+        }
+
+        .restart-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* إخفاء الزر قبل الحاجة إليه */
+        #restart-btn, 
+        #second-restart-btn {
+            display: none;
+        }
+
+        /* اللون الأساسي للتمرين الأول - درجات الأزرق */
+        #first-quiz {
+            background-color: #e6f2ff;
+            border: 2px solid #3498db;
+        }
+
+        #first-quiz .option {
+            background-color: #3498db;
+            color: white;
+        }
+
+        #first-quiz .option:hover {
+            background-color: #2980b9;
+        }
+
+        #first-quiz .option.correct {
+            background-color: #2ecc71;
+        }
+
+        #first-quiz .option.incorrect {
+            background-color: #e74c3c;
+        }
+
+        #first-quiz .restart-btn {
+            background-color: #3498db;
+        }
+
+        #first-quiz .restart-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* اللون الأساسي للتمرين الثاني - درجات الأخضر */
+        #second-quiz {
+            background-color: #e6f9f0;
+            border: 2px solid #2ecc71;
+        }
+
+        #second-quiz .option {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        #second-quiz .option:hover {
+            background-color: #27ae60;
+        }
+
+        #second-quiz .option.correct {
+            background-color: #3498db;
+        }
+
+        #second-quiz .option.incorrect {
+            background-color: #e74c3c;
+        }
+
+        #second-quiz .restart-btn {
+            background-color: #2ecc71;
+        }
+
+        #second-quiz .restart-btn:hover {
+            background-color: #27ae60;
+        }
+
+        /* استجابة للشاشات الصغيرة */
+        @media screen and (max-width: 768px) {
+            .quizzes-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .quiz-section {
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .options {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .option {
+                width: 100%;
+                min-width: auto;
+                padding: 15px 30px;
+                font-size: 1.1em;
+            }
+        }
+
+        /* تحسينات إضافية للقراءة */
+        * {
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <h1>تمارين همزة الوصل والقطع</h1>
+    
+    <div class="quizzes-container">
+        <div id="first-quiz" class="quiz-section">
+            <h2>التمرين الأول</h2>
+            <div id="question-container" class="question"></div>
+            <div id="options-container" class="options"></div>
+            <div id="result-container"></div>
+            <button id="restart-btn" class="restart-btn" onclick="restartQuiz()">إعادة التمرين</button>
+        </div>
+
+        <div id="second-quiz" class="quiz-section">
+            <h2>التمرين الثاني</h2>
+            <div id="second-quiz-container"></div>
+            <div id="second-result"></div>
+            <div id="second-stars"></div>
+            <button id="second-restart-btn" class="restart-btn" onclick="restartSecondQuiz()">إعادة التمرين</button>
+        </div>
+    </div>
+
+    <script>
+        // المتغيرات الرئيسية
+        let currentQuestion = 0;
+        let secondCurrentQuestion = 0;
+        let stars = 0;
+        let secondStars = 0;
+
+        // مصفوفة أسئلة التمرين الأول
+        const hamzaQuestions = [
+            {
+                question: "ما نوع الهمزة في كلمة 'اِبْن'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة وصل",
+                explanation: "الهمزة في 'اِ' هي همزة وصل لأنها تُنطق فقط عند الوصل"
+            },
+            {
+                question: "ما نوع الهمزة في كلمة 'أَكَلَ'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة قطع",
+                explanation: "الهمزة في 'أَ' هي همزة قطع لأنها تُنطق دائماً"
+            },
+            {
+                question: "ما نوع الهمزة في كلمة 'اِقْرَأْ'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة وصل",
+                explanation: "الهمزة في 'اِ' هي همزة وصل تُستخدم للربط بين الكلمات"
+            },
+            {
+                question: "ما نوع الهمزة في كلمة 'إِنْسَان'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة قطع",
+                explanation: "الهمزة في 'إِ' هي همزة قطع لأنها تُنطق في جميع الحالات"
+            },
+            {
+                question: "ما نوع الهمزة في كلمة 'اِمْتَحَان'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة وصل",
+                explanation: "الهمزة في 'اِ' هي همزة وصل تُستخدم عند بداية الكلمة"
+            }
+        ];
+
+        // مصفوفة أسئلة التمرين الثاني
+        const secondHamzaQuestions = [
+            {
+                question: "ما نوع الهمزة في كلمة 'اِمْرَأَة'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة وصل",
+                explanation: "الهمزة في 'اِ' هي همزة وصل تُستخدم للنطق عند بداية الكلمة"
+            },
+            {
+                question: "ما نوع الهمزة في كلمة 'إِنَّ'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة قطع",
+                explanation: "الهمزة في 'إِ' هي همزة قطع تُنطق في كل الحالات"
+            },
+            {
+                question: "ما نوع الهمزة في كلمة 'اِسْتِخْدَام'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة وصل",
+                explanation: "الهمزة في 'اِ' هي همزة وصل تُستخدم للربط عند النطق"
+            },
+            {
+                question: "ما نوع الهمزة في كلمة 'أُمَّة'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة قطع",
+                explanation: "الهمزة في 'أُ' هي همزة قطع لأنها تُنطق دائماً"
+            },
+            {
+                question: "ما نوع الهمزة في كلمة 'اِقْتِصَاد'؟",
+                options: ["همزة وصل", "همزة قطع"],
+                correctAnswer: "همزة وصل",
+                explanation: "الهمزة في 'اِ' هي همزة وصل تُستخدم عند بداية الكلمة"
+            }
+        ];
+
+        // دالة عرض سؤال التمرين الأول
+        function renderQuestion() {
+            const questionContainer = document.getElementById('question-container');
+            const optionsContainer = document.getElementById('options-container');
+            const resultContainer = document.getElementById('result-container');
+            
+            if (currentQuestion < hamzaQuestions.length) {
+                const currentQuizQuestion = hamzaQuestions[currentQuestion];
+
+                questionContainer.textContent = currentQuizQuestion.question;
+                optionsContainer.innerHTML = '';
+                resultContainer.innerHTML = '';
+
+                currentQuizQuestion.options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.classList.add('option');
+                    optionElement.textContent = option;
+                    optionElement.onclick = () => checkAnswer(option);
+                    optionsContainer.appendChild(optionElement);
+                });
+            } else {
+                showResult();
+            }
+        }
+
+        // دالة عرض سؤال التمرين الثاني
+        function renderSecondQuestion() {
+            const questionContainer = document.getElementById('second-quiz-container');
+            const resultContainer = document.getElementById('second-result');
+            
+            if (secondCurrentQuestion < secondHamzaQuestions.length) {
+                const currentQuizQuestion = secondHamzaQuestions[secondCurrentQuestion];
+
+                questionContainer.innerHTML = `
+                    <div class="question">${currentQuizQuestion.question}</div>
+                    <div class="options">
+                        ${currentQuizQuestion.options.map(option => 
+                            `<div class="option" onclick="checkSecondAnswer('${option}')">${option}</div>`
+                        ).join('')}
+                    </div>
+                `;
+                resultContainer.innerHTML = '';
+            } else {
+                showSecondResult();
+            }
+        }
+
+        // دالة التحقق من إجابة التمرين الأول
+        function checkAnswer(selectedOption) {
+            const currentQuizQuestion = hamzaQuestions[currentQuestion];
+            const resultContainer = document.getElementById('result-container');
+            const optionsContainer = document.getElementById('options-container');
+
+            optionsContainer.childNodes.forEach(option => {
+                option.onclick = null;
+                
+                if (option.textContent === currentQuizQuestion.correctAnswer) {
+                    option.classList.add('correct');
+                } else if (option.textContent === selectedOption) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            if (selectedOption === currentQuizQuestion.correctAnswer) {
+                resultContainer.innerHTML = `
+                    <p class="correct">إجابة صحيحة! ✅</p>
+                    <div class="explanation">${currentQuizQuestion.explanation}</div>
+                `;
+                stars++;
+            } else {
+                resultContainer.innerHTML = `
+                    <p class="incorrect">للأسف، إجابتك غير صحيحة. ❌</p>
+                    <div class="explanation">${currentQuizQuestion.explanation}</div>
+                `;
+            }
+
+            currentQuestion++;
+            
+            if (currentQuestion < hamzaQuestions.length) {
+                setTimeout(renderQuestion, 2500);
+            } else {
+                showResult();
+            }
+        }
+
+        // دالة التحقق من إجابة التمرين الثاني
+        function checkSecondAnswer(selectedOption) {
+            const currentQuizQuestion = secondHamzaQuestions[secondCurrentQuestion];
+            const questionContainer = document.getElementById('second-quiz-container');
+            const resultContainer = document.getElementById('second-result');
+
+            questionContainer.querySelectorAll('.option').forEach(option => {
+                option.onclick = null;
+                
+                if (option.textContent === currentQuizQuestion.correctAnswer) {
+                    option.classList.add('correct');
+                } else if (option.textContent === selectedOption) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            if (selectedOption === currentQuizQuestion.correctAnswer) {
+                resultContainer.innerHTML = `
+                    <p class="correct">إجابة صحيحة! ✅</p>
+                    <div class="explanation">${currentQuizQuestion.explanation}</div>
+                `;
+                secondStars++;
+            } else {
+                resultContainer.innerHTML = `
+                    <p class="incorrect">للأسف، إجابتك غير صحيحة. ❌</p>
+                    <div class="explanation">${currentQuizQuestion.explanation}</div>
+                `;
+            }
+
+            secondCurrentQuestion++;
+            
+            if (secondCurrentQuestion < secondHamzaQuestions.length) {
+                setTimeout(renderSecondQuestion, 2500);
+            } else {
+                showSecondResult();
+            }
+        }
+
+        // دالة عرض نتيجة التمرين الأول
+        function showResult() {
+            const resultContainer = document.getElementById('result-container');
+            const restartBtn = document.getElementById('restart-btn');
+            
+            let resultMessage = '';
+            if (stars === hamzaQuestions.length) {
+                resultMessage = 'أحسنت! لقد أجبت على جميع الأسئلة بشكل صحيح 🏆';
+            } else if (stars >= Math.floor(hamzaQuestions.length * 0.7)) {
+                resultMessage = 'ممتاز! لقد أجبت على معظم الأسئلة بشكل صحيح 👍';
+            } else {
+                resultMessage = 'حاول مرة أخرى لتحسين نتيجتك 💪';
+            }
+            
+            resultContainer.innerHTML = `
+                <div class="result-summary">
+                    <h3>النتيجة النهائية</h3>
+                    <p>لقد أجبت على ${stars} من ${hamzaQuestions.length} أسئلة بشكل صحيح</p>
+                    <p>${resultMessage}</p>
+                </div>
+            `;
+            
+            // تأكد من ظهور زر إعادة التمرين
+            restartBtn.style.display = 'block';
+            restartBtn.style.visibility = 'visible';
+            restartBtn.style.opacity = '1';
+        }
+
+        // دالة عرض نتيجة التمرين الثاني
+        function showSecondResult() {
+            const resultContainer = document.getElementById('second-result');
+            const restartBtn = document.getElementById('second-restart-btn');
+            
+            let resultMessage = '';
+            if (secondStars === secondHamzaQuestions.length) {
+                resultMessage = 'أحسنت! لقد أجبت على جميع الأسئلة بشكل صحيح 🏆';
+            } else if (secondStars >= Math.floor(secondHamzaQuestions.length * 0.7)) {
+                resultMessage = 'ممتاز! لقد أجبت على معظم الأسئلة بشكل صحيح 👍';
+            } else {
+                resultMessage = 'حاول مرة أخرى لتحسين نتيجتك 💪';
+            }
+            
+            resultContainer.innerHTML = `
+                <div class="result-summary">
+                    <h3>النتيجة النهائية</h3>
+                    <p>لقد أجبت على ${secondStars} من ${secondHamzaQuestions.length} أسئلة بشكل صحيح</p>
+                    <p>${resultMessage}</p>
+                </div>
+            `;
+            
+            // تأكد من ظهور زر إعادة التمرين
+            restartBtn.style.display = 'block';
+            restartBtn.style.visibility = 'visible';
+            restartBtn.style.opacity = '1';
+        }
+
+        // دالة إعادة التمرين الأول
+        function restartQuiz() {
+            currentQuestion = 0;
+            stars = 0;
+            const resultContainer = document.getElementById('result-container');
+            const restartBtn = document.getElementById('restart-btn');
+            resultContainer.innerHTML = '';
+            restartBtn.style.display = 'none';
+            renderQuestion();
+        }
+
+        // دالة إعادة التمرين الثاني
+        function restartSecondQuiz() {
+            secondCurrentQuestion = 0;
+            secondStars = 0;
+            const resultContainer = document.getElementById('second-result');
+            const restartBtn = document.getElementById('second-restart-btn');
+            resultContainer.innerHTML = '';
+            restartBtn.style.display = 'none';
+            renderSecondQuestion();
+        }
+
+        // بدء التمرينين
+        renderQuestion();
+        renderSecondQuestion();
+    </script>
+</body>
+</html>
