@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercices de Dictée - Français</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #9b59b6;
+            --current-color-dark: #8e44ad;
+        }
+        
+        .section-title {
+            color: var(--current-color);
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+        
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .exercise-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .exercise-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .exercise-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        }
+        
+        .exercise-content {
+            padding: 20px;
+        }
+        
+        .exercise-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .exercise-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .exercise-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--current-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .exercise-link:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .difficulty.easy {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .difficulty.medium {
+            background-color: rgba(241, 196, 15, 0.2);
+            color: #f39c12;
+        }
+        
+        .difficulty.hard {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .section-description {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à l'Accueil
+            </a>
+            <h1>Dictée</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <h2 class="section-title">Exercices de Dictée</h2>
+            
+            <p class="section-description">
+                Améliorez votre orthographe et votre compréhension orale avec nos exercices de dictée interactifs. 
+                Choisissez parmi différents niveaux de difficulté et types d'exercices pour progresser à votre rythme.
+            </p>
+            
+            <div class="exercises-grid">
+                <div class="exercise-card">
+                    <div class="exercise-image" style="background-image: url('../images/dictee-mots.jpg');"></div>
+                    <div class="exercise-content">
+                        <span class="difficulty easy">Facile à Difficile</span>
+                        <h3 class="exercise-title">Dictée de Mots</h3>
+                        <p class="exercise-description">
+                            Écoutez et écrivez correctement des mots français de différents niveaux de difficulté. 
+                            Parfait pour améliorer votre orthographe et votre vocabulaire.
+                        </p>
+                        <a href="dictee-mots.html" class="exercise-link">Commencer</a>
+                    </div>
+                </div>
+                
+                <div class="exercise-card">
+                    <div class="exercise-image" style="background-image: url('../images/dictee-phrases.jpg');"></div>
+                    <div class="exercise-content">
+                        <span class="difficulty medium">Moyen</span>
+                        <h3 class="exercise-title">Dictée de Phrases</h3>
+                        <p class="exercise-description">
+                            Écoutez et écrivez des phrases complètes en français. Cet exercice vous aide à maîtriser 
+                            la grammaire et la structure des phrases.
+                        </p>
+                        <a href="dictee-phrases.html" class="exercise-link">Commencer</a>
+                    </div>
+                </div>
+                
+                <div class="exercise-card">
+                    <div class="exercise-image" style="background-image: url('../images/dictee-textes.jpg');"></div>
+                    <div class="exercise-content">
+                        <span class="difficulty hard">Difficile</span>
+                        <h3 class="exercise-title">Dictée de Textes</h3>
+                        <p class="exercise-description">
+                            Relevez le défi d'écrire des textes complets dictés. Idéal pour les apprenants avancés 
+                            qui souhaitent perfectionner leur français écrit.
+                        </p>
+                        <a href="dictee-textes.html" class="exercise-link">Commencer</a>
+                    </div>
+                </div>
+                
+                <div class="exercise-card">
+                    <div class="exercise-image" style="background-image: url('../images/dictee-nombres.jpg');"></div>
+                    <div class="exercise-content">
+                        <span class="difficulty easy">Facile</span>
+                        <h3 class="exercise-title">Dictée de Nombres</h3>
+                        <p class="exercise-description">
+                            Entraînez-vous à écrire correctement les nombres en français. Un excellent exercice pour 
+                            maîtriser les règles spécifiques des nombres français.
+                        </p>
+                        <a href="dictee-nombres.html" class="exercise-link">Commencer</a>
+                    </div>
+                </div>
+                
+                <div class="exercise-card">
+                    <div class="exercise-image" style="background-image: url('../images/dictee-homonymes.jpg');"></div>
+                    <div class="exercise-content">
+                        <span class="difficulty medium">Moyen</span>
+                        <h3 class="exercise-title">Dictée d'Homonymes</h3>
+                        <p class="exercise-description">
+                            Distinguez les mots qui se prononcent de la même façon mais s'écrivent différemment. 
+                            Un défi pour améliorer votre précision orthographique.
+                        </p>
+                        <a href="dictee-homonymes.html" class="exercise-link">Commencer</a>
+                    </div>
+                </div>
+                
+                <div class="exercise-card">
+                    <div class="exercise-image" style="background-image: url('../images/dictee-accents.jpg');"></div>
+                    <div class="exercise-content">
+                        <span class="difficulty medium">Moyen</span>
+                        <h3 class="exercise-title">Dictée d'Accents</h3>
+                        <p class="exercise-description">
+                            Concentrez-vous sur le placement correct des accents en français. Un exercice essentiel 
+                            pour maîtriser cette particularité de la langue française.
+                        </p>
+                        <a href="dictee-accents.html" class="exercise-link">Commencer</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-lightbulb"></i> Conseils pour la Dictée</h3>
+                <ul>
+                    <li>Écoutez attentivement avant de commencer à écrire</li>
+                    <li>Faites attention aux liaisons entre les mots</li>
+                    <li>Concentrez-vous sur les accents et les lettres muettes</li>
+                    <li>Relisez votre texte pour vérifier la cohérence</li>
+                    <li>Pratiquez régulièrement pour améliorer votre oreille</li>
+                </ul>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // You can add JavaScript functionality here if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if images exist, if not, use placeholders
+            document.querySelectorAll('.exercise-image').forEach(img => {
+                const url = img.style.backgroundImage.slice(4, -1).replace(/"/g, "");
+                const image = new Image();
+                image.src = url;
+                
+                image.onerror = function() {
+                    // If image doesn't exist, use a placeholder
+                    img.style.backgroundImage = `url('https://via.placeholder.com/300x180?text=Dictée+Exercise')`;
+                };
+            });
+        });
+    </script>
+</body>
+</html>

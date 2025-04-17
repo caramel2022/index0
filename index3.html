@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeux de Lettres - Jeux Éducatifs en Français</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        :root {
+            --current-color: #4a90e2;
+            --current-color-dark: #3a80d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+            <h1>Jeux de Lettres</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <div class="games-grid">
+            <a href="anagrammes.html" class="game-item">
+                <div class="game-image">
+                    <i class="fas fa-random"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Anagrammes</h3>
+                    <p class="game-description">Réorganisez les lettres pour former des mots corrects</p>
+                    <div class="difficulty">
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot"></span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="mots-meles.html" class="game-item">
+                <div class="game-image">
+                    <i class="fas fa-th"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Mots Mêlés</h3>
+                    <p class="game-description">Trouvez les mots cachés dans la grille</p>
+                    <div class="difficulty">
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot active"></span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="pendu.html" class="game-item">
+                <div class="game-image">
+                    <i class="fas fa-user-slash"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Le Pendu</h3>
+                    <p class="game-description">Devinez le mot avant que le dessin ne soit complet</p>
+                    <div class="difficulty">
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot"></span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="mots-croises.html" class="game-item">
+                <div class="game-image">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Mots Croisés</h3>
+                    <p class="game-description">Complétez la grille en répondant aux définitions</p>
+                    <div class="difficulty">
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot active"></span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="scrabble.html" class="game-item">
+                <div class="game-image">
+                    <i class="fas fa-font"></i>
+                </div>
+                <div class="game-content">
+                    <h3 class="game-title">Mini Scrabble</h3>
+                    <p class="game-description">Formez des mots avec les lettres disponibles</p>
+                    <div class="difficulty">
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot active"></span>
+                        <span class="difficulty-dot"></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercices de Grammaire Française</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        :root {
+            --current-color: #f1c40f;
+            --current-color-dark: #f39c12;
+        }
+        
+        .games-grid {
+            margin-top: 30px;
+        }
+        
+        .game-item {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .game-image {
+            flex: 0 0 150px;
+        }
+        
+        .game-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .game-description {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à l'Accueil
+            </a>
+            <h1>Exercices de Grammaire</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="games-grid">
+                <a href="grammaire.html" class="game-item">
+                    <div class="game-image">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Présent de l'Indicatif</h3>
+                        <p class="game-description">Exercices sur la conjugaison des verbes au présent de l'indicatif.</p>
+                        <div class="difficulty">
+                            <span class="difficulty-dot active"></span>
+                            <span class="difficulty-dot active"></span>
+                            <span class="difficulty-dot"></span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="articles.html" class="game-item">
+                    <div class="game-image">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Articles Définis et Indéfinis</h3>
+                        <p class="game-description">Exercices sur l'utilisation des articles définis (le, la, les) et indéfinis (un, une, des).</p>
+                        <div class="difficulty">
+                            <span class="difficulty-dot active"></span>
+                            <span class="difficulty-dot"></span>
+                            <span class="difficulty-dot"></span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="pronoms.html" class="game-item">
+                    <div class="game-image">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pronoms Personnels</h3>
+                        <p class="game-description">Exercices sur l'utilisation des pronoms personnels sujets et compléments.</p>
+                        <div class="difficulty">
+                            <span class="difficulty-dot active"></span>
+                            <span class="difficulty-dot active"></span>
+                            <span class="difficulty-dot"></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+</body>
+</html>
