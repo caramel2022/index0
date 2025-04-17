@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conjugaison de Verbes - Conjugaison</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        :root {
+            --current-color: #3498db;
+            --current-color-dark: #2980b9;
+        }
+        
+        .conjugation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .verb-display {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--current-color);
+        }
+        
+        .tense-display {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .conjugation-form {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .pronoun {
+            text-align: right;
+            font-size: 18px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        
+        .conjugation-input {
+            padding: 10px 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .conjugation-input:focus {
+            border-color: var(--current-color);
+            outline: none;
+        }
+        
+        .conjugation-input.correct {
+            border-color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        
+        .conjugation-input.incorrect {
+            border-color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .hint-button {
+            background: none;
+            border: none;
+            color: var(--current-color);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 5px;
+            text-decoration: underline;
+        }
+        
+        .hint-button:hover {
+            color: var(--current-color-dark);
+        }
+        
+        .hint-text {
+            font-size: 14px;
+            color: #777;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .difficulty-selection {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .difficulty-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à la Conjugaison
+            </a>
+            <h1>Conjugaison de Verbes</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <div class="game-interface">
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="score-display">Score: <span id="score">0</span></div>
+                <div class="score-display">Verbe: <span id="verb-number">1</span>/<span id="total-verbs">5</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="game-content-area">
+                <div class="conjugation-container">
+                    <div class="verb-display" id="verb-display">Être</div>
+                    <div class="tense-display" id="tense-display">Présent de l'indicatif</div>
+                    
+                    <form class="conjugation-form" id="conjugation-form">
+                        <!-- Form will be generated here -->
+                    </form>
+                    
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+                
+                <div class="feedback" id="feedback" style="display: none;">
+                    <!-- Feedback will be shown here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Verb conjugation data
+        const verbConjugations = {
+            facile: [
+                {
+                    verb: "être",
+                    tense: "Présent de l'indicatif",
+                    conjugations: {
+                        "je": "suis",
+                        "tu": "es",
+                        "il/elle": "est",
+                        "nous": "sommes",
+                        "vous": "êtes",
+                        "ils/elles": "sont"
+                    },
+                    hint: "Verbe irrégulier très courant"
+                },
+                {
+                    verb: "avoir",
+                    tense: "Présent de l'indicatif",
+                    conjugations: {
+                        "je": "ai",
+                        "tu": "as",
+                        "il/elle": "a",
+                        "nous": "avons",
+                        "vous": "avez",
+                        "ils/elles": "ont"
+                    },
+                    hint: "Verbe irrégulier très courant"
+                },
+                {
+                    verb: "aller",
+                    tense: "Présent de l'indicatif",
+                    conjugations: {
+                        "je": "vais",
+                        "tu": "vas",
+                        "il/elle": "va",
+                        "nous": "allons",
+                        "vous": "allez",
+                        "ils/elles": "vont"
+                    },
+                    hint: "Verbe irrégulier de mouvement"
+                },
+                {
+                    verb: "parler",
+                    tense: "Présent de l'indicatif",
+                    conjugations: {
+                        "je": "parle",
+                        "tu": "parles",
+                        "il/elle": "parle",
+                        "nous": "parlons",
+                        "vous": "parlez",
+                        "ils/elles": "parlent"
+                    },
+                    hint: "Verbe régulier du 1er groupe"
+                },
+                {
+                    verb: "finir",
+                    tense: "Présent de l'indicatif",
+                    conjugations: {
+                        "je": "finis",
+                        "tu": "finis",
+                        "il/elle": "finit",
+                        "nous": "finissons",
+                        "vous": "finissez",
+                        "ils/elles": "finissent"
+                    },
+                    hint: "Verbe régulier du 2ème groupe"
+                }
+            ],
+            moyen: [
+                {
+                    verb: "prendre",
+                    tense: "Présent de l'indicatif",
+                    conjugations: {
+                        "je": "prends",
+                        "tu": "prends",
+                        "il/elle": "prend",
+                        "nous": "prenons",
+                        "vous": "prenez",
+                        "ils/elles": "prennent"
+                    },
+                    hint: "Verbe irrégulier du 3ème groupe"
+                },
+                {
+                    verb: "venir",
+                    tense: "Présent de l'indicatif",
+                    conjugations: {
+                        "je": "viens",
+                        "tu": "viens",
+                        "il/elle": "vient",
+                        "nous": "venons",
+                        "vous": "venez",
+                        "ils/elles": "viennent"
+                    },
+                    hint: "Verbe irrégulier du 3ème groupe"
+                },
+                {
+                    verb: "faire",
+                    tense: "Imparfait",
+                    conjugations: {
+                        "je": "faisais",
+                        "tu": "faisais",
+                        "il/elle": "faisait",
+                        "nous": "faisions",
+                        "vous": "faisiez",
+                        "ils/elles": "faisaient"
+                    },
+                    hint: "Verbe irrégulier au passé"
+                },
+                {
+                    verb: "voir",
+                    tense: "Passé composé",
+                    conjugations: {
+                        "je": "ai vu",
+                        "tu": "as vu",
+                        "il/elle": "a vu",
+                        "nous": "avons vu",
+                        "vous": "avez vu",
+                        "ils/elles": "ont vu"
+                    },
+                    hint: "Utilise l'auxiliaire avoir + participe passé"
+                },
+                {
+                    verb: "manger",
+                    tense: "Futur simple",
+                    conjugations: {
+                        "je": "mangerai",
+                        "tu": "mangeras",
+                        "il/elle": "mangera",
+                        "nous": "mangerons",
+                        "vous": "mangerez",
+                        "ils/elles": "mangeront"
+                    },
+                    hint: "Verbe du 1er groupe avec particularité orthographique"
+                }
+            ],
+            difficile: [
+                {
+                    verb: "pouvoir",
+                    tense: "Subjonctif présent",
+                    conjugations: {
+                        "je": "puisse",
+                        "tu": "puisses",
+                        "il/elle": "puisse",
+                        "nous": "puissions",
+                        "vous": "puissiez",
+                        "ils/elles": "puissent"
+                    },
+                    hint: "Mode utilisé pour exprimer le doute ou la possibilité"
+                },
+                {
+                    verb: "vouloir",
+                    tense: "Conditionnel présent",
+                    conjugations: {
+                        "je": "voudrais",
+                        "tu": "voudrais",
+                        "il/elle": "voudrait",
+                        "nous": "voudrions",
+                        "vous": "voudriez",
+                        "ils/elles": "voudraient"
+                    },
+                    hint: "Utilisé pour exprimer la politesse ou l'hypothèse"
+                },
+                {
+                    verb: "tenir",
+                    tense: "Plus-que-parfait",
+                    conjugations: {
+                        "je": "avais tenu",
+                        "tu": "avais tenu",
+                        "il/elle": "avait tenu",
+                        "nous": "avions tenu",
+                        "vous": "aviez tenu",
+                        "ils/elles": "avaient tenu"
+                    },
+                    hint: "Temps composé formé avec l'imparfait de l'auxiliaire + participe passé"
+                },
+                {
+                    verb: "s'asseoir",
+                    tense: "Présent de l'indicatif",
+                    conjugations: {
+                        "je": "m'assieds",
+                        "tu": "t'assieds",
+                        "il/elle": "s'assied",
+                        "nous": "nous asseyons",
+                        "vous": "vous asseyez",
+                        "ils/elles": "s'asseyent"
+                    },
+                    hint: "Verbe pronominal irrégulier"
+                },
+                {
+                    verb: "acquérir",
+                    tense: "Futur simple",
+                    conjugations: {
+                        "je": "acquerrai",
+                        "tu": "acquerras",
+                        "il/elle": "acquerra",
+                        "nous": "acquerrons",
+                        "vous": "acquerrez",
+                        "ils/elles": "acquerront"
+                    },
+                    hint: "Verbe irrégulier du 3ème groupe"
+                }
+            ]
+        };
+        
+        // Game variables
+        let currentDifficulty = "facile";
+        let currentVerbs = [];
+        let currentVerbIndex = 0;
+        let currentVerb = null;
+        let score = 0;
+        let totalCorrect = 0;
+        const totalVerbs = 5;
+        
+        // DOM elements
+        const verbDisplay = document.getElementById("verb-display");
+        const tenseDisplay = document.getElementById("tense-display");
+        const conjugationForm = document.getElementById("conjugation-form");
+        const submitButton = document.getElementById("submit-button");
+        const feedbackElement = document.getElementById("feedback");
+        const scoreElement = document.getElementById("score");
+        const verbNumberElement = document.getElementById("verb-number");
+        const totalVerbsElement = document.getElementById("total-verbs");
+        const progressBar = document.getElementById("progress-bar");
+        const newGameBtn = document.getElementById("new-game-btn");
+        
+        // Initialize the game
+        function initGame() {
+            // Reset game state
+            currentVerbIndex = 0;
+            score = 0;
+            totalCorrect = 0;
+            
+            // Select random verbs from the current difficulty
+            currentVerbs = shuffleArray([...verbConjugations[currentDifficulty]]).slice(0, totalVerbs);
+            
+            // Set the current verb
+            currentVerb = currentVerbs[currentVerbIndex];
+            
+            // Update UI
+            updateVerbDisplay();
+            scoreElement.textContent = score;
+            verbNumberElement.textContent = "1";
+            totalVerbsElement.textContent = totalVerbs;
+            progressBar.style.width = "0%";
+            
+            // Create the conjugation form
+            createConjugationForm();
+        }
+        
+        // Update the verb display
+        function updateVerbDisplay() {
+            verbDisplay.textContent = currentVerb.verb;
+            tenseDisplay.textContent = currentVerb.tense;
+        }
+        
+        // Create the conjugation form
+        function createConjugationForm() {
+            conjugationForm.innerHTML = "";
+            
+            // Create input fields for each pronoun
+            Object.keys(currentVerb.conjugations).forEach(pronoun => {
+                const pronounDiv = document.createElement("div");
+                pronounDiv.className = "pronoun";
+                pronounDiv.textContent = pronoun;
+                
+                const inputContainer = document.createElement("div");
+                inputContainer.className = "input-container";
+                
+                const input = document.createElement("input");
+                input.type = "text";
+                input.className = "conjugation-input";
+                input.dataset.pronoun = pronoun;
+                input.autocomplete = "off";
+                
+                const hintButton = document.createElement("button");
+                hintButton.type = "button";
+                hintButton.className = "hint-button";
+                hintButton.textContent = "Indice";
+                hintButton.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    showHint(inputContainer, pronoun);
+                });
+                
+                inputContainer.appendChild(input);
+                inputContainer.appendChild(hintButton);
+                
+                conjugationForm.appendChild(pronounDiv);
+                conjugationForm.appendChild(inputContainer);
+            });
+            
+            // Focus on the first input
+            conjugationForm.querySelector("input").focus();
+        }
+        
+        // Show hint for a specific pronoun
+        function showHint(container, pronoun) {
+            // Remove existing hint if any
+            const existingHint = container.querySelector(".hint-text");
+            if (existingHint) {
+                existingHint.remove();
+                return;
+            }
+            
+            const hintText = document.createElement("div");
+            hintText.className = "hint-text";
+            
+            // For the first hint, show the verb group hint
+            if (!container.dataset.hintShown) {
+                hintText.textContent = currentVerb.hint;
+                container.dataset.hintShown = "1";
+            } else {
+                // For the second hint, show the first letter
+                const correctAnswer = currentVerb.conjugations[pronoun];
+                hintText.textContent = `Commence par "${correctAnswer.charAt(0)}"`;
+                container.dataset.hintShown = "2";
+            }
+            
+            container.appendChild(hintText);
+        }
+        
+        // Check the user's answers
+        function checkAnswers() {
+            let allCorrect = true;
+            let correctCount = 0;
+            
+            // Check each input
+            conjugationForm.querySelectorAll(".conjugation-input").forEach(input => {
+                const pronoun = input.dataset.pronoun;
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = currentVerb.conjugations[pronoun].toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    input.className = "conjugation-input correct";
+                    correctCount++;
+                } else {
+                    input.className = "conjugation-input incorrect";
+                    allCorrect = false;
+                    
+                    // Show correct answer
+                    const correctAnswerSpan = document.createElement("div");
+                    correctAnswerSpan.className = "hint-text";
+                    correctAnswerSpan.textContent = `Correct: ${correctAnswer}`;
+                    input.parentNode.appendChild(correctAnswerSpan);
+                }
+                
+                // Disable input
+                input.disabled = true;
+            });
+            
+            // Update score
+            const pronounCount = Object.keys(currentVerb.conjugations).length;
+            const percentCorrect = correctCount / pronounCount;
+            
+            if (percentCorrect === 1) {
+                score += 2; // Full points for all correct
+                showFeedback("Parfait ! Toutes les conjugaisons sont correctes.", "correct");
+            } else if (percentCorrect >= 0.5) {
+                score += 1; // Half points for mostly correct
+                showFeedback("Bien ! La plupart des conjugaisons sont correctes.", "correct");
+            } else {
+                showFeedback("Continuez à pratiquer ces conjugaisons.", "incorrect");
+            }
+            
+            totalCorrect += correctCount;
+            scoreElement.textContent = score;
+            
+            // Enable the next button
+            setTimeout(() => {
+                submitButton.textContent = "Suivant";
+                submitButton.removeEventListener("click", checkAnswers);
+                submitButton.addEventListener("click", nextVerb);
+            }, 500);
+        }
+        
+        // Move to the next verb
+        function nextVerb() {
+            currentVerbIndex++;
+            
+            if (currentVerbIndex < totalVerbs) {
+                // Next verb
+                currentVerb = currentVerbs[currentVerbIndex];
+                verbNumberElement.textContent = currentVerbIndex + 1;
+                
+                // Update UI
+                updateVerbDisplay();
+                createConjugationForm();
+                
+                // Reset submit button
+                submitButton.textContent = "Vérifier";
+                submitButton.removeEventListener("click", nextVerb);
+                submitButton.addEventListener("click", checkAnswers);
+                
+                // Update progress bar
+                const progress = (currentVerbIndex / totalVerbs) * 100;
+                progressBar.style.width = `${progress}%`;
+            } else {
+                // Game over
+                endGame();
+            }
+        }
+        
+        // End the game and show results
+        function endGame() {
+            const totalPossibleCorrect = totalVerbs * Object.keys(currentVerbs[0].conjugations).length;
+            const percentage = Math.round((totalCorrect / totalPossibleCorrect) * 100);
+            
+            let message;
+            if (percentage >= 90) {
+                message = "Excellent ! Votre maîtrise des conjugaisons est impressionnante !";
+            } else if (percentage >= 70) {
+                message = "Très bien ! Vous avez une bonne connaissance des conjugaisons.";
+            } else if (percentage >= 50) {
+                message = "Bien ! Continuez à pratiquer pour vous améliorer.";
+            } else {
+                message = "Continuez à pratiquer les conjugaisons régulièrement.";
+            }
+            
+            // Show feedback
+            showFeedback(`Exercice terminé ! Score: ${score}/${totalVerbs * 2} (${percentage}% de réponses correctes)`, "correct");
+            
+            // Update progress bar to 100%
+            progressBar.style.width = "100%";
+            
+            // Show difficulty selection for next game
+            setTimeout(() => {
+                const difficultySelection = document.createElement("div");
+                difficultySelection.className = "difficulty-selection";
+                difficultySelection.innerHTML = `
+                    <h3>Choisissez une difficulté pour le prochain exercice :</h3>
+                    <div class="difficulty-buttons">
+                        <button class="btn btn-primary" data-difficulty="facile">Facile</button>
+                        <button class="btn btn-primary" data-difficulty="moyen">Moyen</button>
+                        <button class="btn btn-primary" data-difficulty="difficile">Difficile</button>
+                    </div>
+                `;
+                
+                // Add event listeners to difficulty buttons
+                difficultySelection.querySelectorAll("[data-difficulty]").forEach(button => {
+                    button.addEventListener("click", () => {
+                        currentDifficulty = button.dataset.difficulty;
+                        difficultySelection.remove();
+                        initGame();
+                    });
+                });
+                
+                // Add to the game content area
+                document.querySelector(".game-content-area").appendChild(difficultySelection);
+            }, 2000);
+        }
+        
+        // Show feedback message
+        function showFeedback(message, type) {
+            feedbackElement.textContent = message;
+            feedbackElement.className = `feedback ${type}`;
+            feedbackElement.style.display = "block";
+            
+            setTimeout(() => {
+                feedbackElement.style.display = "none";
+            }, 3000);
+        }
+        
+        // Shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Event listeners
+        submitButton.addEventListener("click", checkAnswers);
+        newGameBtn.addEventListener("click", initGame);
+        
+        // Prevent form submission
+        conjugationForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            checkAnswers();
+        });
+        
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>

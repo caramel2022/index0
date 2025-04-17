@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pronoms Personnels - Grammaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        :root {
+            --current-color: #f1c40f;
+            --current-color-dark: #f39c12;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .question-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .input-container {
+            margin-bottom: 20px;
+        }
+        
+        .pronoun-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .pronoun-input:focus {
+            outline: none;
+            border-color: var(--current-color);
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .option-button {
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-button:hover {
+            border-color: var(--current-color);
+        }
+        
+        .option-button.selected {
+            background-color: var(--current-color);
+            color: white;
+            border-color: var(--current-color);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .explanation-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--current-color-dark);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .hint-button {
+            background: none;
+            border: none;
+            color: var(--current-color);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
+        
+        .hint-button:hover {
+            color: var(--current-color-dark);
+        }
+        
+        .hint-text {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
+            display: none;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .pronoun-table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .pronoun-table th, .pronoun-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .pronoun-table th {
+            background-color: #f5f5f5;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .options-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à la Grammaire
+            </a>
+            <h1>Pronoms Personnels</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-questions">10</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="question-container">
+                    <div class="question" id="question-text">
+                        <!-- Question will be displayed here -->
+                    </div>
+                    <div class="options-container" id="options-container">
+                        <!-- Options will be displayed here -->
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                    <button class="hint-button" id="hint-button">Indice</button>
+                    <div class="hint-text" id="hint-text">
+                        <!-- Hint will be displayed here -->
+                    </div>
+                    <div class="explanation" id="explanation">
+                        <div class="explanation-title">Explication:</div>
+                        <div id="explanation-text">
+                            <!-- Explanation will be displayed here -->
+                        </div>
+                    </div>
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Les Pronoms Personnels en Français</h3>
+                <p>Les pronoms personnels remplacent les noms pour éviter les répétitions. En français, il existe plusieurs types de pronoms personnels :</p>
+                
+                <h4>Pronoms Personnels Sujets</h4>
+                <p>Ils remplacent le sujet de la phrase.</p>
+                <table class="pronoun-table">
+                    <tr>
+                        <th>Personne</th>
+                        <th>Singulier</th>
+                        <th>Pluriel</th>
+                    </tr>
+                    <tr>
+                        <td>1ère personne</td>
+                        <td><strong>je</strong> (j' devant voyelle)</td>
+                        <td><strong>nous</strong></td>
+                    </tr>
+                    <tr>
+                        <td>2ème personne</td>
+                        <td><strong>tu</strong></td>
+                        <td><strong>vous</strong></td>
+                    </tr>
+                    <tr>
+                        <td>3ème personne</td>
+                        <td><strong>il</strong> (masculin)<br><strong>elle</strong> (féminin)<br><strong>on</strong> (indéfini)</td>
+                        <td><strong>ils</strong> (masculin)<br><strong>elles</strong> (féminin)</td>
+                    </tr>
+                </table>
+                
+                <h4>Pronoms Personnels Compléments d'Objet Direct (COD)</h4>
+                <p>Ils remplacent le complément d'objet direct (répond à la question « qui ? » ou « quoi ? »).</p>
+                <table class="pronoun-table">
+                    <tr>
+                        <th>Personne</th>
+                        <th>Singulier</th>
+                        <th>Pluriel</th>
+                    </tr>
+                    <tr>
+                        <td>1ère personne</td>
+                        <td><strong>me</strong> (m' devant voyelle)</td>
+                        <td><strong>nous</strong></td>
+                    </tr>
+                    <tr>
+                        <td>2ème personne</td>
+                        <td><strong>te</strong> (t' devant voyelle)</td>
+                        <td><strong>vous</strong></td>
+                    </tr>
+                    <tr>
+                        <td>3ème personne</td>
+                        <td><strong>le</strong> (l' devant voyelle) (masculin)<br><strong>la</strong> (l' devant voyelle) (féminin)</td>
+                        <td><strong>les</strong></td>
+                    </tr>
+                </table>
+                
+                <h4>Pronoms Personnels Compléments d'Objet Indirect (COI)</h4>
+                <p>Ils remplacent le complément d'objet indirect (introduit par « à » et répond à la question « à qui ? »).</p>
+                <table class="pronoun-table">
+                    <tr>
+                        <th>Personne</th>
+                        <th>Singulier</th>
+                        <th>Pluriel</th>
+                    </tr>
+                    <tr>
+                        <td>1ère personne</td>
+                        <td><strong>me</strong> (m' devant voyelle)</td>
+                        <td><strong>nous</strong></td>
+                    </tr>
+                    <tr>
+                        <td>2ème personne</td>
+                        <td><strong>te</strong> (t' devant voyelle)</td>
+                        <td><strong>vous</strong></td>
+                    </tr>
+                    <tr>
+                        <td>3ème personne</td>
+                        <td><strong>lui</strong> (masculin et féminin)</td>
+                        <td><strong>leur</strong></td>
+                    </tr>
+                </table>
+                
+                <h4>Pronoms Toniques</h4>
+                <p>Ils sont utilisés après une préposition, pour insister ou dans une phrase sans verbe.</p>
+                <table class="pronoun-table">
+                    <tr>
+                        <th>Personne</th>
+                        <th>Singulier</th>
+                        <th>Pluriel</th>
+                    </tr>
+                    <tr>
+                        <td>1ère personne</td>
+                        <td><strong>moi</strong></td>
+                        <td><strong>nous</strong></td>
+                    </tr>
+                    <tr>
+                        <td>2ème personne</td>
+                        <td><strong>toi</strong></td>
+                        <td><strong>vous</strong></td>
+                    </tr>
+                    <tr>
+                        <td>3ème personne</td>
+                        <td><strong>lui</strong> (masculin)<br><strong>elle</strong> (féminin)</td>
+                        <td><strong>eux</strong> (masculin)<br><strong>elles</strong> (féminin)</td>
+                    </tr>
+                </table>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    question: "Pierre est mon ami. _____ est très gentil.",
+                    options: ["Il", "Elle", "Ils", "Elles"],
+                    answer: "Il",
+                    explanation: "On utilise le pronom personnel sujet 'Il' pour remplacer 'Pierre' qui est un nom masculin singulier.",
+                    hint: "C'est un pronom personnel sujet masculin singulier."
+                },
+                {
+                    question: "Marie est ma sœur. _____ est intelligente.",
+                    options: ["Il", "Elle", "Ils", "Elles"],
+                    answer: "Elle",
+                    explanation: "On utilise le pronom personnel sujet 'Elle' pour remplacer 'Marie' qui est un nom féminin singulier.",
+                    hint: "C'est un pronom personnel sujet féminin singulier."
+                },
+                {
+                    question: "_____ sommes étudiants à l'université.",
+                    options: ["Je", "Tu", "Nous", "Vous"],
+                    answer: "Nous",
+                    explanation: "On utilise le pronom personnel sujet 'Nous' pour la première personne du pluriel.",
+                    hint: "C'est un pronom personnel sujet à la première personne du pluriel."
+                },
+                {
+                    question: "_____ êtes très gentils avec moi.",
+                    options: ["Je", "Tu", "Nous", "Vous"],
+                    answer: "Vous",
+                    explanation: "On utilise le pronom personnel sujet 'Vous' pour la deuxième personne du pluriel ou comme forme de politesse.",
+                    hint: "C'est un pronom personnel sujet à la deuxième personne du pluriel."
+                },
+                {
+                    question: "Pierre et Paul sont mes amis. _____ habitent à Paris.",
+                    options: ["Il", "Elle", "Ils", "Elles"],
+                    answer: "Ils",
+                    explanation: "On utilise le pronom personnel sujet 'Ils' pour remplacer 'Pierre et Paul' qui sont des noms masculins pluriels.",
+                    hint: "C'est un pronom personnel sujet masculin pluriel."
+                },
+                {
+                    question: "Marie et Sophie sont mes amies. _____ habitent à Lyon.",
+                    options: ["Il", "Elle", "Ils", "Elles"],
+                    answer: "Elles",
+                    explanation: "On utilise le pronom personnel sujet 'Elles' pour remplacer 'Marie et Sophie' qui sont des noms féminins pluriels.",
+                    hint: "C'est un pronom personnel sujet féminin pluriel."
+                },
+                {
+                    question: "_____ aime le chocolat.",
+                    options: ["Je", "Tu", "Il", "Nous"],
+                    answer: "J'",
+                    explanation: "On utilise le pronom personnel sujet 'Je' avec élision (J') devant une voyelle.",
+                    hint: "C'est un pronom personnel sujet à la première personne du singulier avec élision."
+                },
+                {
+                    question: "_____ as un nouveau téléphone.",
+                    options: ["Je", "Tu", "Il", "Nous"],
+                    answer: "Tu",
+                    explanation: "On utilise le pronom personnel sujet 'Tu' pour la deuxième personne du singulier.",
+                    hint: "C'est un pronom personnel sujet à la deuxième personne du singulier."
+                },
+                {
+                    question: "En France, _____ parle français.",
+                    options: ["je", "tu", "on", "nous"],
+                    answer: "on",
+                    explanation: "On utilise le pronom personnel sujet 'on' pour désigner un sujet indéfini ou pour remplacer 'nous' dans le langage familier.",
+                    hint: "C'est un pronom personnel sujet indéfini."
+                },
+                {
+                    question: "Pierre et _____, nous allons au cinéma.",
+                    options: ["je", "moi", "tu", "toi"],
+                    answer: "moi",
+                    explanation: "On utilise le pronom tonique 'moi' et non le pronom sujet 'je' dans cette construction.",
+                    hint: "C'est un pronom tonique à la première personne du singulier."
+                }
+            ],
+            moyen: [
+                {
+                    question: "J'ai acheté un livre. Je _____ ai lu hier soir.",
+                    options: ["le", "la", "lui", "leur"],
+                    answer: "l'",
+                    explanation: "On utilise le pronom COD 'le' avec élision (l') devant une voyelle pour remplacer 'un livre' qui est un COD masculin singulier.",
+                    hint: "C'est un pronom COD masculin singulier avec élision."
+                },
+                {
+                    question: "Tu as parlé à Marie ? Oui, je _____ ai parlé ce matin.",
+                    options: ["le", "la", "lui", "leur"],
+                    answer: "lui",
+                    explanation: "On utilise le pronom COI 'lui' pour remplacer 'à Marie' qui est un COI (complément d'objet indirect).",
+                    hint: "C'est un pronom COI à la troisième personne du singulier."
+                },
+                {
+                    question: "Tu connais mes parents ? Oui, je _____ connais bien.",
+                    options: ["le", "la", "les", "leur"],
+                    answer: "les",
+                    explanation: "On utilise le pronom COD 'les' pour remplacer 'mes parents' qui est un COD pluriel.",
+                    hint: "C'est un pronom COD pluriel."
+                },
+                {
+                    question: "Tu as écrit à tes amis ? Oui, je _____ ai écrit hier.",
+                    options: ["les", "leur", "eux", "ils"],
+                    answer: "leur",
+                    explanation: "On utilise le pronom COI 'leur' pour remplacer 'à tes amis' qui est un COI pluriel.",
+                    hint: "C'est un pronom COI à la troisième personne du pluriel."
+                },
+                {
+                    question: "C'est pour qui, ce cadeau ? C'est pour _____.",
+                    options: ["tu", "te", "toi", "ton"],
+                    answer: "toi",
+                    explanation: "On utilise le pronom tonique 'toi' après une préposition comme 'pour'.",
+                    hint: "C'est un pronom tonique à la deuxième personne du singulier."
+                },
+                {
+                    question: "Il _____ téléphone tous les jours. (à sa mère)",
+                    options: ["le", "la", "lui", "elle"],
+                    answer: "lui",
+                    explanation: "On utilise le pronom COI 'lui' pour remplacer 'à sa mère' qui est un COI.",
+                    hint: "C'est un pronom COI à la troisième personne du singulier."
+                },
+                {
+                    question: "Cette histoire, je _____ connais déjà.",
+                    options: ["le", "la", "lui", "leur"],
+                    answer: "la",
+                    explanation: "On utilise le pronom COD 'la' pour remplacer 'cette histoire' qui est un COD féminin singulier.",
+                    hint: "C'est un pronom COD féminin singulier."
+                },
+                {
+                    question: "Mes amis m'ont invité, mais je ne peux pas aller chez _____.",
+                    options: ["ils", "leur", "eux", "leurs"],
+                    answer: "eux",
+                    explanation: "On utilise le pronom tonique 'eux' après une préposition comme 'chez'.",
+                    hint: "C'est un pronom tonique masculin pluriel."
+                },
+                {
+                    question: "Tu _____ parles souvent ? (à tes parents)",
+                    options: ["les", "leur", "eux", "ils"],
+                    answer: "leur",
+                    explanation: "On utilise le pronom COI 'leur' pour remplacer 'à tes parents' qui est un COI pluriel.",
+                    hint: "C'est un pronom COI à la troisième personne du pluriel."
+                },
+                {
+                    question: "Ce livre, je vais _____ lire pendant les vacances.",
+                    options: ["le", "la", "lui", "leur"],
+                    answer: "le",
+                    explanation: "On utilise le pronom COD 'le' pour remplacer 'ce livre' qui est un COD masculin singulier.",
+                    hint: "C'est un pronom COD masculin singulier."
+                }
+            ],
+            difficile: [
+                {
+                    question: "Je _____ ai donné le livre hier. (à Pierre)",
+                    options: ["le", "la", "lui", "leur"],
+                    answer: "lui",
+                    explanation: "On utilise le pronom COI 'lui' pour remplacer 'à Pierre' qui est un COI.",
+                    hint: "C'est un pronom COI à la troisième personne du singulier."
+                },
+                {
+                    question: "Ce film, je _____ ai déjà vu trois fois.",
+                    options: ["le", "la", "lui", "l'"],
+                    answer: "l'",
+                    explanation: "On utilise le pronom COD 'le' avec élision (l') devant le verbe commençant par une voyelle pour remplacer 'ce film' qui est un COD masculin singulier.",
+                    hint: "C'est un pronom COD masculin singulier avec élision."
+                },
+                {
+                    question: "Ces exercices, je _____ ai terminés ce matin.",
+                    options: ["le", "la", "les", "leur"],
+                    answer: "les",
+                    explanation: "On utilise le pronom COD 'les' pour remplacer 'ces exercices' qui est un COD pluriel.",
+                    hint: "C'est un pronom COD pluriel."
+                },
+                {
+                    question: "Je _____ ai envoyé un message, mais ils n'ont pas répondu. (à mes amis)",
+                    options: ["les", "leur", "eux", "ils"],
+                    answer: "leur",
+                    explanation: "On utilise le pronom COI 'leur' pour remplacer 'à mes amis' qui est un COI pluriel.",
+                    hint: "C'est un pronom COI à la troisième personne du pluriel."
+                },
+                {
+                    question: "C'est à _____ de décider maintenant. (nous)",
+                    options: ["nous", "notre", "nos", "notres"],
+                    answer: "nous",
+                    explanation: "On utilise le pronom tonique 'nous' après la préposition 'à' dans cette expression.",
+                    hint: "C'est un pronom tonique à la première personne du pluriel."
+                },
+                {
+                    question: "Je _____ ai vus au cinéma hier. (Pierre et Marie)",
+                    options: ["le", "la", "les", "leur"],
+                    answer: "les",
+                    explanation: "On utilise le pronom COD 'les' pour remplacer 'Pierre et Marie' qui est un COD pluriel.",
+                    hint: "C'est un pronom COD pluriel."
+                },
+                {
+                    question: "Cette histoire, je ne _____ crois pas.",
+                    options: ["le", "la", "lui", "y"],
+                    answer: "y",
+                    explanation: "On utilise le pronom 'y' pour remplacer un complément introduit par 'à' qui n'est pas une personne.",
+                    hint: "C'est un pronom qui remplace un complément introduit par 'à'."
+                },
+                {
+                    question: "Je _____ pense souvent. (à mes vacances)",
+                    options: ["les", "leur", "y", "en"],
+                    answer: "y",
+                    explanation: "On utilise le pronom 'y' pour remplacer un complément introduit par 'à' qui n'est pas une personne.",
+                    hint: "C'est un pronom qui remplace un complément introduit par 'à'."
+                },
+                {
+                    question: "Je _____ ai besoin pour mon projet. (de ces documents)",
+                    options: ["les", "leur", "y", "en"],
+                    answer: "en",
+                    explanation: "On utilise le pronom 'en' pour remplacer un complément introduit par 'de'.",
+                    hint: "C'est un pronom qui remplace un complément introduit par 'de'."
+                },
+                {
+                    question: "Entre toi et _____, je préfère rester neutre.",
+                    options: ["je", "moi", "me", "mon"],
+                    answer: "moi",
+                    explanation: "On utilise le pronom tonique 'moi' après une préposition comme 'entre'.",
+                    hint: "C'est un pronom tonique à la première personne du singulier."
+                }
+            ]
+        };
+        
+        // Game variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = 10;
+        let currentDifficulty = 'facile';
+        let questions = [];
+        let selectedOption = null;
+        
+        // DOM elements
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const submitButton = document.getElementById('submit-button');
+        const explanation = document.getElementById('explanation');
+        const explanationText = document.getElementById('explanation-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const hintButton = document.getElementById('hint-button');
+        const hintText = document.getElementById('hint-text');
+        const feedback = document.getElementById('feedback');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            submitButton.addEventListener('click', checkAnswer);
+            hintButton.addEventListener('click', showHint);
+            
+            start

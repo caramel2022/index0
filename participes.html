@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Participes Passés - Orthographe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #9b59b6;
+            --current-color-dark: #8e44ad;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .question-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .input-container {
+            margin-bottom: 20px;
+        }
+        
+        .participe-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .participe-input:focus {
+            outline: none;
+            border-color: var(--current-color);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .explanation-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--current-color-dark);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .hint-button {
+            background: none;
+            border: none;
+            color: var(--current-color);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
+        
+        .hint-button:hover {
+            color: var(--current-color-dark);
+        }
+        
+        .hint-text {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
+            display: none;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .rule-example {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            margin: 2px;
+        }
+        
+        .verb-group {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f0ff;
+            border-radius: 8px;
+        }
+        
+        .verb-group h4 {
+            color: var(--current-color-dark);
+            margin-bottom: 10px;
+        }
+        
+        .verb-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .verb-table th, .verb-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .verb-table th {
+            background-color: #f0f0f0;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .difficulty-selector {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à l'Orthographe
+            </a>
+            <h1>Les Participes Passés</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-questions">10</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="question-container">
+                    <div class="question" id="question-text">
+                        <!-- Question will be displayed here -->
+                    </div>
+                    <div class="input-container">
+                        <input type="text" class="participe-input" id="participe-input" placeholder="Entrez le participe passé">
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                    <button class="hint-button" id="hint-button">Indice</button>
+                    <div class="hint-text" id="hint-text">
+                        <!-- Hint will be displayed here -->
+                    </div>
+                    <div class="explanation" id="explanation">
+                        <div class="explanation-title">Explication:</div>
+                        <div id="explanation-text">
+                            <!-- Explanation will be displayed here -->
+                        </div>
+                    </div>
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Les Règles des Participes Passés en Français</h3>
+                <p>Le participe passé est une forme verbale qui peut être utilisée avec un auxiliaire (avoir ou être) pour former des temps composés, ou seule comme adjectif.</p>
+                
+                <div class="verb-group">
+                    <h4>1. Formation des participes passés</h4>
+                    <p>La formation du participe passé dépend du groupe du verbe :</p>
+                    
+                    <table class="verb-table">
+                        <tr>
+                            <th>Groupe</th>
+                            <th>Terminaison</th>
+                            <th>Exemples</th>
+                        </tr>
+                        <tr>
+                            <td>1er groupe (-er)</td>
+                            <td>-é</td>
+                            <td><span class="rule-example">parler → parlé</span>, <span class="rule-example">aimer → aimé</span></td>
+                        </tr>
+                        <tr>
+                            <td>2e groupe (-ir)</td>
+                            <td>-i</td>
+                            <td><span class="rule-example">finir → fini</span>, <span class="rule-example">choisir → choisi</span></td>
+                        </tr>
+                        <tr>
+                            <td>3e groupe</td>
+                            <td>-i, -u, -is, -t...</td>
+                            <td><span class="rule-example">prendre → pris</span>, <span class="rule-example">voir → vu</span>, <span class="rule-example">mettre → mis</span></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="verb-group">
+                    <h4>2. Accord du participe passé avec l'auxiliaire ÊTRE</h4>
+                    <p>Avec l'auxiliaire être, le participe passé s'accorde en genre et en nombre avec le sujet :</p>
+                    <p><span class="rule-example">Elle est partie</span> (féminin singulier)</p>
+                    <p><span class="rule-example">Ils sont partis</span> (masculin pluriel)</p>
+                    <p><span class="rule-example">Elles sont parties</span> (féminin pluriel)</p>
+                    
+                    <p>Cela concerne :</p>
+                    <ul>
+                        <li>Les verbes de mouvement (aller, venir, partir, arriver, etc.)</li>
+                        <li>Les verbes d'état (rester, demeurer, etc.)</li>
+                        <li>Certains verbes intransitifs (naître, mourir, etc.)</li>
+                        <li>Les verbes pronominaux (se laver, s'habiller, etc.)</li>
+                    </ul>
+                </div>
+                
+                <div class="verb-group">
+                    <h4>3. Accord du participe passé avec l'auxiliaire AVOIR</h4>
+                    <p>Avec l'auxiliaire avoir, le participe passé s'accorde avec le complément d'objet direct (COD) seulement si celui-ci est placé avant le verbe :</p>
+                    
+                    <p><span class="rule-example">J'ai mangé des pommes.</span> (pas d'accord, COD après)</p>
+                    <p><span class="rule-example">Les pommes que j'ai mangées.</span> (accord, COD "que" avant)</p>
+                    <p><span class="rule-example">Je les ai mangées.</span> (accord, COD "les" avant)</p>
+                </div>
+                
+                <div class="verb-group">
+                    <h4>4. Cas particuliers des verbes pronominaux</h4>
+                    <p>Pour les verbes pronominaux, les règles sont plus complexes :</p>
+                    
+                    <ul>
+                        <li><strong>Verbes essentiellement pronominaux</strong> (qui n'existent qu'à la forme pronominale) : accord avec le sujet
+                            <br><span class="rule-example">Elle s'est évanouie.</span> (accord)</li>
+                        <li><strong>Verbes pronominaux réfléchis</strong> (où le pronom est COD) : accord avec le pronom réfléchi
+                            <br><span class="rule-example">Elle s'est lavée.</span> (accord, "se" est COD)</li>
+                        <li><strong>Verbes pronominaux réciproques</strong> : accord si le pronom est COD
+                            <br><span class="rule-example">Ils se sont vus.</span> (accord, "se" est COD)</li>
+                        <li><strong>Verbes pronominaux avec COD</strong> : pas d'accord avec le pronom si celui-ci est COI
+                            <br><span class="rule-example">Ils se sont parlé.</span> (pas d'accord, "se" est COI)</li>
+                    </ul>
+                </div>
+                
+                <div class="verb-group">
+                    <h4>5. Participes passés invariables</h4>
+                    <p>Certains participes passés restent invariables dans des cas spécifiques :</p>
+                    
+                    <ul>
+                        <li>Verbes impersonnels : <span class="rule-example">Il a plu.</span></li>
+                        <li>Expressions figées : <span class="rule-example">Ils se sont rendu compte de leur erreur.</span></li>
+                        <li>Verbes suivis d'un infinitif quand le COD fait l'action de l'infinitif : <span class="rule-example">Les chansons que j'ai entendu chanter.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    question: "Quel est le participe passé du verbe 'parler' ?",
+                    answer: "parlé",
+                    explanation: "Le verbe 'parler' est un verbe du 1er groupe. Son participe passé se forme avec la terminaison -é.",
+                    hint: "C'est un verbe du 1er groupe (-er)."
+                },
+                {
+                    question: "Quel est le participe passé du verbe 'finir' ?",
+                    answer: "fini",
+                    explanation: "Le verbe 'finir' est un verbe du 2e groupe. Son participe passé se forme avec la terminaison -i.",
+                    hint: "C'est un verbe du 2e groupe (-ir)."
+                },
+                {
+                    question: "Quel est le participe passé du verbe 'avoir' ?",
+                    answer: "eu",
+                    explanation: "Le verbe 'avoir' est un verbe du 3e groupe. Son participe passé est irrégulier : 'eu'.",
+                    hint: "C'est un verbe irrégulier du 3e groupe."
+                },
+                {
+                    question: "Quel est le participe passé du verbe 'être' ?",
+                    answer: "été",
+                    explanation: "Le verbe 'être' est un verbe du 3e groupe. Son participe passé est irrégulier : 'été'.",
+                    hint: "C'est un verbe irrégulier du 3e groupe."
+                },
+                {
+                    question: "Quel est le participe passé du verbe 'faire' ?",
+                    answer: "fait",
+                    explanation: "Le verbe 'faire' est un verbe du 3e groupe. Son participe passé est irrégulier : 'fait'.",
+                    hint: "C'est un verbe irrégulier du 3e groupe."
+                },
+                {
+                    question: "Quel est le participe passé du verbe 'voir' ?",
+                    answer: "vu",
+                    explanation: "Le verbe 'voir' est un verbe du 3e groupe. Son participe passé est irrégulier : 'vu'.",
+                    hint: "C'est un verbe irrégulier du 3e groupe."
+                },
+                {
+                    question: "Quel est le participe passé du verbe 'prendre' ?",
+                    answer: "pris",
+                    explanation: "Le verbe 'prendre' est un verbe du 3e groupe. Son participe passé est irrégulier : 'pris'.",
+                    hint: "C'est un verbe irrégulier du 3e groupe."
+                },
+                {
+                    question: "Quel est le participe passé du verbe 'venir' ?",
+                    answer: "venu",
+                    explanation: "Le verbe 'venir' est un verbe du 3e groupe. Son participe passé est irrégulier : 'venu'.",
+                    hint: "C'est un verbe irrégulier du 3e groupe."
+                },
+                {
+                    question: "Quel est le participe passé du verbe 'aller' ?",
+                    answer: "allé",
+                    explanation: "Le verbe 'aller' est un verbe du 3e groupe. Son participe passé est 'allé'.",
+                    hint: "C'est un verbe du 3e groupe qui se termine comme un verbe du 1er groupe."
+                },
+                {
+                    question: "Quel est le participe passé du verbe 'manger' ?",
+                    answer: "mangé",
+                    explanation: "Le verbe 'manger' est un verbe du 1er groupe. Son participe passé se forme avec la terminaison -é.",
+                    hint: "C'est un verbe du 1er groupe (-er)."
+                }
+            ],
+            moyen: [
+                {
+                    question: "Complétez : 'Elle est (partir) ce matin.'",
+                    answer: "partie",
+                    explanation: "Le verbe 'partir' se conjugue avec l'auxiliaire 'être'. Le participe passé s'accorde donc avec le sujet 'elle' (féminin singulier).",
+                    hint: "Pensez à l'accord avec l'auxiliaire être."
+                },
+                {
+                    question: "Complétez : 'Ils sont (venir) nous voir.'",
+                    answer: "venus",
+                    explanation: "Le verbe 'venir' se conjugue avec l'auxiliaire 'être'. Le participe passé s'accorde donc avec le sujet 'ils' (masculin pluriel).",
+                    hint: "Pensez à l'accord avec l'auxiliaire être."
+                },
+                {
+                    question: "Complétez : 'J'ai (perdre) mes clés.'",
+                    answer: "perdu",
+                    explanation: "Le verbe 'perdre' est conjugué avec l'auxiliaire 'avoir'. Le COD 'mes clés' est placé après le verbe, donc pas d'accord.",
+                    hint: "Avec l'auxiliaire avoir, vérifiez la position du COD."
+                },
+                {
+                    question: "Complétez : 'Les clés que j'ai (perdre).'",
+                    answer: "perdues",
+                    explanation: "Le verbe 'perdre' est conjugué avec l'auxiliaire 'avoir'. Le COD 'que' (qui remplace 'les clés') est placé avant le verbe, donc accord au féminin pluriel.",
+                    hint: "Avec l'auxiliaire avoir, vérifiez la position du COD."
+                },
+                {
+                    question: "Complétez : 'Nous nous sommes (parler) longuement.'",
+                    answer: "parlé",
+                    explanation: "Dans 'se parler', le pronom 'se' est un COI (on parle à quelqu'un). Le participe passé reste donc invariable.",
+                    hint: "Vérifiez si le pronom réfléchi est COD ou COI."
+                },
+                {
+                    question: "Complétez : 'Elles se sont (laver) les mains.'",
+                    answer: "lavé",
+                    explanation: "Dans cette phrase, 'se' n'est pas COD (ce sont les mains qui sont lavées). Le participe passé reste invariable.",
+                    hint: "Vérifiez quel est le véritable COD dans cette phrase."
+                },
+                {
+                    question: "Complétez : 'Ils se sont (voir) hier.'",
+                    answer: "vus",
+                    explanation: "Dans 'se voir', le pronom 'se' est un COD (ils ont vu qui ? eux-mêmes). Le participe passé s'accorde donc avec le sujet 'ils' (masculin pluriel).",
+                    hint: "Vérifiez si le pronom réfléchi est COD ou COI."
+                },
+                {
+                    question: "Complétez : 'Elle s'est (souvenir) de son enfance.'",
+                    answer: "souvenue",
+                    explanation: "Le verbe 'se souvenir' est essentiellement pronominal. Le participe passé s'accorde donc avec le sujet 'elle' (féminin singulier).",
+                    hint: "C'est un verbe essentiellement pronominal."
+                },
+                {
+                    question: "Complétez : 'Les efforts qu'il a (faire).'",
+                    answer: "faits",
+                    explanation: "Le verbe 'faire' est conjugué avec l'auxiliaire 'avoir'. Le COD 'que' (qui remplace 'les efforts') est placé avant le verbe, donc accord au masculin pluriel.",
+                    hint: "Avec l'auxiliaire avoir, vérifiez la position du COD."
+                },
+                {
+                    question: "Complétez : 'Elles sont (sortir) ensemble.'",
+                    answer: "sorties",
+                    explanation: "Le verbe 'sortir' se conjugue avec l'auxiliaire 'être'. Le participe passé s'accorde donc avec le sujet 'elles' (féminin pluriel).",
+                    hint: "Pensez à l'accord avec l'auxiliaire être."
+                }
+            ],
+            difficile: [
+                {
+                    question: "Complétez : 'Les chansons qu'il a (entendre) chanter.'",
+                    answer: "entendu",
+                    explanation: "Quand le COD placé avant le verbe fait l'action de l'infinitif qui suit, le participe passé reste invariable. Ici, ce sont les chansons qui sont chantées, pas entendues.",
+                    hint: "Attention au cas particulier avec un infinitif."
+                },
+                {
+                    question: "Complétez : 'Les chanteuses qu'il a (entendre) chanter.'",
+                    answer: "entendues",
+                    explanation: "Quand le COD placé avant le verbe est le sujet de l'infinitif qui suit, le participe passé s'accorde. Ici, ce sont les chanteuses qui chantent.",
+                    hint: "Attention au cas particulier avec un infinitif."
+                },
+                {
+                    question: "Complétez : 'Ils se sont (rendre) compte de leur erreur.'",
+                    answer: "rendu",
+                    explanation: "Dans l'expression figée 'se rendre compte', le participe passé reste invariable.",
+                    hint: "C'est une expression figée."
+                },
+                {
+                    question: "Complétez : 'La chaleur qu'il a (faire) hier.'",
+                    answer: "fait",
+                    explanation: "Avec les verbes impersonnels comme 'faire' dans 'il fait chaud', le participe passé reste invariable.",
+                    hint: "C'est un verbe utilisé de façon impersonnelle."
+                },
+                {
+                    question: "Complétez : 'Les trois kilomètres qu'elle a (courir).'",
+                    answer: "courus",
+                    explanation: "Le verbe 'courir' est conjugué avec l'auxiliaire 'avoir'. Le COD 'que' (qui remplace 'les trois kilomètres') est placé avant le verbe, donc accord au masculin pluriel.",
+                    hint: "Avec l'auxiliaire avoir, vérifiez la position du COD."
+                },
+                {
+                    question: "Complétez : 'Elles se sont (succéder) sans interruption.'",
+                    answer: "succédé",
+                    explanation: "Dans 'se succéder', le pronom 'se' est un COI (on succède à quelqu'un). Le participe passé reste donc invariable.",
+                    hint: "Vérifiez si le pronom réfléchi est COD ou COI."
+                },
+                {
+                    question: "Complétez : 'Les fleurs que j'ai (cueillir) sont belles.'",
+                    answer: "cueillies",
+                    explanation: "Le verbe 'cueillir' est conjugué avec l'auxiliaire 'avoir'. Le COD 'que' (qui remplace 'les fleurs') est placé avant le verbe, donc accord au féminin pluriel.",
+                    hint: "Avec l'auxiliaire avoir, vérifiez la position du COD."
+                },
+                {
+                    question: "Complétez : 'Ils se sont (plaire) à nous contredire.'",
+                    answer: "plu",
+                    explanation: "Dans 'se plaire à', le pronom 'se' est un COI (on plaît à quelqu'un). Le participe passé reste donc invariable.",
+                    hint: "Vérifiez si le pronom réfléchi est COD ou COI."
+                },
+                {
+                    question: "Complétez : 'Les vingt minutes qu'il a (courir).'",
+                    answer: "couru",
+                    explanation: "Ici, 'les vingt minutes' n'est pas le COD de 'courir' (on ne court pas des minutes). C'est un complément circonstanciel de temps, donc pas d'accord.",
+                    hint: "Attention à bien identifier le COD."
+                },
+                {
+                    question: "Complétez : 'Quelle chaleur il a (faire) !'",
+                    answer: "fait",
+                    explanation: "Avec les verbes impersonnels comme 'faire' dans 'il fait chaud', le participe passé reste invariable.",
+                    hint: "C'est un verbe utilisé de façon impersonnelle."
+                }
+            ]
+        };
+        
+        // Game variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = 10;
+        let currentDifficulty = 'facile';
+        let questions = [];
+        
+        // DOM elements
+        const questionText = document.getElementById('question-text');
+        const participeInput = document.getElementById('participe-input');
+        const submitButton = document.getElementById('submit-button');
+        const explanation = document.getElementById('explanation');
+        const explanationText = document.getElementById('explanation-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const hintButton = document.getElementById('hint-button');
+        const hintText = document.getElementById('hint-text');
+        const feedback = document.getElementById('feedback');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            submitButton.addEventListener('click', checkAnswer);
+            hintButton.addEventListener('click', showHint);
+            
+            // Allow pressing Enter to submit answer
+            participeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // Get questions for the current difficulty
+            questions = getRandomQuestions(exerciseData[currentDifficulty], totalQuestions);
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalQuestionsDisplay.textContent = totalQuestions;
+            progressBar.style.width = '0%';
+            
+            // Show first question
+            showQuestion();
+        }
+        
+        // Get random questions from the data
+        function getRandomQuestions(data, count) {
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        // Show the current question
+        // Show the current question
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            
+            // Update question text
+            questionText.textContent = question.question;
+            
+            // Clear input
+            participeInput.value = '';
+            
+            // Hide explanation and feedback
+            explanation.style.display = 'none';
+            feedback.style.display = 'none';
+            
+            // Hide hint
+            hintText.style.display = 'none';
+            hintText.textContent = '';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentQuestionIndex / totalQuestions) * 100}%`;
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextQuestion);
+            submitButton.addEventListener('click', checkAnswer);
+            
+            // Focus on input
+            participeInput.focus();
+        }
+        
+        // Check the submitted answer
+        function checkAnswer() {
+            const userAnswer = participeInput.value.trim().toLowerCase();
+            const question = questions[currentQuestionIndex];
+            const correctAnswer = question.answer.toLowerCase();
+            
+            if (userAnswer === '') {
+                alert('Veuillez entrer votre réponse.');
+                return;
+            }
+            
+            const isCorrect = userAnswer === correctAnswer;
+            
+            // Show feedback
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.textContent = isCorrect 
+                ? 'Correct ! Bien joué !' 
+                : `Incorrect. La bonne réponse est "${question.answer}".`;
+            feedback.style.display = 'block';
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+            }
+            
+            // Show explanation
+            explanationText.textContent = question.explanation;
+            explanation.style.display = 'block';
+            
+            // Disable input
+            participeInput.disabled = true;
+            
+            // Change submit button to next button
+            submitButton.textContent = 'Question Suivante';
+            submitButton.removeEventListener('click', checkAnswer);
+            submitButton.addEventListener('click', nextQuestion);
+        }
+        
+        // Show hint for the current question
+        function showHint() {
+            const question = questions[currentQuestionIndex];
+            hintText.textContent = question.hint;
+            hintText.style.display = 'block';
+        }
+        
+        // Move to the next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            // Enable input for next question
+            participeInput.disabled = false;
+            
+            // Show next question
+            showQuestion();
+        }
+        
+        // End the game
+        function endGame() {
+            // Clear the question container
+            questionText.textContent = '';
+            participeInput.style.display = 'none';
+            hintButton.style.display = 'none';
+            submitButton.style.display = 'none';
+            
+            // Show final score
+            const scorePercentage = (score / totalQuestions) * 100;
+            let message = '';
+            
+            if (scorePercentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez très bien les règles des participes passés en français.';
+            } else if (scorePercentage >= 70) {
+                message = 'Très bien ! Vous avez une bonne compréhension des règles des participes passés.';
+            } else if (scorePercentage >= 50) {
+                message = 'Bien ! Continuez à pratiquer pour améliorer votre maîtrise des participes passés.';
+            } else {
+                message = 'Continuez à pratiquer ! Les règles des participes passés en français peuvent être complexes.';
+            }
+            
+            // Create result message
+            const resultElement = document.createElement('div');
+            resultElement.innerHTML = `
+                <h2>Exercice terminé !</h2>
+                <p>Votre score : ${score}/${totalQuestions} (${scorePercentage}%)</p>
+                <p>${message}</p>
+                <button class="submit-button" onclick="startNewGame()">Recommencer</button>
+            `;
+            
+            questionText.parentNode.appendChild(resultElement);
+            
+            // Update progress bar to 100%
+            progressBar.style.width = '100%';
+        }
+    </script>
+</body>
+</html>

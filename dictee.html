@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!-- ... existing code ... -->
+
+<script>
+    // ... existing code ...
+    
+    // End the game
+    function endGame() {
+        // Create result container
+        const resultElement = document.createElement('div');
+        resultElement.className = 'dictation-container';
+        
+        // Show final score
+        const scorePercentage = (score / totalTexts) * 100;
+        let message = '';
+        
+        if (scorePercentage >= 90) {
+            message = 'Excellent ! Vous avez une très bonne compréhension orale et une excellente orthographe.';
+        } else if (scorePercentage >= 70) {
+            message = 'Très bien ! Votre compréhension orale et votre orthographe sont bonnes.';
+        } else if (scorePercentage >= 50) {
+            message = 'Bien ! Continuez à pratiquer pour améliorer votre compréhension orale et votre orthographe.';
+        } else {
+            message = 'Continuez à pratiquer ! La dictée est un exercice difficile qui demande de la pratique régulière.';
+        }
+        
+        // Create result message
+        resultElement.innerHTML = `
+            <h2>Exercice terminé !</h2>
+            <p>Votre score : ${score}/${totalTexts} (${scorePercentage}%)</p>
+            <p>${message}</p>
+            <button class="submit-button" onclick="startNewGame()">Recommencer</button>
+        `;
+        
+        // Replace the dictation container with the result element
+        document.querySelector('.dictation-container').replaceWith(resultElement);
+        
+        // Update progress bar to show completion
+        progressBar.style.width = '100%';
+    }
+    
+    // Function to get French voice for speech synthesis
+    function getFrenchVoice() {
+        const voices = window.speechSynthesis.getVoices();
+        // Try to find a French voice
+        return voices.find(voice => voice.lang.includes('fr')) || voices[0];
+    }
+    
+    // Function to handle voice loading
+    function handleVoicesLoaded() {
+        const frenchVoice = getFrenchVoice();
+        if (frenchVoice && frenchVoice.lang.includes('fr')) {
+            console.log('French voice loaded: ' + frenchVoice.name);
+        } else {
+            console.warn('No French voice found, using default voice');
+        }
+    }
+    
+    // Load voices when available
+    if (speechSynthesisAvailable) {
+        if (window.speechSynthesis.getVoices().length > 0) {
+            handleVoicesLoaded();
+        } else {
+            window.speechSynthesis.onvoiceschanged = handleVoicesLoaded;
+        }
+    }
+    
+    // Function to save user progress
+    function saveProgress() {
+        const progress = {
+            difficulty: currentDifficulty,
+            score: score,
+            totalTexts: totalTexts,
+            lastPlayed: new Date().toISOString()
+        };
+        
+        try {
+            localStorage.setItem('dicteeProgress', JSON.stringify(progress));
+        } catch (e) {
+            console.error('Could not save progress: ', e);
+        }
+    }
+    
+    // Function to load user progress
+    function loadProgress() {
+        try {
+            const progress = JSON.parse(localStorage.getItem('dicteeProgress'));
+            if (progress) {
+                // Only load difficulty from saved progress
+                difficultySelect.value = progress.difficulty;
+                currentDifficulty = progress.difficulty;
+                return true;
+            }
+        } catch (e) {
+            console.error('Could not load progress: ', e);
+        }
+        return false;
+    }
+    
+    // Add event listener to save progress when leaving the page
+    window.addEventListener('beforeunload', saveProgress);
+    
+    // Load progress when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if speech synthesis is available
+        speechSynthesisAvailable = 'speechSynthesis' in window;
+        
+        if (!speechSynthesisAvailable) {
+            alert('Votre navigateur ne prend pas en charge la synthèse vocale. Cet exercice nécessite la synthèse vocale pour fonctionner correctement.');
+        }
+        
+        // Load saved progress
+        loadProgress();
+        
+        // Set up event listeners
+        newGameBtn.addEventListener('click', startNewGame);
+        difficultySelect.addEventListener('change', function() {
+            currentDifficulty = this.value;
+            startNewGame();
+        });
+        
+        playButton.addEventListener('click', playText);
+        submitButton.addEventListener('click', checkAnswer);
+        
+        // Allow pressing Ctrl+Enter to submit answer
+        textInput.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                checkAnswer();
+            }
+        });
+        
+        // Start a new game
+        startNewGame();
+    });
+    
+    // Function to handle slow network or browser issues
+    function handleSpeechError() {
+        alert('Il y a eu un problème avec la synthèse vocale. Veuillez réessayer ou vérifier les paramètres de votre navigateur.');
+        playCount--; // Don't count failed attempts
+        playCountDisplay.textContent = playCount;
+    }
+    
+    // Enhanced play text function with error handling
+    function playText() {
+        if (playCount >= maxPlays) {
+            alert('Vous avez atteint le nombre maximum d\'écoutes pour ce texte.');
+            return;
+        }
+        
+        const text = texts[currentTextIndex].text;
+        
+        if (speechSynthesisAvailable) {
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'fr-FR';
+            utterance.rate = 0.9; // Slightly slower than normal
+            
+            // Get French voice
+            const frenchVoice = getFrenchVoice();
+            if (frenchVoice) {
+                utterance.voice = frenchVoice;
+            }
+            
+            // Add error handling
+            utterance.onerror = handleSpeechError;
+            
+            // Visual feedback during playback
+            playButton.innerHTML = '<i class="fas fa-pause"></i>';
+            playButton.classList.add('playing');
+            
+            utterance.onend = function() {
+                playButton.innerHTML = '<i class="fas fa-play"></i>';
+                playButton.classList.remove('playing');
+            };
+            
+            window.speechSynthesis.speak(utterance);
+            
+            playCount++;
+            playCountDisplay.textContent = playCount;
+        } else {
+            alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici le texte : ' + text);
+        }
+    }
+    
+    // Function to adjust difficulty based on user performance
+    function adjustDifficulty() {
+        const scorePercentage = (score / totalTexts) * 100;
+        
+        if (scorePercentage >= 90 && currentDifficulty !== 'difficile') {
+            // Suggest increasing difficulty
+            if (confirm('Excellent ! Voulez-vous essayer un niveau plus difficile ?')) {
+                if (currentDifficulty === 'facile') {
+                    currentDifficulty = 'moyen';
+                } else if (currentDifficulty === 'moyen') {
+                    currentDifficulty = 'difficile';
+                }
+                difficultySelect.value = currentDifficulty;
+            }
+        } else if (scorePercentage <= 30 && currentDifficulty !== 'facile') {
+            // Suggest decreasing difficulty
+            if (confirm('Cet exercice semble difficile. Voulez-vous essayer un niveau plus facile ?')) {
+                if (currentDifficulty === 'difficile') {
+                    currentDifficulty = 'moyen';
+                } else if (currentDifficulty === 'moyen') {
+                    currentDifficulty = 'facile';
+                }
+                difficultySelect.value = currentDifficulty;
+            }
+        }
+    }
+    
+    // Modify endGame to include difficulty adjustment
+    const originalEndGame = endGame;
+    endGame = function() {
+        originalEndGame();
+        adjustDifficulty();
+    };
+</script>
+</body>
+</html>

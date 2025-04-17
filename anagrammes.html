@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anagrammes - Jeux de Lettres</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        :root {
+            --current-color: #3498db;
+            --current-color-dark: #2980b9;
+        }
+        
+        .anagram-container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .scrambled-word {
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            margin-bottom: 30px;
+            color: var(--current-color);
+        }
+        
+        .letter {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background-color: white;
+            border: 2px solid var(--current-color);
+            border-radius: 8px;
+            margin: 0 5px;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .answer-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        
+        .answer-input:focus {
+            border-color: var(--current-color);
+            outline: none;
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .hint-container {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        
+        .hint-text {
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        .hint-button {
+            background: none;
+            border: none;
+            color: var(--current-color);
+            font-weight: 500;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: color 0.3s;
+        }
+        
+        .hint-button:hover {
+            color: var(--current-color-dark);
+            text-decoration: underline;
+        }
+        
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .progress-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--current-color);
+        }
+        
+        @media (max-width: 768px) {
+            .scrambled-word {
+                font-size: 28px;
+            }
+            
+            .letter {
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                font-size: 20px;
+                margin: 0 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour aux Jeux de Lettres
+            </a>
+            <h1>Anagrammes</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <div class="game-interface">
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouveau Jeu
+                </button>
+                <div class="score-display">Score: <span id="score">0</span></div>
+            </div>
+            
+            <div class="game-content-area">
+                <div class="progress-container">
+                    <div class="progress-text">Mot <span id="current-word">1</span>/<span id="total-words">10</span></div>
+                    <div class="progress-bar-container">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                </div>
+                
+                <div class="anagram-container">
+                    <div class="category-text">Catégorie: <span id="category-display">Animaux</span></div>
+                    <div class="scrambled-word" id="scrambled-word">
+                        <!-- Scrambled word will be displayed here -->
+                    </div>
+                    
+                    <form id="answer-form" class="answer-form">
+                        <input type="text" id="answer-input" class="answer-input" placeholder="Votre réponse..." autocomplete="off">
+                        <button type="submit" class="submit-button">Vérifier</button>
+                    </form>
+                    
+                    <div class="hint-container">
+                        <button id="hint-btn" class="hint-button">Afficher un indice</button>
+                        <div id="hint-text" class="hint-text" style="display: none;">
+                            <!-- Hint will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feedback" id="feedback" style="display: none;">
+                    <!-- Feedback will be shown here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Word categories with definitions for hints
+        const wordCategories = {
+            animaux: [
+                { word: "CHAT", hint: "Animal domestique qui miaule" },
+                { word: "CHIEN", hint: "Meilleur ami de l'homme" },
+                { word: "LION", hint: "Roi de la jungle" },
+                { word: "TIGRE", hint: "Grand félin rayé" },
+                { word: "OURS", hint: "Grand mammifère qui hiberne" },
+                { word: "LOUP", hint: "Animal sauvage qui hurle à la lune" },
+                { word: "RENARD", hint: "Animal rusé à la queue touffue" },
+                { word: "AIGLE", hint: "Oiseau rapace symbole de puissance" },
+                { word: "GIRAFE", hint: "Animal au long cou" },
+                { word: "ELEPHANT", hint: "Plus grand mammifère terrestre" }
+            ],
+            fruits: [
+                { word: "POMME", hint: "Fruit rouge ou vert croquant" },
+                { word: "POIRE", hint: "Fruit en forme de goutte" },
+                { word: "BANANE", hint: "Fruit jaune et courbé" },
+                { word: "ORANGE", hint: "Fruit rond et agrume" },
+                { word: "FRAISE", hint: "Petit fruit rouge à pépins" },
+                { word: "CERISE", hint: "Petit fruit rouge avec un noyau" },
+                { word: "RAISIN", hint: "Fruit qui pousse en grappe" },
+                { word: "KIWI", hint: "Fruit vert et poilu à l'intérieur" },
+                { word: "ANANAS", hint: "Fruit tropical à la chair jaune" },
+                { word: "MANGUE", hint: "Fruit tropical à noyau" }
+            ],
+            pays: [
+                { word: "FRANCE", hint: "Pays de la Tour Eiffel" },
+                { word: "ESPAGNE", hint: "Pays de la paella" },
+                { word: "ITALIE", hint: "Pays en forme de botte" },
+                { word: "CANADA", hint: "Pays de l'érable" },
+                { word: "JAPON", hint: "Pays du soleil levant" },
+                { word: "BRESIL", hint: "Plus grand pays d'Amérique du Sud" },
+                { word: "EGYPTE", hint: "Pays des pyramides" },
+                { word: "MAROC", hint: "Pays d'Afrique du Nord" },
+                { word: "ALLEMAGNE", hint: "Pays de la bière et des saucisses" },
+                { word: "RUSSIE", hint: "Plus grand pays du monde" }
+            ],
+            metiers: [
+                { word: "DOCTEUR", hint: "Soigne les malades" },
+                { word: "AVOCAT", hint: "Défend les clients au tribunal" },
+                { word: "POMPIER", hint: "Éteint les incendies" },
+                { word: "POLICIER", hint: "Maintient l'ordre public" },
+                { word: "BOULANGER", hint: "Fabrique le pain" },
+                { word: "PROFESSEUR", hint: "Enseigne aux élèves" },
+                { word: "CUISINIER", hint: "Prépare les repas" },
+                { word: "ARTISTE", hint: "Crée des œuvres d'art" },
+                { word: "INGENIEUR", hint: "Conçoit des solutions techniques" },
+                { word: "ARCHITECTE", hint: "Dessine les plans des bâtiments" }
+            ]
+        };
+        
+        // Game variables
+        let currentWords = [];
+        let currentWordIndex = 0;
+        let currentWord = "";
+        let scrambledWord = "";
+        let score = 0;
+        let hintUsed = false;
+        let currentCategory = "";
+        
+        // DOM elements
+        const scrambledWordElement = document.getElementById("scrambled-word");
+        const categoryDisplayElement = document.getElementById("category-display");
+        const answerForm = document.getElementById("answer-form");
+        const answerInput = document.getElementById("answer-input");
+        const hintBtn = document.getElementById("hint-btn");
+        const hintTextElement = document.getElementById("hint-text");
+        const feedbackElement = document.getElementById("feedback");
+        const scoreElement = document.getElementById("score");
+        const currentWordElement = document.getElementById("current-word");
+        const totalWordsElement = document.getElementById("total-words");
+        const progressBar = document.getElementById("progress-bar");
+        const newGameBtn = document.getElementById("new-game-btn");
+        
+        // Initialize the game
+        function initGame() {
+            // Reset game state
+            currentWordIndex = 0;
+            score = 0;
+            
+            // Choose a random category
+            const categories = Object.keys(wordCategories);
+            currentCategory = categories[Math.floor(Math.random() * categories.length)];
+            
+            // Select and shuffle words from the category
+            currentWords = [...wordCategories[currentCategory]];
+            shuffleArray(currentWords);
+            currentWords = currentWords.slice(0, 10); // Limit to 10 words
+            
+            // Set the current word
+            setCurrentWord();
+            
+            // Update UI
+            categoryDisplayElement.textContent = currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1);
+            scoreElement.textContent = score;
+            currentWordElement.textContent = "1";
+            totalWordsElement.textContent = currentWords.length;
+            progressBar.style.width = "0%";
+            
+            // Clear input and hint
+            answerInput.value = "";
+            hintTextElement.style.display = "none";
+            hintUsed = false;
+            
+            // Focus on the input
+            answerInput.focus();
+        }
+        
+        // Set the current word and scramble it
+        function setCurrentWord() {
+            const wordObj = currentWords[currentWordIndex];
+            currentWord = wordObj.word;
+            
+            // Scramble the word
+            scrambledWord = scrambleWord(currentWord);
+            
+            // Display the scrambled word with letter divs
+            scrambledWordElement.innerHTML = '';
+            for (const letter of scrambledWord) {
+                const letterElement = document.createElement("span");
+                letterElement.className = "letter";
+                letterElement.textContent = letter;
+                scrambledWordElement.appendChild(letterElement);
+            }
+            
+            // Reset hint
+            hintTextElement.style.display = "none";
+            hintUsed = false;
+        }
+        
+        // Scramble a word
+        function scrambleWord(word) {
+            // Convert to array, shuffle, and join back
+            const letters = word.split('');
+            
+            // Keep shuffling until the word is different from the original
+            let scrambled;
+            do {
+                shuffleArray(letters);
+                scrambled = letters.join('');
+            } while (scrambled === word);
+            
+            return scrambled;
+        }
+        
+        // Check the user's answer
+        function checkAnswer(event) {
+            event.preventDefault();
+            
+            const userAnswer = answerInput.value.trim().toUpperCase();
+            
+            if (userAnswer === currentWord) {
+                // Correct answer
+                let pointsEarned = 10;
+                if (!hintUsed) {
+                    pointsEarned += 5; // Bonus for not using hint
+                }
+                
+                score += pointsEarned;
+                scoreElement.textContent = score;
+                
+                showFeedback(`Correct ! +${pointsEarned} points`, "correct");
+                
+                // Move to next word after delay
+                setTimeout(() => {
+                    currentWordIndex++;
+                    
+                    if (currentWordIndex < currentWords.length) {
+                        // Next word
+                        setCurrentWord();
+                        
+                        // Update progress
+                        currentWordElement.textContent = currentWordIndex + 1;
+                        const progress = (currentWordIndex / currentWords.length) * 100;
+                        progressBar.style.width = `${progress}%`;
+                        
+                        // Clear input and focus
+                        answerInput.value = "";
+                        answerInput.focus();
+                    } else {
+                        // Game over
+                        endGame();
+                    }
+                }, 1500);
+            } else {
+                // Incorrect answer
+                showFeedback("Incorrect. Essayez encore !", "incorrect");
+                
+                // Shake the scrambled word
+                scrambledWordElement.classList.add("shake");
+                setTimeout(() => {
+                    scrambledWordElement.classList.remove("shake");
+                }, 500);
+            }
+        }
+        
+        // Show hint
+        function showHint() {
+            const wordObj = currentWords[currentWordIndex];
+            hintTextElement.textContent = wordObj.hint;
+            hintTextElement.style.display = "block";
+            hintUsed = true;
+        }
+        
+        // End the game and show results
+        function endGame() {
+            const percentage = Math.round((score / (currentWords.length * 15)) * 100);
+            
+            let message;
+            if (percentage >= 90) {
+                message = "Excellent ! Vous êtes un maître des anagrammes !";
+            } else if (percentage >= 70) {
+                message = "Très bien ! Vous avez un bon vocabulaire.";
+            } else if (percentage >= 50) {
+                message = "Bien ! Continuez à pratiquer pour vous améliorer.";
+            } else {
+                message = "Continuez à pratiquer pour améliorer votre vocabulaire.";
+            }
+            
+            // Clear game area
+            scrambledWordElement.innerHTML = "Partie terminée !";
+            answerForm.innerHTML = `
+                <div style="text-align: center; margin: 20px 0;">
+                    <h2>Résultat: ${score}/${currentWords.length * 15} (${percentage}%)</h2>
+                    <p>${message}</p>
+                    <button type="button" class="submit-button" onclick="initGame()">Nouvelle Partie</button>
+                </div>
+            `;
+            
+            // Update progress bar to 100%
+            progressBar.style.width = "100%";
+        }
+        
+        // Show feedback message
+        function showFeedback(message, type) {
+            feedbackElement.textContent = message;
+            feedbackElement.className = `feedback ${type}`;
+            feedbackElement.style.display = "block";
+            
+            setTimeout(() => {
+                feedbackElement.style.display = "none";
+            }, 3000);
+        }
+        
+        // Shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Event listeners
+        answerForm.addEventListener("submit", checkAnswer);
+        hintBtn.addEventListener("click", showHint);
+        newGameBtn.addEventListener("click", initGame);
+        
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictée d'Homonymes - Français</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #e67e22;
+            --current-color-dark: #d35400;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .dictation-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .play-button {
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 24px;
+        }
+        
+        .play-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .play-count {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .sentence-display {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .homonym-blank {
+            display: inline-block;
+            width: 100px;
+            height: 30px;
+            border-bottom: 2px solid var(--current-color);
+            margin: 0 5px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .homonym-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .homonym-option {
+            padding: 8px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .homonym-option:hover {
+            background-color: #e9ecef;
+            border-color: var(--current-color);
+        }
+        
+        .homonym-option.selected {
+            background-color: var(--current-color);
+            color: white;
+            border-color: var(--current-color-dark);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .homonym-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .homonym-table th, .homonym-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .homonym-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .homonym-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .homonym-pair {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .homonym-word {
+            font-weight: bold;
+            color: var(--current-color-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .difficulty-selector {
+                margin-top: 15px;
+            }
+            
+            .homonym-options {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .homonym-option {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à la Dictée
+            </a>
+            <h1>Dictée d'Homonymes</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-sentences">5</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="dictation-container">
+                    <div class="audio-controls">
+                        <button class="play-button" id="play-button">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="play-count">
+                            Écoutez la phrase (<span id="play-count">0</span>/<span id="max-plays">3</span>)
+                        </div>
+                    </div>
+                    
+                    <div class="sentence-display" id="sentence-display">
+                        <!-- Sentence with blanks will be inserted here -->
+                    </div>
+                    
+                    <div class="homonym-options" id="homonym-options">
+                        <!-- Homonym options will be inserted here -->
+                    </div>
+                    
+                    <div class="feedback" id="feedback"></div>
+                    
+                    <div class="result-container" id="result-container">
+                        <div id="result-text"></div>
+                        <div class="explanation" id="explanation"></div>
+                    </div>
+                    
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Les Homonymes en Français</h3>
+                <p>Les homonymes sont des mots qui se prononcent de la même façon mais qui s'écrivent différemment et ont des significations différentes.</p>
+                
+                <h4>Exemples courants d'homonymes :</h4>
+                
+                <div class="homonym-pair">
+                    <div>
+                        <span class="homonym-word">a</span> (verbe avoir) : Il <strong>a</strong> un livre.
+                    </div>
+                    <div>
+                        <span class="homonym-word">à</span> (préposition) : Je vais <strong>à</strong> l'école.
+                    </div>
+                </div>
+                
+                <div class="homonym-pair">
+                    <div>
+                        <span class="homonym-word">et</span> (conjonction) : Pierre <strong>et</strong> Marie
+                    </div>
+                    <div>
+                        <span class="homonym-word">est</span> (verbe être) : Il <strong>est</strong> grand.
+                    </div>
+                </div>
+                
+                <div class="homonym-pair">
+                    <div>
+                        <span class="homonym-word">son</span> (déterminant possessif) : <strong>Son</strong> livre
+                    </div>
+                    <div>
+                        <span class="homonym-word">sont</span> (verbe être) : Ils <strong>sont</strong> là.
+                    </div>
+                </div>
+                
+                <h4>Comment faire l'exercice :</h4>
+                <ol>
+                    <li>Écoutez attentivement la phrase</li>
+                    <li>Choisissez l'homonyme correct pour compléter la phrase</li>
+                    <li>Cliquez sur "Vérifier" pour voir votre résultat</li>
+                </ol>
+                
+                <h4>Conseils pour distinguer les homonymes :</h4>
+                <ul>
+                    <li>Analysez le contexte de la phrase</li>
+                    <li>Identifiez la nature grammaticale du mot (verbe, nom, adjectif, etc.)</li>
+                    <li>Essayez de remplacer le mot par un synonyme pour voir si cela a du sens</li>
+                    <li>Mémorisez les règles spécifiques pour les paires d'homonymes courantes</li>
+                </ul>
+                
+                <p>La maîtrise des homonymes est essentielle pour une bonne orthographe en français !</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    sentence: "Je ne sais pas [blank] il est allé.",
+                    options: ["où", "ou"],
+                    answer: "où",
+                    explanation: "'Où' est un adverbe de lieu, tandis que 'ou' est une conjonction qui exprime une alternative."
+                },
+                {
+                    sentence: "Il [blank] un nouveau livre.",
+                    options: ["a", "à"],
+                    answer: "a",
+                    explanation: "'A' est une forme du verbe avoir, tandis que 'à' est une préposition."
+                },
+                {
+                    sentence: "Marie [blank] Paul sont amis.",
+                    options: ["et", "est"],
+                    answer: "et",
+                    explanation: "'Et' est une conjonction de coordination, tandis que 'est' est une forme du verbe être."
+                },
+                {
+                    sentence: "Ils [blank] partis en vacances.",
+                    options: ["son", "sont"],
+                    answer: "sont",
+                    explanation: "'Sont' est une forme du verbe être, tandis que 'son' est un déterminant possessif."
+                },
+                {
+                    sentence: "C'est [blank] livre.",
+                    options: ["son", "sont"],
+                    answer: "son",
+                    explanation: "'Son' est un déterminant possessif, tandis que 'sont' est une forme du verbe être."
+                },
+                {
+                    sentence: "Je vais [blank] la boulangerie.",
+                    options: ["a", "à"],
+                    answer: "à",
+                    explanation: "'À' est une préposition, tandis que 'a' est une forme du verbe avoir."
+                },
+                {
+                    sentence: "Tu veux du thé [blank] du café ?",
+                    options: ["ou", "où"],
+                    answer: "ou",
+                    explanation: "'Ou' est une conjonction qui exprime une alternative, tandis que 'où' est un adverbe de lieu."
+                },
+                {
+                    sentence: "Elle [blank] très intelligente.",
+                    options: ["et", "est"],
+                    answer: "est",
+                    explanation: "'Est' est une forme du verbe être, tandis que 'et' est une conjonction de coordination."
+                },
+                {
+                    sentence: "Je [blank] vu ton frère hier.",
+                    options: ["l'ai", "lait", "laid"],
+                    answer: "l'ai",
+                    explanation: "'L'ai' est la contraction de 'le' et 'ai' (verbe avoir), 'lait' est un nom (boisson), et 'laid' est un adjectif (contraire de beau)."
+                },
+                {
+                    sentence: "Il faut que tu [blank] tes devoirs.",
+                    options: ["fait", "fais"],
+                    answer: "fais",
+                    explanation: "'Fais' est la forme conjuguée du verbe faire à la 2e personne du singulier, tandis que 'fait' est la forme à la 3e personne ou le participe passé."
+                }
+            ],
+            moyen: [
+                {
+                    sentence: "Cette [blank] est très belle.",
+                    options: ["scène", "seine", "saine"],
+                    answer: "scène",
+                    explanation: "'Scène' désigne un espace de théâtre ou une partie d'une pièce, 'seine' est un filet de pêche ou le nom d'un fleuve, et 'saine' est un adjectif qui signifie 'en bonne santé'."
+                },
+                {
+                    sentence: "Il a [blank] son examen avec succès.",
+                    options: ["passé", "passer", "passée"],
+                    answer: "passé",
+                    explanation: "'Passé' est le participe passé du verbe passer, 'passer' est l'infinitif, et 'passée' est la forme féminine du participe passé."
+                },
+                {
+                    sentence: "Le [blank] de cette maison est très élevé.",
+                    options: ["prix", "prie", "pris"],
+                    answer: "prix",
+                    explanation: "'Prix' est un nom qui désigne la valeur monétaire, 'prie' est une forme du verbe prier, et 'pris' est le participe passé du verbe prendre."
+                },
+                {
+                    sentence: "Je [blank] que tu viennes demain.",
+                    options: ["veux", "vœux"],
+                    answer: "veux",
+                    explanation: "'Veux' est une forme du verbe vouloir, tandis que 'vœux' est un nom pluriel qui désigne des souhaits."
+                },
+                {
+                    sentence: "Il a [blank] son chapeau sur la table.",
+                    options: ["posé", "pausé", "posée"],
+                    answer: "posé",
+                    explanation: "'Posé' est le participe passé du verbe poser, 'pausé' n'existe pas en français, et 'posée' est la forme féminine du participe passé."
+                },
+                {
+                    sentence: "La [blank] est un animal sauvage.",
+                    options: ["panthère", "panterre"],
+                    answer: "panthère",
+                    explanation: "'Panthère' est un félin sauvage, tandis que 'panterre' n'existe pas en français."
+                },
+                {
+                    sentence: "Il faut [blank] les règles du jeu.",
+                    options: ["respecter", "respecté"],
+                    answer: "respecter",
+                    explanation: "'Respecter' est l'infinitif du verbe, tandis que 'respecté' est le participe passé."
+                },
+                {
+                    sentence: "Le [blank] souffle fort aujourd'hui.",
+                    options: ["vent", "vend", "van"],
+                    answer: "vent",
+                    explanation: "'Vent' désigne un mouvement de l'air, 'vend' est une forme du verbe vendre, et 'van' est un outil agricole."
+                },
+                {
+                    sentence: "J'ai [blank] mon portefeuille.",
+                    options: ["perdu", "perdue", "perdus"],
+                    answer: "perdu",
+                    explanation: "'Perdu' est le participe passé masculin singulier du verbe perdre, 'perdue' est la forme féminine, et 'perdus' est la forme masculine plurielle."
+                },
+                {
+                    sentence: "Cette [blank] est délicieuse.",
+                    options: ["poire", "pois", "poireau"],
+                    answer: "poire",
+                    explanation: "'Poire' est un fruit, 'pois' est une légumineuse, et 'poireau' est un légume."
+                }
+            ],
+            difficile: [
+                {
+                    sentence: "Les [blank] de ce château sont magnifiques.",
+                    options: ["tours", "tour", "tourd"],
+                    answer: "tours",
+                    explanation: "'Tours' (pluriel de 'tour') désigne des constructions élevées, 'tour' est au singulier, et 'tourd' n'existe pas en français."
+                },
+                {
+                    sentence: "Il faut qu'il [blank] ses erreurs.",
+                    options: ["corrige", "corriges", "corrigent"],
+                    answer: "corrige",
+                    explanation: "'Corrige' est la forme conjuguée du verbe corriger à la 3e personne du singulier au subjonctif présent, 'corriges' est à la 2e personne, et 'corrigent' est à la 3e personne du pluriel."
+                },
+                {
+                    sentence: "Les [blank] de cette entreprise sont en hausse.",
+                    options: ["comptes", "contes", "comtes"],
+                    answer: "comptes",
+                    explanation: "'Comptes' désigne des documents financiers, 'contes' désigne des récits imaginaires, et 'comtes' désigne des titres de noblesse."
+                },
+                {
+                    sentence: "Il a [blank] toutes ses économies dans ce projet.",
+                    options: ["investi", "investit", "investie"],
+                    answer: "investi",
+                    explanation: "'Investi' est le participe passé du verbe investir, 'investit' est la forme conjuguée à la 3e personne du singulier au présent, et 'investie' est la forme féminine du participe passé."
+                },
+                {
+                    sentence: "Cette [blank] est très ancienne.",
+                    options: ["statue", "statut", "statu"],
+                    answer: "statue",
+                    explanation: "'Statue' est une sculpture représentant un personnage, 'statut' désigne une position légale ou sociale, et 'statu' n'existe pas seul en français (sauf dans l'expression 'statu quo')."
+                },
+                {
+                    sentence: "Je ne [blank] pas ce qu'il dit.",
+                    options: ["comprends", "comprend", "comprennes"],
+                    answer: "comprends",
+                    explanation: "'Comprends' est la forme conjuguée du verbe comprendre à la 1re personne du singulier, 'comprend' est à la 3e personne, et 'comprennes' est au subjonctif."
+                },
+                {
+                    sentence: "Les [blank] de ce pays sont très variés.",
+                    options: ["paysages", "passages", "passagers"],
+                    answer: "paysages",
+                    explanation: "'Paysages' désigne des étendues de pays, 'passages' désigne des lieux où l'on passe, et 'passagers' désigne des personnes qui voyagent."
+                },
+                {
+                    sentence: "Il [blank] ses vacances à la montagne.",
+                    options: ["passe", "pace", "pâsse"],
+                    answer: "passe",
+                    explanation: "'Passe' est une forme du verbe passer, 'pace' n'existe pas en français, et 'pâsse' n'existe pas non plus."
+                },
+                {
+                    sentence: "Cette [blank] est très difficile à résoudre.",
+                    options: ["énigme", "énigmes", "égnime"],
+                    answer: "énigme",
+                    explanation: "'Énigme' est un problème difficile à résoudre, 'énigmes' est le pluriel, et 'égnime' n'existe pas en français."
+                },
+                {
+                    sentence: "Le [blank] de cette histoire est surprenant.",
+                    options: ["dénouement", "dénouements", "dénoument"],
+                    answer: "dénouement",
+                    explanation: "'Dénouement' est la conclusion d'une histoire, 'dénouements' est le pluriel, et 'dénoument' est une orthographe incorrecte."
+                }
+            ]
+        };
+        
+        // Game variables
+        let currentSentenceIndex = 0;
+        let score = 0;
+        let totalSentences = 5;
+        let currentDifficulty = 'facile';
+        let sentences = [];
+        let playCount = 0;
+        let maxPlays = 3;
+        let speechSynthesisAvailable = false;
+        let selectedOption = null;
+        
+        // DOM elements
+        const playButton = document.getElementById('play-button');
+        const playCountDisplay = document.getElementById('play-count');
+        const maxPlaysDisplay = document.getElementById('max-plays');
+        const sentenceDisplay = document.getElementById('sentence-display');
+        const homonymOptions = document.getElementById('homonym-options');
+        const submitButton = document.getElementById('submit-button');
+        const resultContainer = document.getElementById('result-container');
+        const resultText = document.getElementById('result-text');
+        const explanation = document.getElementById('explanation');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalSentencesDisplay = document.getElementById('total-sentences');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const feedback = document.getElementById('feedback');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if speech synthesis is available
+            speechSynthesisAvailable = 'speechSynthesis' in window;
+            
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            
+            playButton.addEventListener('click', playSentence);
+            submitButton.addEventListener('click', checkAnswer);
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            currentSentenceIndex = 0;
+            score = 0;
+            
+            // Get sentences for the current difficulty
+            sentences = getRandomSentences(exerciseData[currentDifficulty], totalSentences);
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalSentencesDisplay.textContent = totalSentences;
+            progressBar.style.width = '0%';
+            
+            // Show first sentence
+            showSentence();
+        }
+        
+        // Get random sentences from the data
+        function getRandomSentences(data, count) {
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        // Show the current sentence
+        function showSentence() {
+            if (currentSentenceIndex >= sentences.length) {
+                endGame();
+                return;
+            }
+            
+            // Reset play count
+            playCount = 0;
+            playCountDisplay.textContent = playCount;
+            maxPlaysDisplay.textContent = maxPlays;
+            
+            // Reset selected option
+            selectedOption = null;
+            
+            // Hide result container and feedback
+            resultContainer.style.display = 'none';
+            feedback.style.display = 'none';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentSentenceIndex / totalSentences) * 100}%`;
+            
+            // Get current sentence data
+            const sentenceData = sentences[currentSentenceIndex];
+            
+            // Display sentence with blank
+            sentenceDisplay.innerHTML = sentenceData.sentence.replace('[blank]', '<span class="homonym-blank" id="homonym-blank"></span>');
+            
+            // Display homonym options
+            homonymOptions.innerHTML = '';
+            sentenceData.options.forEach(option => {
+                const optionButton = document.createElement('button');
+                optionButton.className = 'homonym-option';
+                optionButton.textContent = option;
+                optionButton.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.homonym-option').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Update selected option
+                    selectedOption = option;
+                    
+                    // Update blank with selected option
+                    document.getElementById('homonym-blank').textContent = option;
+                });
+                homonymOptions.appendChild(optionButton);
+            });
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextSentence);
+            submitButton.addEventListener('click', checkAnswer);
+        }
+        
+        // Play the current sentence
+        function playSentence() {
+            if (playCount >= maxPlays) {
+                alert('Vous avez atteint le nombre maximum d\'écoutes pour cette phrase.');
+                return;
+            }
+            
+            // Get current sentence data
+            const sentenceData = sentences[currentSentenceIndex];
+            
+            // Create full sentence with correct answer
+            const fullSentence = sentenceData.sentence.replace('[blank]', sentenceData.answer);
+            
+            if (speechSynthesisAvailable) {
+                const utterance = new SpeechSynthesisUtterance(fullSentence);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.9; // Slightly slower than normal
+                
+                window.speechSynthesis.speak(utterance);
+                
+                playCount++;
+                playCountDisplay.textContent = playCount;
+            } else {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici la phrase : ' + fullSentence);
+            }
+        }
+        
+        // Check the submitted answer
+        function checkAnswer() {
+            if (selectedOption === null) {
+                alert('Veuillez sélectionner une option.');
+                return;
+            }
+            
+            const sentenceData = sentences[currentSentenceIndex];
+            const isCorrect = selectedOption === sentenceData.answer;
+            
+            // Show feedback
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.textContent = isCorrect 
+                ? 'Bravo ! Votre réponse est correcte.' 
+                : 'Incorrect. La bonne réponse est : ' + sentenceData.answer;
+            feedback.style.display = 'block';
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+            }
+            
+            // Show result
+            resultText.innerHTML = `<strong>Phrase complète :</strong> ${sentenceData.sentence.replace('[blank]', '<strong>' + sentenceData.answer + '</strong>')}`;
+            explanation.textContent = sentenceData.explanation;
+            resultContainer.style.display = 'block';
+            
+            // Change submit button to next button
+            submitButton.textContent = 'Suivant';
+            submitButton.removeEventListener('click', checkAnswer);
+            submitButton.addEventListener('click', nextSentence);
+        }
+        
+        // Go to the next sentence
+        function nextSentence() {
+            currentSentenceIndex++;
+            showSentence();
+        }
+        
+        // End the game
+        function endGame() {
+            // Calculate score percentage
+            const scorePercentage = Math.round((score / totalSentences) * 100);
+            
+            // Determine message based on score
+            let message = '';
+            if (scorePercentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez très bien les homonymes.';
+            } else if (scorePercentage >= 70) {
+                message = 'Très bien ! Continuez à pratiquer pour vous améliorer.';
+            } else if (scorePercentage >= 50) {
+                message = 'Bien ! Avec un peu plus de pratique, vous progresserez rapidement.';
+            } else {
+                message = 'Continuez à pratiquer régulièrement pour améliorer votre maîtrise des homonymes.';
+            }
+            
+            // Create result element
+            const resultElement = document.createElement('div');
+            resultElement.className = 'dictation-container';
+            resultElement.innerHTML = `
+                <h2>Exercice terminé !</h2>
+                <p>Votre score : ${score}/${totalSentences} (${scorePercentage}%)</p>
+                <p>${message}</p>
+                <button class="submit-button" id="restart-button">
+                    Recommencer
+                </button>
+            `;
+            
+            // Add event listener to restart button
+            resultElement.querySelector('#restart-button').addEventListener('click', startNewGame);
+            
+            // Replace the dictation container with the result element
+            document.querySelector('.dictation-container').replaceWith(resultElement);
+            
+            // Update progress bar to show completion
+            progressBar.style.width = '100%';
+            
+            // Save progress
+            saveProgress();
+        }
+        
+        // Function to get French voice for speech synthesis
+        function getFrenchVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            // Try to find a French voice
+            return voices.find(voice => voice.lang.includes('fr')) || voices[0];
+        }
+        
+        // Function to save user progress
+        function saveProgress() {
+            const progress = {
+                difficulty: currentDifficulty,
+                score: score,
+                totalSentences: totalSentences,
+                lastPlayed: new Date().toISOString()
+            };
+            
+            try {
+                localStorage.setItem('dicteeHomonymesProgress', JSON.stringify(progress));
+            } catch (e) {
+                console.error('Could not save progress: ', e);
+            }
+        }
+        
+        // Function to load user progress
+        function loadProgress() {
+            try {
+                const progress = JSON.parse(localStorage.getItem('dicteeHomonymesProgress'));
+                if (progress) {
+                    // Only load difficulty from saved progress
+                    difficultySelect.value = progress.difficulty;
+                    currentDifficulty = progress.difficulty;
+                    return true;
+                }
+            } catch (e) {
+                console.error('Could not load progress: ', e);
+            }
+            return false;
+        }
+        
+        // Add event listener to save progress when leaving the page
+        window.addEventListener('beforeunload', saveProgress);
+        
+        // Load voices when available
+        if (speechSynthesisAvailable) {
+            if (window.speechSynthesis.getVoices().length > 0) {
+                getFrenchVoice();
+            } else {
+                window.speechSynthesis.onvoiceschanged = getFrenchVoice;
+            }
+        }
+        
+        // Enhanced play sentence function with error handling
+        function enhancedPlaySentence() {
+            if (playCount >= maxPlays) {
+                alert('Vous avez atteint le nombre maximum d\'écoutes pour cette phrase.');
+                return;
+            }
+            
+            const sentenceData = sentences[currentSentenceIndex];
+            const fullSentence = sentenceData.sentence.replace('[blank]', sentenceData.answer);
+            
+            if (speechSynthesisAvailable) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(fullSentence);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.9; // Slightly slower than normal
+                
+                // Get French voice
+                const frenchVoice = getFrenchVoice();
+                if (frenchVoice) {
+                    utterance.voice = frenchVoice;
+                }
+                
+                // Add error handling
+                utterance.onerror = function() {
+                    alert('Il y a eu un problème avec la synthèse vocale. Veuillez réessayer ou vérifier les paramètres de votre navigateur.');
+                    playCount--; // Don't count failed attempts
+                    playCountDisplay.textContent = playCount;
+                };
+                
+                // Visual feedback during playback
+                playButton.innerHTML = '<i class="fas fa-pause"></i>';
+                playButton.classList.add('playing');
+                
+                utterance.onend = function() {
+                    playButton.innerHTML = '<i class="fas fa-play"></i>';
+                    playButton.classList.remove('playing');
+                };
+                
+                window.speechSynthesis.speak(utterance);
+                
+                playCount++;
+                playCountDisplay.textContent = playCount;
+            } else {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici la phrase : ' + fullSentence);
+            }
+        }
+        
+        // Replace simple playSentence with enhanced version
+        playButton.removeEventListener('click', playSentence);
+        playButton.addEventListener('click', enhancedPlaySentence);
+        
+        // Function to adjust difficulty based on user performance
+        function adjustDifficulty() {
+            const scorePercentage = (score / totalSentences) * 100;
+            
+            if (scorePercentage >= 90 && currentDifficulty !== 'difficile') {
+                // Suggest increasing difficulty
+                if (confirm('Excellent ! Voulez-vous essayer un niveau plus difficile ?')) {
+                    if (currentDifficulty === 'facile') {
+                        currentDifficulty = 'moyen';
+                    } else if (currentDifficulty === 'moyen') {
+                        currentDifficulty = 'difficile';
+                    }
+                    difficultySelect.value = currentDifficulty;
+                }
+            } else if (scorePercentage <= 30 && currentDifficulty !== 'facile') {
+                // Suggest decreasing difficulty
+                if (confirm('Cet exercice semble difficile. Voulez-vous essayer un niveau plus facile ?')) {
+                    if (currentDifficulty === 'difficile') {
+                        currentDifficulty = 'moyen';
+                    } else if (currentDifficulty === 'moyen') {
+                        currentDifficulty = 'facile';
+                    }
+                    difficultySelect.value = currentDifficulty;
+                }
+            }
+        }
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Space bar to play audio
+            if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
+                e.preventDefault();
+                enhancedPlaySentence();
+            }
+            
+            // Enter to check answer or go to next sentence
+            if (e.code === 'Enter' && !e.target.matches('input, textarea')) {
+                e.preventDefault();
+                if (submitButton.textContent === 'Vérifier') {
+                    checkAnswer();
+                } else if (submitButton.textContent === 'Suivant') {
+                    nextSentence();
+                }
+            }
+            
+            // Number keys 1-9 to select options
+            if (e.code.startsWith('Digit') && !e.target.matches('input, textarea')) {
+                const digit = parseInt(e.code.replace('Digit', ''));
+                const options = document.querySelectorAll('.homonym-option');
+                if (digit > 0 && digit <= options.length) {
+                    options[digit - 1].click();
+                }
+            }
+        });
+        
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if speech synthesis is available
+            speechSynthesisAvailable = 'speechSynthesis' in window;
+            
+            // Load saved progress
+            loadProgress();
+            
+            // Start a new game
+            startNewGame();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homonymes - Vocabulaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #e74c3c;
+            --current-color-dark: #c0392b;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .question-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .option.selected {
+            border-color: var(--current-color);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .explanation-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--current-color-dark);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .hint-button {
+            background: none;
+            border: none;
+            color: var(--current-color);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
+        
+        .hint-button:hover {
+            color: var(--current-color-dark);
+        }
+        
+        .hint-text {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
+            display: none;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .homonym-example {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-style: italic;
+        }
+        
+        .homonym-pair {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .homonym-pair h4 {
+            color: var(--current-color-dark);
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .homonym-word {
+            font-weight: 700;
+            color: var(--current-color);
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .difficulty-selector {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour au Vocabulaire
+            </a>
+            <h1>Les Homonymes</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-questions">10</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="question-container">
+                    <div class="question" id="question-text">
+                        <!-- Question will be displayed here -->
+                    </div>
+                    <div class="options-container" id="options-container">
+                        <!-- Options will be displayed here -->
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                    <button class="hint-button" id="hint-button">Indice</button>
+                    <div class="hint-text" id="hint-text">
+                        <!-- Hint will be displayed here -->
+                    </div>
+                    <div class="explanation" id="explanation">
+                        <div class="explanation-title">Explication:</div>
+                        <div id="explanation-text">
+                            <!-- Explanation will be displayed here -->
+                        </div>
+                    </div>
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Les Homonymes</h3>
+                <p>Les homonymes sont des mots qui se prononcent de la même façon mais qui ont des significations différentes. Ils peuvent avoir la même orthographe (homonymes parfaits) ou des orthographes différentes (homophones).</p>
+                
+                <h4>Exemples d'homonymes :</h4>
+                
+                <div class="homonym-pair">
+                    <h4>mer / mère / maire</h4>
+                    <p><span class="homonym-word">mer</span> : étendue d'eau salée</p>
+                    <div class="homonym-example">Nous allons à la <span class="homonym-word">mer</span> cet été.</div>
+                    
+                    <p><span class="homonym-word">mère</span> : femme qui a donné naissance à un enfant</p>
+                    <div class="homonym-example">Ma <span class="homonym-word">mère</span> prépare un gâteau.</div>
+                    
+                    <p><span class="homonym-word">maire</span> : personne à la tête d'une municipalité</p>
+                    <div class="homonym-example">Le <span class="homonym-word">maire</span> de la ville a inauguré le nouveau parc.</div>
+                </div>
+                
+                <div class="homonym-pair">
+                    <h4>vers / verre / vert</h4>
+                    <p><span class="homonym-word">vers</span> : direction, ou petit animal, ou type de poésie</p>
+                    <div class="homonym-example">Je me dirige <span class="homonym-word">vers</span> la maison.</div>
+                    
+                    <p><span class="homonym-word">verre</span> : matériau transparent ou récipient pour boire</p>
+                    <div class="homonym-example">J'ai cassé un <span class="homonym-word">verre</span> en faisant la vaisselle.</div>
+                    
+                    <p><span class="homonym-word">vert</span> : couleur</p>
+                    <div class="homonym-example">J'aime porter des vêtements <span class="homonym-word">verts</span>.</div>
+                </div>
+                
+                <div class="homonym-pair">
+                    <h4>sot / seau</h4>
+                    <p><span class="homonym-word">sot</span> : personne stupide</p>
+                    <div class="homonym-example">Il ne faut pas être <span class="homonym-word">sot</span> pour comprendre cette leçon.</div>
+                    
+                    <p><span class="homonym-word">seau</span> : récipient cylindrique avec une anse</p>
+                    <div class="homonym-example">J'ai rempli le <span class="homonym-word">seau</span> d'eau.</div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <!-- This is continuing the script section from the previous code -->
+    <script>
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    question: "Choisissez le bon homonyme : Je vais à la _____ ce weekend.",
+                    options: ["mer", "mère", "maire"],
+                    answer: "mer",
+                    explanation: "Dans ce contexte, 'mer' est correct car il s'agit d'un lieu où l'on peut aller. 'Mer' désigne une étendue d'eau salée, 'mère' est une femme qui a des enfants, et 'maire' est le chef d'une municipalité.",
+                    hint: "C'est un endroit où l'on peut nager."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Mon _____ est cassé, je ne peux pas boire.",
+                    options: ["verre", "ver", "vert", "vers"],
+                    answer: "verre",
+                    explanation: "'Verre' est un récipient pour boire. 'Ver' est un petit animal, 'vert' est une couleur, et 'vers' peut être une préposition de direction ou un type de poésie.",
+                    hint: "C'est un objet dans lequel on boit."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Il a _____ son chapeau sur la table.",
+                    options: ["posé", "pausé"],
+                    answer: "posé",
+                    explanation: "'Posé' signifie placer quelque chose quelque part. 'Pausé' n'existe pas en français standard (on utilise 'faire une pause').",
+                    hint: "Ce mot vient du verbe 'poser'."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Le _____ souffle fort aujourd'hui.",
+                    options: ["vent", "vend", "van"],
+                    answer: "vent",
+                    explanation: "'Vent' désigne le mouvement de l'air. 'Vend' est une forme du verbe vendre, et 'van' est un outil agricole ou un type de véhicule.",
+                    hint: "C'est un phénomène météorologique."
+                },
+                {
+                    question: "Choisissez le bon homonyme : J'ai mal au _____.",
+                    options: ["poing", "point"],
+                    answer: "poing",
+                    explanation: "'Poing' désigne la main fermée. 'Point' peut être un signe de ponctuation, un lieu précis, ou la négation.",
+                    hint: "C'est une partie du corps."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Cette _____ est délicieuse.",
+                    options: ["poire", "poire", "poire"],
+                    answer: "poire",
+                    explanation: "'Poire' est un fruit. Les trois options sont identiques pour montrer qu'il n'y a pas d'homonyme courant pour ce mot.",
+                    hint: "C'est un fruit."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Le _____ de la ville a fait un discours.",
+                    options: ["maire", "mer", "mère"],
+                    answer: "maire",
+                    explanation: "'Maire' est la personne à la tête d'une municipalité. 'Mer' est une étendue d'eau salée, et 'mère' est une femme qui a des enfants.",
+                    hint: "C'est une personne élue."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Il faut _____ les ingrédients avant de cuisiner.",
+                    options: ["peser", "pesée"],
+                    answer: "peser",
+                    explanation: "'Peser' est le verbe qui signifie déterminer le poids. 'Pesée' est le nom qui désigne l'action de peser.",
+                    hint: "C'est un verbe à l'infinitif."
+                },
+                {
+                    question: "Choisissez le bon homonyme : J'ai acheté un nouveau _____.",
+                    options: ["compte", "comte", "conte"],
+                    answer: "compte",
+                    explanation: "Dans ce contexte, 'compte' (bancaire) est le plus probable. 'Comte' est un titre de noblesse, et 'conte' est une histoire fictive.",
+                    hint: "C'est lié à la banque."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Le chat a mangé une _____.",
+                    options: ["souris", "sourire", "sourit"],
+                    answer: "souris",
+                    explanation: "'Souris' est un petit rongeur que les chats chassent. 'Sourire' est un nom désignant l'expression faciale, et 'sourit' est une forme conjuguée du verbe sourire.",
+                    hint: "C'est un animal."
+                }
+            ],
+            moyen: [
+                {
+                    question: "Choisissez le bon homonyme : Il a _____ son appartement à un étudiant.",
+                    options: ["loué", "louer", "louait"],
+                    answer: "loué",
+                    explanation: "'Loué' est le participe passé du verbe louer, qui convient dans cette phrase au passé composé. 'Louer' est l'infinitif, et 'louait' est à l'imparfait.",
+                    hint: "La phrase est au passé composé."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Le _____ est un animal sauvage.",
+                    options: ["cerf", "serre", "sert"],
+                    answer: "cerf",
+                    explanation: "'Cerf' est un animal sauvage. 'Serre' peut être une installation pour cultiver des plantes ou une partie du corps des oiseaux, et 'sert' est une forme du verbe servir.",
+                    hint: "C'est un animal avec des bois."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Je ne _____ pas ce que tu dis.",
+                    options: ["comprends", "comprend", "comprenne"],
+                    answer: "comprends",
+                    explanation: "'Comprends' est la forme correcte du verbe comprendre à la première personne du singulier au présent. 'Comprend' est à la troisième personne, et 'comprenne' est au subjonctif.",
+                    hint: "C'est la conjugaison correcte pour 'je'."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Il faut tourner à _____ au prochain carrefour.",
+                    options: ["droite", "droit"],
+                    answer: "droite",
+                    explanation: "'Droite' est la direction opposée à gauche. 'Droit' peut être un adjectif ou un nom désignant une règle juridique.",
+                    hint: "C'est une direction."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Le _____ de cette histoire est surprenant.",
+                    options: ["cours", "court", "courre"],
+                    answer: "cours",
+                    explanation: "Dans ce contexte, 'cours' signifie le déroulement. 'Court' est un adjectif qui signifie de petite longueur, et 'courre' est une forme ancienne du verbe courir.",
+                    hint: "Il s'agit du déroulement de l'histoire."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Cette _____ est très ancienne.",
+                    options: ["statue", "statut", "statuent"],
+                    answer: "statue",
+                    explanation: "'Statue' est une sculpture représentant un personnage. 'Statut' désigne la position légale ou sociale, et 'statuent' est une forme du verbe statuer.",
+                    hint: "C'est une œuvre d'art."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Il a _____ son adversaire au tennis.",
+                    options: ["battu", "battue", "batte"],
+                    answer: "battu",
+                    explanation: "'Battu' est le participe passé masculin du verbe battre. 'Battue' est le féminin, et 'batte' est un instrument pour frapper.",
+                    hint: "C'est le participe passé qui s'accorde avec 'il'."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Le _____ est un animal marin.",
+                    options: ["phoque", "foc", "foque"],
+                    answer: "phoque",
+                    explanation: "'Phoque' est un mammifère marin. 'Foc' est un type de voile sur un bateau.",
+                    hint: "C'est un animal qui vit dans l'eau."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Je vais _____ mes amis ce soir.",
+                    options: ["voir", "voire", "voix"],
+                    answer: "voir",
+                    explanation: "'Voir' est le verbe qui signifie percevoir par la vue ou rencontrer. 'Voire' est un adverbe qui signifie 'et même', et 'voix' est un son produit par les cordes vocales.",
+                    hint: "C'est un verbe qui signifie rencontrer."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Il a perdu son _____ de crédit.",
+                    options: ["compte", "comte", "conte"],
+                    answer: "compte",
+                    explanation: "'Compte' désigne un service bancaire. 'Comte' est un titre de noblesse, et 'conte' est une histoire fictive.",
+                    hint: "C'est lié à la banque."
+                }
+            ],
+            difficile: [
+                {
+                    question: "Choisissez le bon homonyme : Les _____ de cette entreprise sont très élevés.",
+                    options: ["bénéfices", "bénéficient", "bénéficier"],
+                    answer: "bénéfices",
+                    explanation: "'Bénéfices' est le nom qui désigne les gains financiers. 'Bénéficient' est une forme conjuguée du verbe bénéficier, et 'bénéficier' est l'infinitif.",
+                    hint: "C'est un nom qui désigne les profits."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Il a _____ son opinion sur le sujet.",
+                    options: ["émis", "émit", "émi"],
+                    answer: "émis",
+                    explanation: "'Émis' est le participe passé du verbe émettre. 'Émit' est la forme du passé simple à la troisième personne, et 'émi' n'existe pas.",
+                    hint: "C'est le participe passé du verbe émettre."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Le _____ de ce roman est complexe.",
+                    options: ["fil", "file", "fils"],
+                    answer: "fil",
+                    explanation: "Dans ce contexte, 'fil' désigne le déroulement, la trame. 'File' peut être une rangée de personnes ou une forme du verbe filer, et 'fils' est un enfant de sexe masculin.",
+                    hint: "Il s'agit de la trame narrative."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Cette décision _____ à tous les employés.",
+                    options: ["s'applique", "s'appliquent", "s'appliqua"],
+                    answer: "s'applique",
+                    explanation: "'S'applique' est la forme correcte du verbe s'appliquer à la troisième personne du singulier au présent. 'S'appliquent' est au pluriel, et 's'appliqua' est au passé simple.",
+                    hint: "Le sujet 'décision' est singulier."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Il a atteint son _____.",
+                    options: ["but", "bue", "bu"],
+                    answer: "but",
+                    explanation: "'But' désigne un objectif. 'Bue' et 'bu' sont des formes du participe passé du verbe boire.",
+                    hint: "C'est un objectif à atteindre."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Les _____ de ce pays sont très variés.",
+                    options: ["mœurs", "meurs", "meurt"],
+                    answer: "mœurs",
+                    explanation: "'Mœurs' désigne les habitudes et coutumes d'une société. 'Meurs' et 'meurt' sont des formes du verbe mourir.",
+                    hint: "Ce sont les coutumes et habitudes d'une société."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Il faut _____ cette lettre rapidement.",
+                    options: ["expédier", "expédiez", "expédié"],
+                    answer: "expédier",
+                    explanation: "'Expédier' est l'infinitif du verbe, qui convient après 'il faut'. 'Expédiez' est à l'impératif ou à la deuxième personne du pluriel, et 'expédié' est le participe passé.",
+                    hint: "Après 'il faut', on utilise l'infinitif."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Le _____ de ce médicament est efficace.",
+                    options: ["principe", "prince", "princes"],
+                    answer: "principe",
+                    explanation: "'Principe' désigne un élément fondamental ou une règle de base. 'Prince' est un titre de noblesse, et 'princes' est son pluriel.",
+                    hint: "C'est un élément fondamental."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Cette _____ est très importante pour l'avenir.",
+                    options: ["décision", "décisions", "décisionnaire"],
+                    answer: "décision",
+                    explanation: "'Décision' est le choix qui est fait. 'Décisions' est le pluriel, et 'décisionnaire' est la personne qui prend les décisions.",
+                    hint: "C'est un choix singulier."
+                },
+                {
+                    question: "Choisissez le bon homonyme : Les _____ de ce projet sont considérables.",
+                    options: ["enjeux", "en jeux", "en jeu"],
+                    answer: "enjeux",
+                    explanation: "'Enjeux' désigne ce qui peut être gagné ou perdu. 'En jeux' serait incorrect, et 'en jeu' est au singulier.",
+                    hint: "Ce sont les risques ou les bénéfices potentiels."
+                }
+            ]
+        };
+        
+        // Game variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = 10;
+        let currentDifficulty = 'facile';
+        let questions = [];
+        let selectedOption = null;
+        
+        // DOM elements
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const submitButton = document.getElementById('submit-button');
+        const explanation = document.getElementById('explanation');
+        const explanationText = document.getElementById('explanation-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const hintButton = document.getElementById('hint-button');
+        const hintText = document.getElementById('hint-text');
+        const feedback = document.getElementById('feedback');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            submitButton.addEventListener('click', checkAnswer);
+            hintButton.addEventListener('click', showHint);
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedOption = null;
+            
+            // Get questions for the current difficulty
+            questions = getRandomQuestions(exerciseData[currentDifficulty], totalQuestions);
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalQuestionsDisplay.textContent = totalQuestions;
+            progressBar.style.width = '0%';
+            
+            // Show first question
+            showQuestion();
+        }
+        
+        // Get random questions from the data
+        function getRandomQuestions(data, count) {
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        // Show the current question
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            selectedOption = null;
+            
+            // Update question text
+            questionText.textContent = question.question;
+            
+            // Create options
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.dataset.value = option;
+                optionElement.addEventListener('click', selectOption);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Hide explanation and feedback
+            explanation.style.display = 'none';
+            feedback.style.display = 'none';
+            
+            // Hide hint
+            hintText.style.display = 'none';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentQuestionIndex / totalQuestions) * 100}%`;
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextQuestion);
+            submitButton.addEventListener('click', checkAnswer);
+        }
+        
+        // Handle option selection
+        function selectOption(e) {
+            // Remove selected class from all options
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            e.target.classList.add('selected');
+            
+            // Store selected option
+            selectedOption = e.target.dataset.value;
+        }
+        
+        // Check the submitted answer
+        function checkAnswer() {
+            if (!selectedOption) {
+                alert('Veuillez sélectionner une réponse.');
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedOption === question.answer;
+            
+            // Show feedback
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.textContent = isCorrect 
+                ? 'Correct ! Bien joué !' 
+                : `Incorrect. La bonne réponse est "${question.answer}".`;
+            feedback.style.display = 'block';
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+            }
+            
+            // Show explanation
+            explanationText.textContent = question.explanation;
+            explanation.style.display = 'block';
+            
+            // Disable option selection
+            document.querySelectorAll('.option').forEach(option => {
+                option.removeEventListener('click', selectOption);
+                
+                // Highlight correct answer
+                if (option.dataset.value === question.answer) {
+                    option.style.borderColor = '#27ae60';
+                    option.style.backgroundColor = 'rgba(46, 204, 113, 0.1)';
+                }
+                // If this was selected but incorrect
+                else if (option.dataset.value === selectedOption && !isCorrect) {
+                    option.style.borderColor = '#c0392b';
+                    option.style.backgroundColor = 'rgba(231, 76, 60, 0.1)';
+                }
+            });
+            
+            // Change submit button to next button
+            submitButton.textContent = 'Question Suivante';
+            submitButton.removeEventListener('click', checkAnswer);
+            submitButton.addEventListener('click', nextQuestion);
+        }
+        
+        // Show hint for the current question
+        function showHint() {
+            const question = questions[currentQuestionIndex];
+            hintText.textContent = question.hint;
+            hintText.style.display = 'block';
+        }
+        
+        // Move to the next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            // Show next question
+            showQuestion();
+        }
+        
+        // End the game
+        function endGame() {
+            // Clear the question container
+            questionText.textContent = '';
+            optionsContainer.innerHTML = '';
+            hintButton.style.display = 'none';
+            submitButton.style.display = 'none';
+            
+            // Show final score
+            const scorePercentage = (score / totalQuestions) * 100;
+            let message = '';
+            
+            if (scorePercentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez très bien les homonymes.';
+            } else if (scorePercentage >= 70) {
+                message = 'Très bien ! Vous avez une bonne compréhension des homonymes.';
+            } else if (scorePercentage >= 50) {
+                message = 'Bien ! Continuez à pratiquer pour améliorer votre maîtrise des homonymes.';
+            } else {
+                message = 'Continuez à pratiquer ! Les homonymes français peuvent être difficiles.';
+            }
+            
+            // Create result message
+            const resultElement = document.createElement('div');
+            resultElement.innerHTML = `
+                <h2>Exercice terminé !</h2>
+                <p>Votre score : ${score}/${totalQuestions} (${scorePercentage}%)</p>
+                <p>${message}</p>
+                <button class="submit-button" onclick="startNewGame()">Recommencer</button>
+            `;
+            
+            questionText.parentNode.appendChild(resultElement);
+            
+            // Update progress bar to 100%
+            progressBar.style.width = '100%';
+        }
+    </script>
