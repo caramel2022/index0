@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeux de Lettres - Français</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-button:hover {
+            background-color: #357abd;
+        }
+        
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .game-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .game-card.anagrammes {
+            background-color: #4a90e2;
+        }
+        
+        .game-card.mots-meles {
+            background-color: #2ecc71;
+        }
+        
+        .game-card.mots-croises {
+            background-color: #9b59b6;
+        }
+        
+        .game-icon {
+            text-align: center;
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+        }
+        
+        .game-title {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+        .game-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            text-align: center;
+            padding: 0 15px 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .games-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .games-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-button">← Retour à l'accueil</a>
+    
+    <header>
+        <h1>Jeux de Lettres</h1>
+        <p class="subtitle">Formez des mots et enrichissez votre vocabulaire</p>
+    </header>
+    
+    <div class="games-container">
+        <a href="scrabble.html" class="game-card anagrammes">
+            <div class="game-icon">
+                <span>🟦</span>
+            </div>
+            <div class="game-title">Scrabble</div>
+            <div class="game-description">Formez des mots sur le plateau pour marquer des points</div>
+        </a>
+        
+        <a href="pendule.html" class="game-card mots-meles">
+            <div class="game-icon">
+                <span>🔔</span>
+            </div>
+            <div class="game-title">Pendule</div>
+            <div class="game-description">Devinez le mot avant que le pendule ne tombe</div>
+        </a>
+        
+        <a href="mots-croises.html" class="game-card mots-croises">
+            <div class="game-icon">
+                <span>📝</span>
+            </div>
+            <div class="game-title">Mots Croisés</div>
+            <div class="game-description">Complétez la grille en trouvant les mots correspondant aux définitions</div>
+        </a>
+        
+        <a href="anagrammes.html" class="game-card anagrammes">
+            <div class="game-icon">
+                <span>🔤</span>
+            </div>
+            <div class="game-title">Anagrammes</div>
+            <div class="game-description">Réorganisez les lettres pour former des mots corrects</div>
+        </a>
+        
+        <a href="mots-meles.html" class="game-card mots-meles">
+            <div class="game-icon">
+                <span>🔍</span>
+            </div>
+            <div class="game-title">Mots Mêlés</div>
+            <div class="game-description">Trouvez les mots cachés dans une grille de lettres</div>
+        </a>
+    </div>
+</body>
+</html>

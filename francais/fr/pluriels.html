@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Pluriels - Orthographe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #3498db;
+            --current-color-dark: #2980b9;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .question-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .input-container {
+            margin-bottom: 20px;
+        }
+        
+        .plural-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .plural-input:focus {
+            outline: none;
+            border-color: var(--current-color);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .explanation-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--current-color-dark);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .hint-button {
+            background: none;
+            border: none;
+            color: var(--current-color);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
+        
+        .hint-button:hover {
+            color: var(--current-color-dark);
+        }
+        
+        .hint-text {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
+            display: none;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .rule-example {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            margin: 2px;
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .difficulty-selector {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à l'Orthographe
+            </a>
+            <h1>Les Pluriels</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-questions">10</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="question-container">
+                    <div class="question" id="question-text">
+                        <!-- Question will be displayed here -->
+                    </div>
+                    <div class="input-container">
+                        <input type="text" class="plural-input" id="plural-input" placeholder="Entrez le pluriel du mot">
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                    <button class="hint-button" id="hint-button">Indice</button>
+                    <div class="hint-text" id="hint-text">
+                        <!-- Hint will be displayed here -->
+                    </div>
+                    <div class="explanation" id="explanation">
+                        <div class="explanation-title">Explication:</div>
+                        <div id="explanation-text">
+                            <!-- Explanation will be displayed here -->
+                        </div>
+                    </div>
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Les Règles du Pluriel en Français</h3>
+                <p>En français, la formation du pluriel suit plusieurs règles selon la terminaison du mot au singulier :</p>
+                
+                <h4>1. Règle générale</h4>
+                <p>On ajoute un "s" à la fin du mot.</p>
+                <p>Exemples : <span class="rule-example">un livre → des livres</span>, <span class="rule-example">une table → des tables</span></p>
+                
+                <h4>2. Mots se terminant par -s, -x, -z</h4>
+                <p>Ces mots restent invariables au pluriel (ils ne changent pas).</p>
+                <p>Exemples : <span class="rule-example">un fils → des fils</span>, <span class="rule-example">une voix → des voix</span>, <span class="rule-example">un nez → des nez</span></p>
+                
+                <h4>3. Mots se terminant par -au, -eau, -eu</h4>
+                <p>On ajoute un "x" à la fin du mot.</p>
+                <p>Exemples : <span class="rule-example">un bateau → des bateaux</span>, <span class="rule-example">un jeu → des jeux</span></p>
+                <p>Exceptions : <span class="rule-example">un pneu → des pneus</span>, <span class="rule-example">un bleu → des bleus</span></p>
+                
+                <h4>4. Mots se terminant par -al</h4>
+                <p>La plupart se transforment en "-aux".</p>
+                <p>Exemples : <span class="rule-example">un journal → des journaux</span>, <span class="rule-example">un animal → des animaux</span></p>
+                <p>Exceptions : <span class="rule-example">un bal → des bals</span>, <span class="rule-example">un festival → des festivals</span></p>
+                
+                <h4>5. Mots se terminant par -ou</h4>
+                <p>On ajoute généralement un "s".</p>
+                <p>Exemples : <span class="rule-example">un trou → des trous</span>, <span class="rule-example">un clou → des clous</span></p>
+                <p>Exceptions (qui prennent un "x") : <span class="rule-example">bijou, caillou, chou, genou, hibou, joujou, pou</span></p>
+                
+                <h4>6. Mots se terminant par -ail</h4>
+                <p>On ajoute généralement un "s".</p>
+                <p>Exemples : <span class="rule-example">un détail → des détails</span>, <span class="rule-example">un portail → des portails</span></p>
+                <p>Exceptions (qui deviennent "-aux") : <span class="rule-example">bail, corail, émail, soupirail, travail, vitrail</span></p>
+                
+                <h4>7. Cas particuliers</h4>
+                <p>Certains mots ont des pluriels irréguliers :</p>
+                <p><span class="rule-example">œil → yeux</span>, <span class="rule-example">ciel → cieux</span>, <span class="rule-example">monsieur → messieurs</span>, <span class="rule-example">madame → mesdames</span></p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    question: "Quel est le pluriel de 'livre' ?",
+                    answer: "livres",
+                    explanation: "On ajoute un 's' à la fin du mot selon la règle générale du pluriel.",
+                    hint: "Appliquez la règle générale du pluriel."
+                },
+                {
+                    question: "Quel est le pluriel de 'table' ?",
+                    answer: "tables",
+                    explanation: "On ajoute un 's' à la fin du mot selon la règle générale du pluriel.",
+                    hint: "Appliquez la règle générale du pluriel."
+                },
+                {
+                    question: "Quel est le pluriel de 'maison' ?",
+                    answer: "maisons",
+                    explanation: "On ajoute un 's' à la fin du mot selon la règle générale du pluriel.",
+                    hint: "Appliquez la règle générale du pluriel."
+                },
+                {
+                    question: "Quel est le pluriel de 'fils' ?",
+                    answer: "fils",
+                    explanation: "Les mots qui se terminent par -s, -x ou -z ne changent pas au pluriel.",
+                    hint: "Ce mot se termine déjà par 's'."
+                },
+                {
+                    question: "Quel est le pluriel de 'nez' ?",
+                    answer: "nez",
+                    explanation: "Les mots qui se terminent par -s, -x ou -z ne changent pas au pluriel.",
+                    hint: "Ce mot se termine déjà par 'z'."
+                },
+                {
+                    question: "Quel est le pluriel de 'voix' ?",
+                    answer: "voix",
+                    explanation: "Les mots qui se terminent par -s, -x ou -z ne changent pas au pluriel.",
+                    hint: "Ce mot se termine déjà par 'x'."
+                },
+                {
+                    question: "Quel est le pluriel de 'bateau' ?",
+                    answer: "bateaux",
+                    explanation: "Les mots qui se terminent par -eau prennent un 'x' au pluriel.",
+                    hint: "Les mots en -eau prennent un 'x' au pluriel."
+                },
+                {
+                    question: "Quel est le pluriel de 'jeu' ?",
+                    answer: "jeux",
+                    explanation: "Les mots qui se terminent par -eu prennent généralement un 'x' au pluriel.",
+                    hint: "Les mots en -eu prennent généralement un 'x' au pluriel."
+                },
+                {
+                    question: "Quel est le pluriel de 'chapeau' ?",
+                    answer: "chapeaux",
+                    explanation: "Les mots qui se terminent par -eau prennent un 'x' au pluriel.",
+                    hint: "Les mots en -eau prennent un 'x' au pluriel."
+                },
+                {
+                    question: "Quel est le pluriel de 'trou' ?",
+                    answer: "trous",
+                    explanation: "Les mots qui se terminent par -ou prennent généralement un 's' au pluriel.",
+                    hint: "La plupart des mots en -ou prennent un 's' au pluriel."
+                }
+            ],
+            moyen: [
+                {
+                    question: "Quel est le pluriel de 'journal' ?",
+                    answer: "journaux",
+                    explanation: "Les mots qui se terminent par -al se transforment généralement en -aux au pluriel.",
+                    hint: "Les mots en -al se transforment généralement en -aux."
+                },
+                {
+                    question: "Quel est le pluriel de 'animal' ?",
+                    answer: "animaux",
+                    explanation: "Les mots qui se terminent par -al se transforment généralement en -aux au pluriel.",
+                    hint: "Les mots en -al se transforment généralement en -aux."
+                },
+                {
+                    question: "Quel est le pluriel de 'festival' ?",
+                    answer: "festivals",
+                    explanation: "C'est une exception à la règle des mots en -al. 'Festival' prend simplement un 's' au pluriel.",
+                    hint: "C'est une exception à la règle des mots en -al."
+                },
+                {
+                    question: "Quel est le pluriel de 'bijou' ?",
+                    answer: "bijoux",
+                    explanation: "C'est l'une des sept exceptions des mots en -ou qui prennent un 'x' au pluriel (bijou, caillou, chou, genou, hibou, joujou, pou).",
+                    hint: "C'est l'une des exceptions des mots en -ou qui prennent un 'x'."
+                },
+                {
+                    question: "Quel est le pluriel de 'genou' ?",
+                    answer: "genoux",
+                    explanation: "C'est l'une des sept exceptions des mots en -ou qui prennent un 'x' au pluriel (bijou, caillou, chou, genou, hibou, joujou, pou).",
+                    hint: "C'est l'une des exceptions des mots en -ou qui prennent un 'x'."
+                },
+                {
+                    question: "Quel est le pluriel de 'détail' ?",
+                    answer: "détails",
+                    explanation: "La plupart des mots en -ail prennent un 's' au pluriel.",
+                    hint: "La plupart des mots en -ail prennent un 's' au pluriel."
+                },
+                {
+                    question: "Quel est le pluriel de 'travail' ?",
+                    answer: "travaux",
+                    explanation: "C'est l'une des exceptions des mots en -ail qui se transforment en -aux au pluriel.",
+                    hint: "C'est l'une des exceptions des mots en -ail."
+                },
+                {
+                    question: "Quel est le pluriel de 'pneu' ?",
+                    answer: "pneus",
+                    explanation: "C'est une exception à la règle des mots en -eu. 'Pneu' prend un 's' au pluriel et non un 'x'.",
+                    hint: "C'est une exception à la règle des mots en -eu."
+                },
+                {
+                    question: "Quel est le pluriel de 'bal' ?",
+                    answer: "bals",
+                    explanation: "C'est une exception à la règle des mots en -al. 'Bal' prend simplement un 's' au pluriel.",
+                    hint: "C'est une exception à la règle des mots en -al."
+                },
+                {
+                    question: "Quel est le pluriel de 'cheval' ?",
+                    answer: "chevaux",
+                    explanation: "Les mots qui se terminent par -al se transforment généralement en -aux au pluriel.",
+                    hint: "Les mots en -al se transforment généralement en -aux."
+                }
+            ],
+            difficile: [
+                {
+                    question: "Quel est le pluriel de 'œil' ?",
+                    answer: "yeux",
+                    explanation: "C'est un pluriel irrégulier. 'Œil' devient 'yeux' au pluriel.",
+                    hint: "C'est un pluriel totalement irrégulier."
+                },
+                {
+                    question: "Quel est le pluriel de 'ciel' ?",
+                    answer: "cieux",
+                    explanation: "C'est un pluriel irrégulier. 'Ciel' devient 'cieux' au pluriel (dans la plupart des contextes).",
+                    hint: "C'est un pluriel irrégulier."
+                },
+                {
+                    question: "Quel est le pluriel de 'monsieur' ?",
+                    answer: "messieurs",
+                    explanation: "C'est un pluriel irrégulier. 'Monsieur' devient 'messieurs' au pluriel.",
+                    hint: "C'est un pluriel totalement irrégulier."
+                },
+                {
+                    question: "Quel est le pluriel de 'madame' ?",
+                    answer: "mesdames",
+                    explanation: "C'est un pluriel irrégulier. 'Madame' devient 'mesdames' au pluriel.",
+                    hint: "C'est un pluriel totalement irrégulier."
+                },
+                {
+                    question: "Quel est le pluriel de 'vitrail' ?",
+                    answer: "vitraux",
+                    explanation: "C'est l'une des exceptions des mots en -ail qui se transforment en -aux au pluriel.",
+                    hint: "C'est l'une des exceptions des mots en -ail."
+                },
+                {
+                    question: "Quel est le pluriel de 'corail' ?",
+                    answer: "coraux",
+                    explanation: "C'est l'une des exceptions des mots en -ail qui se transforment en -aux au pluriel.",
+                    hint: "C'est l'une des exceptions des mots en -ail."
+                },
+                {
+                    question: "Quel est le pluriel de 'éventail' ?",
+                    answer: "éventails",
+                    explanation: "La plupart des mots en -ail prennent un 's' au pluriel.",
+                    hint: "La plupart des mots en -ail prennent un 's' au pluriel."
+                },
+                {
+                    question: "Quel est le pluriel de 'aïeul' (dans le sens d'ancêtre) ?",
+                    answer: "aïeux",
+                    explanation: "Quand 'aïeul' désigne les ancêtres en général, son pluriel est 'aïeux'.",
+                    hint: "Ce mot a deux pluriels différents selon le sens."
+                },
+                {
+                    question: "Quel est le pluriel de 'aïeul' (dans le sens de grand-père) ?",
+                    answer: "aïeuls",
+                    explanation: "Quand 'aïeul' désigne spécifiquement les grands-pères, son pluriel est 'aïeuls'.",
+                    hint: "Ce mot a deux pluriels différents selon le sens."
+                },
+                {
+                    question: "Quel est le pluriel de 'ciel' dans l'expression 'les ciels de lit' ?",
+                    answer: "ciels",
+                    explanation: "Dans certains contextes spécifiques comme 'ciels de lit' ou 'ciels de tableau', le pluriel de 'ciel' est 'ciels' et non 'cieux'.",
+                    hint: "Dans certains contextes spécifiques, le pluriel régulier est utilisé."
+                }
+            ]
+        };
+        
+        // Game variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = 10;
+        let currentDifficulty = 'facile';
+        let questions = [];
+        
+        // DOM elements
+        const questionText = document.getElementById('question-text');
+        const pluralInput = document.getElementById('plural-input');
+        const submitButton = document.getElementById('submit-button');
+        const explanation = document.getElementById('explanation');
+        const explanationText = document.getElementById('explanation-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const hintButton = document.getElementById('hint-button');
+        const hintText = document.getElementById('hint-text');
+        const feedback = document.getElementById('feedback');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            submitButton.addEventListener('click', checkAnswer);
+            hintButton.addEventListener('click', showHint);
+            
+            // Allow pressing Enter to submit answer
+            pluralInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // Get questions for the current difficulty
+            questions = getRandomQuestions(exerciseData[currentDifficulty], totalQuestions);
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalQuestionsDisplay.textContent = totalQuestions;
+            progressBar.style.width = '0%';
+            
+            // Show first question
+            showQuestion();
+        }
+        
+        // Get random questions from the data
+        function getRandomQuestions(data, count) {
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        // Show the current question
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            
+            // Update question text
+            questionText.textContent = question.question;
+            
+            // Clear input
+            pluralInput.value = '';
+            
+            // Hide explanation and feedback
+            explanation.style.display = 'none';
+            feedback.style.display = 'none';
+            
+            // Hide hint
+            hintText.style.display = 'none';
+            hintText.textContent = '';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentQuestionIndex / totalQuestions) * 100}%`;
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextQuestion);
+            submitButton.addEventListener('click', checkAnswer);
+            
+            // Focus on input
+            pluralInput.focus();
+        }
+        
+        // Check the submitted answer
+        function checkAnswer() {
+            const userAnswer = pluralInput.value.trim().toLowerCase();
+            const question = questions[currentQuestionIndex];
+            const correctAnswer = question.answer.toLowerCase();
+            
+            if (userAnswer === '') {
+                alert('Veuillez entrer votre réponse.');
+                return;
+            }
+            
+            const isCorrect = userAnswer === correctAnswer;
+            
+            // Show feedback
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.textContent = isCorrect 
+                ? 'Correct ! Bien joué !' 
+                : `Incorrect. La bonne réponse est "${question.answer}".`;
+            feedback.style.display = 'block';
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+            }
+            
+            // Show explanation
+            explanationText.textContent = question.explanation;
+            explanation.style.display = 'block';
+            
+            // Disable input
+            pluralInput.disabled = true;
+            
+            // Change submit button to next button
+            submitButton.textContent = 'Question Suivante';
+            submitButton.removeEventListener('click', checkAnswer);
+            submitButton.addEventListener('click', nextQuestion);
+        }
+        
+        // Show hint for the current question
+        function showHint() {
+            const question = questions[currentQuestionIndex];
+            hintText.textContent = question.hint;
+            hintText.style.display = 'block';
+        }
+        
+        // Move to the next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            // Enable input for next question
+            pluralInput.disabled = false;
+            
+            // Show next question
+            showQuestion();
+        }
+        
+        // End the game
+        function endGame() {
+            // Clear the question container
+            questionText.textContent = '';
+            pluralInput.style.display = 'none';
+            hintButton.style.display = 'none';
+            submitButton.style.display = 'none';
+            
+            // Show final score
+            const scorePercentage = (score / totalQuestions) * 100;
+            let message = '';
+            
+            if (scorePercentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez très bien les règles du pluriel en français.';
+            } else if (scorePercentage >= 70) {
+                message = 'Très bien ! Vous avez une bonne compréhension des règles du pluriel.';
+            } else if (scorePercentage >= 50) {
+                message = 'Bien ! Continuez à pratiquer pour améliorer votre maîtrise des pluriels.';
+            } else {
+                message = 'Continuez à pratiquer ! Les règles du pluriel en français peuvent être complexes.';
+            }
+            
+            // Create result message
+            const resultElement = document.createElement('div');
+            resultElement.innerHTML = `
+                <h2>Exercice terminé !</h2>
+                <p>Votre score : ${score}/${totalQuestions} (${scorePercentage}%)</p>
+                <p>${message}</p>
+                <button class="submit-button" onclick="startNewGame()">Recommencer</button>
+            `;
+            
+            questionText.parentNode.appendChild(resultElement);
+            
+            // Update progress bar to 100%
+            progressBar.style.width = '100%';
+        }
+    </script>
+</body>
+</html>

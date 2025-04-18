@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fonctions Grammaticales - Exercices</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f9e79f 0%, #f5f5f5 100%);
+            min-height: 100vh;
+        }
+        .back-button {
+            display: inline-block;
+            margin: 30px 0 0 30px;
+            padding: 10px 18px;
+            background-color: #f1c40f;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(241, 196, 15, 0.08);
+            transition: background 0.3s;
+        }
+        .back-button:hover {
+            background-color: #d4ac0d;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 6px 24px rgba(44, 62, 80, 0.08);
+            padding: 36px 28px 28px 28px;
+        }
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        .exercise {
+            margin-bottom: 30px;
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .choices {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .choice-btn {
+            flex: 1 1 40%;
+            padding: 12px;
+            background-color: #f1c40f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 6px;
+        }
+        .choice-btn:hover {
+            background-color: #d4ac0d;
+        }
+        .feedback {
+            margin-top: 15px;
+            font-size: 17px;
+            font-weight: 500;
+        }
+        .correct {
+            color: #27ae60;
+        }
+        .incorrect {
+            color: #c0392b;
+        }
+        #nextBtn {
+            margin-top: 18px;
+            padding: 10px 24px;
+            background-color: #f1c40f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: none;
+        }
+        #nextBtn:hover {
+            background-color: #d4ac0d;
+        }
+        @media (max-width: 700px) {
+            .container {
+                padding: 18px 5px 18px 5px;
+            }
+            .choices {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index5.html" class="back-button">← Retour</a>
+    <div class="container">
+        <h1>Fonctions Grammaticales</h1>
+        <div class="subtitle">Choisissez la fonction grammaticale du mot ou groupe de mots en gras.</div>
+        <div class="exercise" id="exercise">
+            <div class="question" id="question"></div>
+            <div class="choices" id="choices"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+        <button onclick="nextExercise()" id="nextBtn">Exercice suivant</button>
+    </div>
+    <script>
+        const exercises = [
+            {
+                question: ' <b><span style="color:#f1c40f">Le chat</span></b> mange la souris.',
+                correct: 'Sujet',
+                choices: ['Sujet', 'COD', 'COI', 'Attribut']
+            },
+            {
+                question: 'Paul donne un cadeau à <b><span style="color:#f1c40f">son ami</span></b>.',
+                correct: 'COI',
+                choices: ['COD', 'COI', 'Sujet', 'Complément circonstanciel']
+            },
+            {
+                question: 'Elle trouve <b><span style="color:#f1c40f">le livre</span></b> intéressant.',
+                correct: 'COD',
+                choices: ['COD', 'Sujet', 'Attribut', 'Complément du nom']
+            },
+            {
+                question: 'Cet enfant est <b><span style="color:#f1c40f">gentil</span></b>.',
+                correct: 'Attribut',
+                choices: ['Attribut', 'Sujet', 'COD', 'COI']
+            },
+            {
+                question: 'Nous partons <b><span style="color:#f1c40f">demain</span></b>.',
+                correct: 'Complément circonstanciel',
+                choices: ['Complément circonstanciel', 'COD', 'Sujet', 'COI']
+            },
+            {
+                question: 'La maison <b><span style="color:#f1c40f">de mon oncle</span></b> est grande.',
+                correct: 'Complément du nom',
+                choices: ['Complément du nom', 'COD', 'Sujet', 'Attribut']
+            },
+            {
+                question: 'Il parle <b><span style="color:#f1c40f">à sa sœur</span></b>.',
+                correct: 'COI',
+                choices: ['COI', 'COD', 'Sujet', 'Complément circonstanciel']
+            },
+            {
+                question: ' <b><span style="color:#f1c40f">Les enfants</span></b> jouent dans le parc.',
+                correct: 'Sujet',
+                choices: ['Sujet', 'COD', 'COI', 'Attribut']
+            },
+            {
+                question: 'Elle regarde <b><span style="color:#f1c40f">la télévision</span></b>.',
+                correct: 'COD',
+                choices: ['COD', 'Sujet', 'COI', 'Complément circonstanciel']
+            },
+            {
+                question: 'Il est devenu <b><span style="color:#f1c40f">médecin</span></b>.',
+                correct: 'Attribut',
+                choices: ['Attribut', 'Sujet', 'COD', 'Complément du nom']
+            }
+        ];
+        let current = 0;
+
+        function showExercise() {
+            document.getElementById('question').innerHTML = exercises[current].question;
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+            exercises[current].choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.textContent = choice;
+                btn.onclick = () => checkAnswer(choice);
+                choicesDiv.appendChild(btn);
+            });
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function checkAnswer(selected) {
+            const correct = exercises[current].correct;
+            const feedback = document.getElementById('feedback');
+            if (selected === correct) {
+                feedback.textContent = "Bravo ! C'est la bonne réponse.";
+                feedback.className = 'feedback correct';
+                document.getElementById('nextBtn').style.display = (current < exercises.length - 1) ? 'inline-block' : 'none';
+            } else {
+                feedback.textContent = "Incorrect. Essayez encore !";
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function nextExercise() {
+            if (current < exercises.length - 1) {
+                current++;
+                showExercise();
+            }
+        }
+
+        // Initialize
+        showExercise();
+    </script>
+</body>
+</html>

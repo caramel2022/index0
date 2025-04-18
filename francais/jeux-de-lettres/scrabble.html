@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Scrabble - Orthographe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #e67e22;
+            --current-color-dark: #d35400;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .scrabble-board {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .scrabble-cell {
+            aspect-ratio: 1/1;
+            background-color: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .scrabble-cell:hover {
+            background-color: #e9ecef;
+        }
+        
+        .scrabble-cell.selected {
+            background-color: var(--current-color);
+            color: white;
+            border-color: var(--current-color-dark);
+        }
+        
+        .scrabble-cell.double-letter {
+            background-color: #90caf9;
+        }
+        
+        .scrabble-cell.triple-letter {
+            background-color: #1e88e5;
+            color: white;
+        }
+        
+        .scrabble-cell.double-word {
+            background-color: #ffcc80;
+        }
+        
+        .scrabble-cell.triple-word {
+            background-color: #ef6c00;
+            color: white;
+        }
+        
+        .scrabble-cell .points {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 10px;
+            font-weight: normal;
+        }
+        
+        .letter-rack {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .rack-letter {
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .rack-letter:hover {
+            background-color: #e9ecef;
+        }
+        
+        .rack-letter.selected {
+            background-color: var(--current-color);
+            color: white;
+            border-color: var(--current-color-dark);
+        }
+        
+        .rack-letter .points {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 10px;
+            font-weight: normal;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .word-display {
+            font-size: 24px;
+            margin-bottom: 20px;
+            min-height: 36px;
+            text-align: center;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            text-align: center;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .timer {
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .word-list {
+            margin-top: 20px;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .word-list-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .scrabble-board {
+                grid-template-columns: repeat(8, 1fr);
+            }
+            
+            .rack-letter {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+            
+            .game-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+        
+        .info-box {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index1.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à l'Orthographe
+            </a>
+            <h1>Mini Scrabble</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="difficulty-selector">
+                <label for="difficulty-select">Difficulté:</label>
+                <select id="difficulty-select">
+                    <option value="facile">Facile</option>
+                    <option value="moyen">Moyen</option>
+                    <option value="difficile">Difficile</option>
+                </select>
+            </div>
+            
+            <div class="timer" id="timer">Temps: 03:00</div>
+            <div class="score-display">Score: <span id="score">0</span> points</div>
+            
+            <div class="game-container">
+                <div class="word-display" id="current-word"></div>
+                
+                <div class="letter-rack" id="letter-rack">
+                    <!-- Letters will be added here dynamically -->
+                </div>
+                
+                <div class="game-controls">
+                    <button id="submit-word-btn" class="btn btn-primary">Soumettre le mot</button>
+                    <button id="shuffle-btn" class="btn btn-secondary">Mélanger les lettres</button>
+                    <button id="clear-btn" class="btn btn-secondary">Effacer</button>
+                    <button id="new-game-btn" class="btn btn-primary">Nouvelle partie</button>
+                </div>
+                
+                <div class="feedback" id="feedback"></div>
+                
+                <div class="word-list" id="word-list">
+                    <h3>Mots trouvés:</h3>
+                    <div id="found-words"></div>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Comment jouer au Mini Scrabble</h3>
+                <p>Le Mini Scrabble est un jeu de lettres où vous devez former des mots français à partir des lettres disponibles dans votre chevalet.</p>
+                
+                <h4>Règles du jeu:</h4>
+                <ul>
+                    <li>Cliquez sur les lettres de votre chevalet pour former un mot</li>
+                    <li>Cliquez sur "Soumettre le mot" pour vérifier si votre mot est valide</li>
+                    <li>Les mots valides vous rapportent des points basés sur la valeur des lettres</li>
+                    <li>Vous pouvez mélanger vos lettres ou effacer votre sélection actuelle</li>
+                    <li>Essayez de trouver le maximum de mots avant la fin du temps imparti</li>
+                </ul>
+                
+                <h4>Valeur des lettres:</h4>
+                <p>Comme dans le Scrabble classique, chaque lettre a une valeur différente:</p>
+                <ul>
+                    <li>1 point: A, E, I, L, N, O, R, S, T, U</li>
+                    <li>2 points: D, G, M</li>
+                    <li>3 points: B, C, P</li>
+                    <li>4 points: F, H, V</li>
+                    <li>8 points: J, Q</li>
+                    <li>10 points: K, W, X, Y, Z</li>
+                </ul>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Letter distribution and points (French Scrabble)
+        const letterDistribution = {
+            'A': { count: 9, points: 1 },
+            'B': { count: 2, points: 3 },
+            'C': { count: 2, points: 3 },
+            'D': { count: 3, points: 2 },
+            'E': { count: 15, points: 1 },
+            'F': { count: 2, points: 4 },
+            'G': { count: 2, points: 2 },
+            'H': { count: 2, points: 4 },
+            'I': { count: 8, points: 1 },
+            'J': { count: 1, points: 8 },
+            'K': { count: 1, points: 10 },
+            'L': { count: 5, points: 1 },
+            'M': { count: 3, points: 2 },
+            'N': { count: 6, points: 1 },
+            'O': { count: 6, points: 1 },
+            'P': { count: 2, points: 3 },
+            'Q': { count: 1, points: 8 },
+            'R': { count: 6, points: 1 },
+            'S': { count: 6, points: 1 },
+            'T': { count: 6, points: 1 },
+            'U': { count: 6, points: 1 },
+            'V': { count: 2, points: 4 },
+            'W': { count: 1, points: 10 },
+            'X': { count: 1, points: 10 },
+            'Y': { count: 1, points: 10 },
+            'Z': { count: 1, points: 10 }
+        };
+        
+        // French dictionary by difficulty
+        const frenchDictionary = {
+            facile: [
+                "ami", "chat", "chien", "maison", "école", "livre", "table", "pomme", "pain", "eau",
+                "jour", "nuit", "soleil", "lune", "arbre", "fleur", "porte", "fenêtre", "rue", "ville",
+                "pays", "mer", "montagne", "rivière", "lac", "forêt", "jardin", "parc", "voiture", "vélo",
+                "train", "avion", "bus", "métro", "gare", "aéroport", "hôtel", "restaurant", "café", "bar",
+                "magasin", "marché", "supermarché", "boulangerie", "pharmacie", "hôpital", "médecin", "infirmier", "patient", "maladie",
+                "santé", "corps", "tête", "main", "pied", "bras", "jambe", "œil", "nez", "bouche",
+                "dent", "cheveu", "cœur", "sang", "os", "peau", "muscle", "cerveau", "poumon", "estomac",
+                "famille", "parent", "enfant", "bébé", "fils", "fille", "frère", "sœur", "oncle", "tante",
+                "cousin", "grand-père", "grand-mère", "mari", "femme", "ami", "voisin", "collègue", "patron", "employé",
+                "travail", "bureau", "usine", "ferme", "école", "université", "étudiant", "professeur", "élève", "classe"
+            ],
+            moyen: [
+                "abandonner", "accepter", "accompagner", "acheter", "adorer", "aider", "aimer", "ajouter", "aller", "améliorer",
+                "amuser", "analyser", "annoncer", "apercevoir", "apparaître", "appeler", "apporter", "apprendre", "approcher", "arrêter",
+                "arriver", "assister", "attendre", "augmenter", "avoir", "baisser", "battre", "boire", "cacher", "casser",
+                "cesser", "changer", "chanter", "chercher", "choisir", "commencer", "comprendre", "compter", "conduire", "connaître",
+                "construire", "continuer", "couper", "courir", "couvrir", "craindre", "créer", "croire", "danser", "décider",
+                "découvrir", "demander", "demeurer", "déplacer", "descendre", "désirer", "détruire", "devenir", "devoir", "dire",
+                "diriger", "discuter", "disparaître", "donner", "dormir", "écouter", "écrire", "effacer", "élever", "empêcher",
+                "emporter", "entendre", "entrer", "envoyer", "espérer", "essayer", "être", "éviter", "exister", "expliquer",
+                "faire", "falloir", "fermer", "finir", "former", "frapper", "gagner", "garder", "glisser", "goûter",
+                "grandir", "habiter", "ignorer", "imaginer", "indiquer", "installer", "intéresser", "inviter", "jeter", "jouer"
+            ],
+            difficile: [
+                "abracadabrant", "acariâtre", "accoutumance", "acrimonie", "affabulation", "alambiqué", "anachronique", "antédiluvien", "anthropomorphisme", "anticonstitutionnellement",
+                "apophtegme", "archétype", "argumentaire", "aristocratie", "arithmétique", "atermoiement", "autodidacte", "autosatisfaction", "axiomatique", "balbutiement",
+                "belligérance", "bienveillance", "billevesée", "cacophonie", "calamiteux", "calligraphie", "catachrèse", "cataclysme", "catastrophique", "catégorique",
+                "circonlocution", "circonspection", "circonvolution", "clandestinité", "claustrophobe", "cleptomanie", "coercition", "collationner", "commisération", "concupiscence",
+                "condescendance", "conflagration", "consubstantiel", "contiguïté", "contingence", "contrefaçon", "contretemps", "controverse", "contumélie", "convenance",
+                "corollaire", "corroborer", "cosmopolite", "crédulité", "crépusculaire", "cryptographie", "cynégétique", "débonnaire", "décrépitude", "déférence",
+                "déliquescence", "démiurge", "dépravation", "désappointement", "désopilant", "despotique", "désuétude", "détérioration", "dévolu", "dextérité",
+                "dialectique", "diapason", "diaphane", "diatribe", "dichotomie", "diffamation", "dilapidation", "diligence", "discernement", "discrétionnaire",
+                "disgrâce", "disparate", "dissémination", "dissonance", "divagation", "dogmatique", "doléance", "duplicité", "dysphasie", "ébullition",
+                "ecchymose", "ecclésiaste", "échappatoire", "éclaircissement", "éclectisme", "économètre", "écuménique", "édulcorer", "effaroucher", "effervescence"
+            ]
+        };
+        
+        // Game variables
+        let currentDifficulty = 'facile';
+        let score = 0;
+        let selectedLetters = [];
+        let rackLetters = [];
+        let foundWords = [];
+        let timerInterval;
+        let timeLeft = 180; // 3 minutes
+        
+        // DOM elements
+        const letterRack = document.getElementById('letter-rack');
+        const currentWordDisplay = document.getElementById('current-word');
+        const submitWordBtn = document.getElementById('submit-word-btn');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const scoreDisplay = document.getElementById('score');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const feedbackElement = document.getElementById('feedback');
+        const timerElement = document.getElementById('timer');
+        const foundWordsElement = document.getElementById('found-words');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            newGameBtn.addEventListener('click', startNewGame);
+            submitWordBtn.addEventListener('click', submitWord);
+            shuffleBtn.addEventListener('click', shuffleRack);
+            clearBtn.addEventListener('click', clearSelection);
+            
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            score = 0;
+            selectedLetters = [];
+            foundWords = [];
+            
+            // Clear displays
+            currentWordDisplay.textContent = '';
+            scoreDisplay.textContent = '0';
+            foundWordsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            
+            // Generate new rack letters
+            generateRackLetters();
+            
+            // Reset and start timer
+            clearInterval(timerInterval);
+            timeLeft = 180;
+            updateTimerDisplay();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        
+        // Generate letters for the rack
+        function generateRackLetters() {
+            rackLetters = [];
+            
+            // Create a pool of letters based on distribution
+            let letterPool = [];
+            for (const [letter, info] of Object.entries(letterDistribution)) {
+                for (let i = 0; i < info.count; i++) {
+                    letterPool.push(letter);
+                }
+            }
+            
+            // Shuffle the pool
+            letterPool = shuffleArray(letterPool);
+            
+            // Take 7 letters for the rack
+            rackLetters = letterPool.slice(0, 7);
+            
+            // Render the rack
+            renderRack();
+        }
+        
+        // Render the letter rack
+        function renderRack() {
+            letterRack.innerHTML = '';
+            
+            rackLetters.forEach((letter, index) => {
+                const letterElement = document.createElement('div');
+                letterElement.className = 'rack-letter';
+                letterElement.dataset.index = index;
+                letterElement.dataset.letter = letter;
+                letterElement.innerHTML = letter;
+                
+                // Add points
+                const pointsElement = document.createElement('span');
+                pointsElement.className = 'points';
+                pointsElement.textContent = letterDistribution[letter].points;
+                letterElement.appendChild(pointsElement);
+                
+                // Add click event
+                letterElement.addEventListener('click', toggleLetterSelection);
+                
+                letterRack.appendChild(letterElement);
+            });
+        }
+        
+        // Toggle letter selection
+        function toggleLetterSelection(event) {
+            const letterElement = event.currentTarget;
+            const index = parseInt(letterElement.dataset.index);
+            const letter = letterElement.dataset.letter;
+            
+            // Check if already selected
+            const selectedIndex = selectedLetters.findIndex(item => item.index === index);
+            
+            if (selectedIndex === -1) {
+                // Add to selection
+                selectedLetters.push({ index, letter });
+                letterElement.classList.add('selected');
+            } else {
+                // Remove from selection
+                selectedLetters.splice(selectedIndex, 1);
+                letterElement.classList.remove('selected');
+            }
+            
+            // Sort selected letters by selection order
+            selectedLetters.sort((a, b) => a.index - b.index);
+            
+            // Update current word display
+            updateCurrentWordDisplay();
+        }
+        
+        // Update the current word display
+        function updateCurrentWordDisplay() {
+            const word = selectedLetters.map(item => item.letter).join('');
+            currentWordDisplay.textContent = word;
+        }
+        
+        // Submit the current word
+        function submitWord() {
+            const word = selectedLetters.map(item => item.letter).join('').toLowerCase();
+            
+            if (word.length < 2) {
+                showFeedback('Le mot doit contenir au moins 2 lettres.', false);
+                return;
+            }
+            
+            if (foundWords.some(w => w.word.toLowerCase() === word)) {
+                showFeedback('Vous avez déjà trouvé ce mot !', false);
+                return;
+            }
+            
+            // Check if word is in dictionary
+            if (frenchDictionary[currentDifficulty].includes(word)) {
+                // Calculate word score
+                const wordScore = calculateWordScore(word);
+                
+                // Add to found words
+                foundWords.push({ word, score: wordScore });
+                
+                // Update total score
+                score += wordScore;
+                scoreDisplay.textContent = score;
+                
+                // Update found words display
+                updateFoundWordsDisplay();
+                
+                // Generate new letters for the used ones
+                replaceUsedLetters();
+                
+                // Clear selection
+                clearSelection();
+                
+                showFeedback(`Bravo ! "${word}" vaut ${wordScore} points.`, true);
+            } else {
+                showFeedback(`"${word}" n'est pas un mot valide en français.`, false);
+            }
+        }
+        
+        // Calculate score for a word
+        function calculateWordScore(word) {
+            let wordScore = 0;
+            
+            for (const letter of word.toUpperCase()) {
+                if (letterDistribution[letter]) {
+                    wordScore += letterDistribution[letter].points;
+                }
+            }
+            
+            // Bonus for longer words
+            if (word.length >= 6) {
+                wordScore += 10;
+            } else if (word.length >= 5) {
+                wordScore += 5;
+            } else if (word.length >= 4) {
+                wordScore += 2;
+            }
+            
+            return wordScore;
+        }
+        
+        // Replace used letters with new ones
+        function replaceUsedLetters() {
+            // Create a pool of remaining letters
+            let letterPool = [];
+            for (const [letter, info] of Object.entries(letterDistribution)) {
+                for (let i = 0; i < info.count; i++) {
+                    letterPool.push(letter);
+                }
+            }
+            
+            // Remove letters that are already in the rack but not selected
+            const remainingRackIndices = rackLetters.map((_, i) => i)
+                .filter(i => !selectedLetters.some(item => item.index === i));
+            
+            const remainingRackLetters = remainingRackIndices.map(i => rackLetters[i]);
+            
+            for (const letter of remainingRackLetters) {
+                const index = letterPool.indexOf(letter);
+                if (index !== -1) {
+                    letterPool.splice(index, 1);
+                }
+            }
+            
+            // Shuffle the pool
+            letterPool = shuffleArray(letterPool);
+            
+            // Create new rack with remaining letters and new ones
+            const newRack = Array(7).fill(null);
+            
+            // Keep unselected letters in their positions
+            for (let i = 0; i < rackLetters.length; i++) {
+                if (!selectedLetters.some(item => item.index === i)) {
+                    newRack[i] = rackLetters[i];
+                }
+            }
+            
+            // Fill empty slots with new letters
+            let poolIndex = 0;
+            for (let i = 0; i < newRack.length; i++) {
+                if (newRack[i] === null) {
+                    if (poolIndex < letterPool.length) {
+                        newRack[i] = letterPool[poolIndex++];
+                    } else {
+                        // If we run out of letters, use a common letter
+                        newRack[i] = ['E', 'A', 'I', 'O', 'N', 'R', 'S', 'T'][Math.floor(Math.random() * 8)];
+                    }
+                }
+            }
+            
+            rackLetters = newRack;
+            renderRack();
+        }
+        
+        // Update the found words display
+        function updateFoundWordsDisplay() {
+            foundWordsElement.innerHTML = '';
+            
+            // Sort words by score (highest first)
+            const sortedWords = [...foundWords].sort((a, b) => b.score - a.score);
+            
+            sortedWords.forEach(({ word, score }) => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'word-list-item';
+                wordElement.innerHTML = `
+                    <span>${word}</span>
+                    <span>${score} points</span>
+                `;
+                foundWordsElement.appendChild(wordElement);
+            });
+        }
+        
+        // Shuffle the rack letters
+        function shuffleRack() {
+            rackLetters = shuffleArray(rackLetters);
+            clearSelection();
+            renderRack();
+        }
+        
+        // Clear the current selection
+        function clearSelection() {
+            selectedLetters = [];
+            currentWordDisplay.textContent = '';
+            
+            // Remove selected class from all letters
+            document.querySelectorAll('.rack-letter').forEach(el => {
+                el.classList.remove('selected');
+            });
+        }
+        
+        // Show feedback message
+        function showFeedback(message, isCorrect) {
+            feedbackElement.textContent = message;
+            feedbackElement.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedbackElement.style.display = 'block';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                feedbackElement.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Update timer
+        function updateTimer() {
+            timeLeft--;
+            updateTimerDisplay();
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                endGame();
+            }
+        }
+        
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `Temps: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // End the game
+        function endGame() {
+            // Disable game controls
+            submitWordBtn.disabled = true;
+            shuffleBtn.disabled = true;
+            clearBtn.disabled = true;
+            
+            // Show final score
+            let message = '';
+            
+            if (score >= 100) {
+                message = 'Excellent ! Vous avez un vocabulaire impressionnant !';
+            } else if (score >= 70) {
+                message = 'Très bien ! Vous avez une bonne maîtrise du vocabulaire français.';
+            } else if (score >= 40) {
+                message = 'Bien ! Continuez à enrichir votre vocabulaire.';
+            } else {
+                message = 'Continuez à pratiquer pour améliorer votre vocabulaire français.';
+            }
+            
+            // Show feedback with final message
+            showFeedback(`Partie terminée ! Score final: ${score} points. ${message}`, true);
+            
+            // Keep feedback visible
+            clearTimeout(feedbackElement.timeout);
+        }
+        
+        // Utility function to shuffle an array
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+    </script>
+</body>
+</html>

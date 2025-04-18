@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imparfait - Exercices</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f5f5f5 100%);
+            min-height: 100vh;
+        }
+        .back-button {
+            display: inline-block;
+            margin: 30px 0 0 30px;
+            padding: 10px 18px;
+            background-color: #9b59b6;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(155, 89, 182, 0.08);
+            transition: background 0.3s;
+        }
+        .back-button:hover {
+            background-color: #8e44ad;
+        }
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 6px 24px rgba(44, 62, 80, 0.08);
+            padding: 36px 28px 28px 28px;
+        }
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 20px;
+        }
+        .exercise {
+            margin-bottom: 30px;
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 18px;
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #8e44ad;
+        }
+        .feedback {
+            margin-top: 15px;
+            font-size: 17px;
+            font-weight: 500;
+        }
+        .correct {
+            color: #27ae60;
+        }
+        .incorrect {
+            color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <a href="index4.html" class="back-button">← Retour</a>
+    <div class="container">
+        <h1>Imparfait</h1>
+        <div class="exercise" id="exercise">
+            <div class="question" id="question">
+                Complétez : <b>Quand j'étais petit, je (jouer) ______ dans le jardin.</b>
+            </div>
+            <div class="input-area">
+                <input type="text" id="answer" autocomplete="off" placeholder="Votre réponse">
+                <button onclick="checkAnswer()">Vérifier</button>
+            </div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+        <button onclick="nextExercise()" id="nextBtn" style="display:none;">Exercice suivant</button>
+    </div>
+    <script>
+        // Simple exercises array
+        const exercises = [
+            {
+                question: "Complétez : <b>Quand j'étais petit, je (jouer) ______ dans le jardin.</b>",
+                answer: "jouais"
+            },
+            {
+                question: "Complétez : <b>Vous (être) ______ très gentils avec moi.</b>",
+                answer: "étiez"
+            },
+            {
+                question: "Complétez : <b>Nous (avoir) ______ un chien noir.</b>",
+                answer: "avions"
+            },
+            {
+                question: "Complétez : <b>Elle (finir) ______ toujours ses devoirs avant le dîner.</b>",
+                answer: "finissait"
+            },
+            {
+                question: "Complétez : <b>Ils (prendre) ______ le bus tous les matins.</b>",
+                answer: "prenaient"
+            }
+        ];
+        let current = 0;
+
+        function showExercise() {
+            document.getElementById('question').innerHTML = exercises[current].question;
+            document.getElementById('answer').value = '';
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function checkAnswer() {
+            const user = document.getElementById('answer').value.trim().toLowerCase();
+            const correct = exercises[current].answer;
+            const feedback = document.getElementById('feedback');
+            if (user === correct) {
+                feedback.textContent = "Bravo ! C'est correct.";
+                feedback.className = 'feedback correct';
+                document.getElementById('nextBtn').style.display = (current < exercises.length - 1) ? 'inline-block' : 'none';
+            } else {
+                feedback.textContent = "Incorrect. Essayez encore !";
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function nextExercise() {
+            if (current < exercises.length - 1) {
+                current++;
+                showExercise();
+            }
+        }
+
+        // Initialize
+        showExercise();
+    </script>
+</body>
+</html>

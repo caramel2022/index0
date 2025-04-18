@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Présent de l'Indicatif - Grammaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #3498db;
+            --current-color-dark: #2980b9;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .question-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .input-container {
+            margin-bottom: 20px;
+        }
+        
+        .verb-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .verb-input:focus {
+            outline: none;
+            border-color: var(--current-color);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .explanation-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--current-color-dark);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .hint-button {
+            background: none;
+            border: none;
+            color: var(--current-color);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
+        
+        .hint-button:hover {
+            color: var(--current-color-dark);
+        }
+        
+        .hint-text {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
+            display: none;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .verb-table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .verb-table th, .verb-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .verb-table th {
+            background-color: #f5f5f5;
+            font-weight: 500;
+        }
+        
+        .verb-group {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .verb-group.first {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .verb-group.second {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #2980b9;
+        }
+        
+        .verb-group.third {
+            background-color: rgba(155, 89, 182, 0.2);
+            color: #8e44ad;
+        }
+        
+        .verb-group.irregular {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .difficulty-selector {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à la Grammaire
+            </a>
+            <h1>Présent de l'Indicatif</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-questions">10</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="question-container">
+                    <div class="question" id="question-text">
+                        <!-- Question will be displayed here -->
+                    </div>
+                    <div class="input-container">
+                        <input type="text" class="verb-input" id="verb-input" placeholder="Entrez la forme conjuguée">
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                    <button class="hint-button" id="hint-button">Indice</button>
+                    <div class="hint-text" id="hint-text">
+                        <!-- Hint will be displayed here -->
+                    </div>
+                    <div class="explanation" id="explanation">
+                        <div class="explanation-title">Explication:</div>
+                        <div id="explanation-text">
+                            <!-- Explanation will be displayed here -->
+                        </div>
+                    </div>
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Le Présent de l'Indicatif</h3>
+                <p>Le présent de l'indicatif est utilisé pour :</p>
+                <ul>
+                    <li>Décrire une action qui se déroule au moment où l'on parle</li>
+                    <li>Exprimer une vérité générale ou une habitude</li>
+                    <li>Parler d'un futur proche ou planifié</li>
+                </ul>
+                <p>En français, il existe trois groupes de verbes :</p>
+                <ul>
+                    <li><strong>Premier groupe</strong> : verbes en -er (sauf aller)</li>
+                    <li><strong>Deuxième groupe</strong> : verbes en -ir qui se conjuguent avec -issons à la 1ère personne du pluriel</li>
+                    <li><strong>Troisième groupe</strong> : tous les autres verbes (-ir, -oir, -re)</li>
+                </ul>
+                
+                <h4>Exemples de conjugaisons au présent :</h4>
+                <table class="verb-table">
+                    <tr>
+                        <th>Verbe</th>
+                        <th>Je</th>
+                        <th>Tu</th>
+                        <th>Il/Elle</th>
+                        <th>Nous</th>
+                        <th>Vous</th>
+                        <th>Ils/Elles</th>
+                    </tr>
+                    <tr>
+                        <td>Parler <span class="verb-group first">1er groupe</span></td>
+                        <td>parle</td>
+                        <td>parles</td>
+                        <td>parle</td>
+                        <td>parlons</td>
+                        <td>parlez</td>
+                        <td>parlent</td>
+                    </tr>
+                    <tr>
+                        <td>Finir <span class="verb-group second">2e groupe</span></td>
+                        <td>finis</td>
+                        <td>finis</td>
+                        <td>finit</td>
+                        <td>finissons</td>
+                        <td>finissez</td>
+                        <td>finissent</td>
+                    </tr>
+                    <tr>
+                        <td>Prendre <span class="verb-group third">3e groupe</span></td>
+                        <td>prends</td>
+                        <td>prends</td>
+                        <td>prend</td>
+                        <td>prenons</td>
+                        <td>prenez</td>
+                        <td>prennent</td>
+                    </tr>
+                    <tr>
+                        <td>Être <span class="verb-group irregular">irrégulier</span></td>
+                        <td>suis</td>
+                        <td>es</td>
+                        <td>est</td>
+                        <td>sommes</td>
+                        <td>êtes</td>
+                        <td>sont</td>
+                    </tr>
+                </table>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    question: "Je (parler) français tous les jours.",
+                    answer: "parle",
+                    infinitive: "parler",
+                    explanation: "Le verbe 'parler' est un verbe du premier groupe. À la première personne du singulier (je), on ajoute la terminaison 'e'.",
+                    hint: "Verbe du 1er groupe (-er) à la 1ère personne du singulier."
+                },
+                {
+                    question: "Tu (aimer) le chocolat.",
+                    answer: "aimes",
+                    infinitive: "aimer",
+                    explanation: "Le verbe 'aimer' est un verbe du premier groupe. À la deuxième personne du singulier (tu), on ajoute la terminaison 'es'.",
+                    hint: "Verbe du 1er groupe (-er) à la 2ème personne du singulier."
+                },
+                {
+                    question: "Il (habiter) à Paris.",
+                    answer: "habite",
+                    infinitive: "habiter",
+                    explanation: "Le verbe 'habiter' est un verbe du premier groupe. À la troisième personne du singulier (il/elle), on ajoute la terminaison 'e'.",
+                    hint: "Verbe du 1er groupe (-er) à la 3ème personne du singulier."
+                },
+                {
+                    question: "Nous (étudier) le français.",
+                    answer: "étudions",
+                    infinitive: "étudier",
+                    explanation: "Le verbe 'étudier' est un verbe du premier groupe. À la première personne du pluriel (nous), on ajoute la terminaison 'ons'.",
+                    hint: "Verbe du 1er groupe (-er) à la 1ère personne du pluriel."
+                },
+                {
+                    question: "Vous (travailler) beaucoup.",
+                    answer: "travaillez",
+                    infinitive: "travailler",
+                    explanation: "Le verbe 'travailler' est un verbe du premier groupe. À la deuxième personne du pluriel (vous), on ajoute la terminaison 'ez'.",
+                    hint: "Verbe du 1er groupe (-er) à la 2ème personne du pluriel."
+                },
+                {
+                    question: "Ils (regarder) la télévision.",
+                    answer: "regardent",
+                    infinitive: "regarder",
+                    explanation: "Le verbe 'regarder' est un verbe du premier groupe. À la troisième personne du pluriel (ils/elles), on ajoute la terminaison 'ent'.",
+                    hint: "Verbe du 1er groupe (-er) à la 3ème personne du pluriel."
+                },
+                {
+                    question: "Je (être) étudiant.",
+                    answer: "suis",
+                    infinitive: "être",
+                    explanation: "Le verbe 'être' est un verbe irrégulier. À la première personne du singulier (je), la forme est 'suis'.",
+                    hint: "Verbe irrégulier très courant."
+                },
+                {
+                    question: "Tu (avoir) un chat.",
+                    answer: "as",
+                    infinitive: "avoir",
+                    explanation: "Le verbe 'avoir' est un verbe irrégulier. À la deuxième personne du singulier (tu), la forme est 'as'.",
+                    hint: "Verbe irrégulier très courant."
+                },
+                {
+                    question: "Elle (aller) à l'école.",
+                    answer: "va",
+                    infinitive: "aller",
+                    explanation: "Le verbe 'aller' est un verbe irrégulier. À la troisième personne du singulier (elle), la forme est 'va'.",
+                    hint: "Verbe irrégulier très courant."
+                },
+                {
+                    question: "Nous (faire) nos devoirs.",
+                    answer: "faisons",
+                    infinitive: "faire",
+                    explanation: "Le verbe 'faire' est un verbe irrégulier. À la première personne du pluriel (nous), la forme est 'faisons'.",
+                    hint: "Verbe irrégulier très courant."
+                }
+            ],
+            moyen: [
+                {
+                    question: "Je (finir) mon travail à 18h.",
+                    answer: "finis",
+                    infinitive: "finir",
+                    explanation: "Le verbe 'finir' est un verbe du deuxième groupe. À la première personne du singulier (je), on ajoute la terminaison 'is'.",
+                    hint: "Verbe du 2ème groupe (-ir) à la 1ère personne du singulier."
+                },
+                {
+                    question: "Tu (choisir) un livre.",
+                    answer: "choisis",
+                    infinitive: "choisir",
+                    explanation: "Le verbe 'choisir' est un verbe du deuxième groupe. À la deuxième personne du singulier (tu), on ajoute la terminaison 'is'.",
+                    hint: "Verbe du 2ème groupe (-ir) à la 2ème personne du singulier."
+                },
+                {
+                    question: "Il (réfléchir) à la question.",
+                    answer: "réfléchit",
+                    infinitive: "réfléchir",
+                    explanation: "Le verbe 'réfléchir' est un verbe du deuxième groupe. À la troisième personne du singulier (il), on ajoute la terminaison 'it'.",
+                    hint: "Verbe du 2ème groupe (-ir) à la 3ème personne du singulier."
+                },
+                {
+                    question: "Nous (réussir) l'examen.",
+                    answer: "réussissons",
+                    infinitive: "réussir",
+                    explanation: "Le verbe 'réussir' est un verbe du deuxième groupe. À la première personne du pluriel (nous), on ajoute la terminaison 'issons'.",
+                    hint: "Verbe du 2ème groupe (-ir) à la 1ère personne du pluriel."
+                },
+                {
+                    question: "Vous (grandir) vite.",
+                    answer: "grandissez",
+                    infinitive: "grandir",
+                    explanation: "Le verbe 'grandir' est un verbe du deuxième groupe. À la deuxième personne du pluriel (vous), on ajoute la terminaison 'issez'.",
+                    hint: "Verbe du 2ème groupe (-ir) à la 2ème personne du pluriel."
+                },
+                {
+                    question: "Elles (obéir) aux règles.",
+                    answer: "obéissent",
+                    infinitive: "obéir",
+                    explanation: "Le verbe 'obéir' est un verbe du deuxième groupe. À la troisième personne du pluriel (elles), on ajoute la terminaison 'issent'.",
+                    hint: "Verbe du 2ème groupe (-ir) à la 3ème personne du pluriel."
+                },
+                {
+                    question: "Je (prendre) le train.",
+                    answer: "prends",
+                    infinitive: "prendre",
+                    explanation: "Le verbe 'prendre' est un verbe du troisième groupe. À la première personne du singulier (je), la forme est 'prends'.",
+                    hint: "Verbe du 3ème groupe (-re) à la 1ère personne du singulier."
+                },
+                {
+                    question: "Tu (venir) chez moi ce soir.",
+                    answer: "viens",
+                    infinitive: "venir",
+                    explanation: "Le verbe 'venir' est un verbe du troisième groupe. À la deuxième personne du singulier (tu), la forme est 'viens'.",
+                    hint: "Verbe du 3ème groupe (-ir) à la 2ème personne du singulier."
+                },
+                {
+                    question: "Elle (mettre) la table.",
+                    answer: "met",
+                    infinitive: "mettre",
+                    explanation: "Le verbe 'mettre' est un verbe du troisième groupe. À la troisième personne du singulier (elle), la forme est 'met'.",
+                    hint: "Verbe du 3ème groupe (-re) à la 3ème personne du singulier."
+                },
+                {
+                    question: "Nous (voir) un film.",
+                    answer: "voyons",
+                    infinitive: "voir",
+                    explanation: "Le verbe 'voir' est un verbe du troisième groupe. À la première personne du pluriel (nous), la forme est 'voyons'.",
+                    hint: "Verbe du 3ème groupe (-oir) à la 1ère personne du pluriel."
+                }
+            ],
+            difficile: [
+                {
+                    question: "Je (vouloir) apprendre le français.",
+                    answer: "veux",
+                    infinitive: "vouloir",
+                    explanation: "Le verbe 'vouloir' est un verbe irrégulier du troisième groupe. À la première personne du singulier (je), la forme est 'veux'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-oir)."
+                },
+                {
+                    question: "Tu (pouvoir) m'aider.",
+                    answer: "peux",
+                    infinitive: "pouvoir",
+                    explanation: "Le verbe 'pouvoir' est un verbe irrégulier du troisième groupe. À la deuxième personne du singulier (tu), la forme est 'peux'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-oir)."
+                },
+                {
+                    question: "Il (savoir) la réponse.",
+                    answer: "sait",
+                    infinitive: "savoir",
+                    explanation: "Le verbe 'savoir' est un verbe irrégulier du troisième groupe. À la troisième personne du singulier (il), la forme est 'sait'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-oir)."
+                },
+                {
+                    question: "Nous (devoir) partir maintenant.",
+                    answer: "devons",
+                    infinitive: "devoir",
+                    explanation: "Le verbe 'devoir' est un verbe irrégulier du troisième groupe. À la première personne du pluriel (nous), la forme est 'devons'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-oir)."
+                },
+                {
+                    question: "Vous (recevoir) un cadeau.",
+                    answer: "recevez",
+                    infinitive: "recevoir",
+                    explanation: "Le verbe 'recevoir' est un verbe irrégulier du troisième groupe. À la deuxième personne du pluriel (vous), la forme est 'recevez'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-oir)."
+                },
+                {
+                    question: "Ils (dire) la vérité.",
+                    answer: "disent",
+                    infinitive: "dire",
+                    explanation: "Le verbe 'dire' est un verbe irrégulier du troisième groupe. À la troisième personne du pluriel (ils), la forme est 'disent'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-re)."
+                },
+                {
+                    question: "Je (boire) du café le matin.",
+                    answer: "bois",
+                    infinitive: "boire",
+                    explanation: "Le verbe 'boire' est un verbe irrégulier du troisième groupe. À la première personne du singulier (je), la forme est 'bois'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-re)."
+                },
+                {
+                    question: "Tu (croire) en toi.",
+                    answer: "crois",
+                    infinitive: "croire",
+                    explanation: "Le verbe 'croire' est un verbe irrégulier du troisième groupe. À la deuxième personne du singulier (tu), la forme est 'crois'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-re)."
+                },
+                {
+                    question: "Elle (vivre) à Lyon.",
+                    answer: "vit",
+                    infinitive: "vivre",
+                    explanation: "Le verbe 'vivre' est un verbe irrégulier du troisième groupe. À la troisième personne du singulier (elle), la forme est 'vit'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-re)."
+                },
+                {
+                    question: "Nous (comprendre) la leçon.",
+                    answer: "comprenons",
+                    infinitive: "comprendre",
+                    explanation: "Le verbe 'comprendre' est un verbe irrégulier du troisième groupe. À la première personne du pluriel (nous), la forme est 'comprenons'.",
+                    hint: "Verbe irrégulier du 3ème groupe (-re)."
+                }
+            ]
+        };
+        
+        // Game variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = 10;
+        let currentDifficulty = 'facile';
+        let questions = [];
+        
+        // DOM elements
+        const questionText = document.getElementById('question-text');
+        const verbInput = document.getElementById('verb-input');
+        const submitButton = document.getElementById('submit-button');
+        const explanation = document.getElementById('explanation');
+        const explanationText = document.getElementById('explanation-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const hintButton = document.getElementById('hint-button');
+        const hintText = document.getElementById('hint-text');
+        const feedback = document.getElementById('feedback');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            submitButton.addEventListener('click', checkAnswer);
+            hintButton.addEventListener('click', showHint);
+            
+            // Allow pressing Enter to submit answer
+            verbInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // Get questions for the current difficulty
+            questions = getRandomQuestions(exerciseData[currentDifficulty], totalQuestions);
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalQuestionsDisplay.textContent = totalQuestions;
+            progressBar.style.width = '0%';
+            
+            // Show first question
+            showQuestion();
+        }
+        
+        // Get random questions from the data
+        function getRandomQuestions(data, count) {
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        // Show the current question
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            
+            // Update question text
+            questionText.textContent = question.question;
+            
+            // Clear input
+            verbInput.value = '';
+            verbInput.focus();
+            
+            // Hide explanation and feedback
+            explanation.style.display = 'none';
+            feedback.style.display = 'none';
+            
+            // Hide hint
+            hintText.style.display = 'none';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentQuestionIndex / totalQuestions) * 100}%`;
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextQuestion);
+            submitButton.addEventListener('click', checkAnswer);
+        }
+        
+        // Check the submitted answer
+        function checkAnswer() {
+            const userAnswer = verbInput.value.trim().toLowerCase();
+            
+            if (!userAnswer) {
+                alert('Veuillez entrer une réponse.');
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            const isCorrect = userAnswer === question.answer.toLowerCase();
+            
+            // Show feedback
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.textContent = isCorrect 
+                ? 'Correct ! Bien joué !' 
+                : `Incorrect. La bonne réponse est "${question.answer}".`;
+            feedback.style.display = 'block';
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+            }
+            
+            // Show explanation
+            explanationText.textContent = question.explanation;
+            explanation.style.display = 'block';
+            
+            // Disable input
+            verbInput.disabled = true;
+            
+            // Change submit button to next button
+            submitButton.textContent = 'Question Suivante';
+            submitButton.removeEventListener('click', checkAnswer);
+            submitButton.addEventListener('click', nextQuestion);
+        }
+        
+        // Show hint for the current question
+        function showHint() {
+            const question = questions[currentQuestionIndex];
+            hintText.textContent = question.hint;
+            hintText.style.display = 'block';
+        }
+        
+        // Move to the next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            // Enable input
+            verbInput.disabled = false;
+            
+            // Show next question
+            showQuestion();
+        }
+        
+        // End the game
+        function endGame() {
+            // Clear the question container
+            questionText.textContent = '';
+            verbInput.style.display = 'none';
+            hintButton.style.display = 'none';
+            submitButton.style.display = 'none';
+            
+            // Show final score
+            const scorePercentage = (score / totalQuestions) * 100;
+            let message = '';
+            
+            if (scorePercentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez très bien la conjugaison au présent.';
+            } else if (scorePercentage >= 70) {
+                message = 'Très bien ! Vous avez une bonne compréhension de la conjugaison au présent.';
+            } else if (scorePercentage >= 50) {
+                message = 'Bien ! Continuez à pratiquer pour améliorer votre maîtrise de la conjugaison.';
+            } else {
+                message = 'Continuez à pratiquer ! La conjugaison française peut être difficile.';
+            }
+            
+            // Create result message
+            const resultElement = document.createElement('div');
+            resultElement.innerHTML = `
+                <h2>Exercice terminé !</h2>
+                <p>Votre score : ${score}/${totalQuestions} (${scorePercentage}%)</p>
+                <p>${message}</p>
+                <button class="submit-button" onclick="startNewGame()">Recommencer</button>
+            `;
+            
+            questionText.parentNode.appendChild(resultElement);
+            
+            // Update progress bar to 100%
+            progressBar.style.width = '100%';
+        }
+    </script>
+</body>
+</html>

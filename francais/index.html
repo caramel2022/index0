@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeux Éducatifs en Français</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .game-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .game-card.lettres {
+            background-color: #4a90e2;
+        }
+        
+        .game-card.orthographe {
+            background-color: #2ecc71;
+        }
+        
+        .game-card.dictee {
+            background-color: #9b59b6;
+        }
+        
+        .game-card.conjugaison {
+            background-color: #e74c3c;
+        }
+        
+        .game-card.grammaire {
+            background-color: #f1c40f;
+        }
+        
+        .game-card.vocabulaire {
+            background-color: #5d7bf3;
+        }
+        
+        .game-icon {
+            text-align: center;
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+        }
+        
+        .game-title {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+        .game-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            text-align: center;
+            padding: 0 15px 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .games-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .games-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Jeux Éducatifs en Français</h1>
+        <p class="subtitle">Améliorez votre français en vous amusant</p>
+    </header>
+    
+    <div class="games-container">
+        <a href="jeux-de-lettres/index1.html" class="game-card lettres">
+            <div class="game-icon">
+                <span>文</span>
+            </div>
+            <div class="game-title">Jeux de Lettres</div>
+            <div class="game-description">Formez des mots et enrichissez votre vocabulaire</div>
+        </a>
+        
+        <a href="orthographe/index2.html" class="game-card orthographe">
+            <div class="game-icon">
+                <span>📄</span>
+            </div>
+            <div class="game-title">Orthographe</div>
+            <div class="game-description">Améliorez votre orthographe en vous amusant</div>
+        </a>
+        
+        <a href="dictee/index3.html" class="game-card dictee">
+            <div class="game-icon">
+                <span>🔊</span>
+            </div>
+            <div class="game-title">Dictée</div>
+            <div class="game-description">Écoutez et écrivez correctement</div>
+        </a>
+        
+        <a href="conjugaison/index4.html" class="game-card conjugaison">
+            <div class="game-icon">
+                <span>📖</span>
+            </div>
+            <div class="game-title">Conjugaison</div>
+            <div class="game-description">Maîtrisez les temps et les modes</div>
+        </a>
+        
+        <a href="grammaire/index5.html" class="game-card grammaire">
+            <div class="game-icon">
+                <span>📋</span>
+            </div>
+            <div class="game-title">Grammaire</div>
+            <div class="game-description">Apprenez les règles grammaticales</div>
+        </a>
+        
+        <a href="vocabulaire/index6.html" class="game-card vocabulaire">
+            <div class="game-icon">
+                <span>📊</span>
+            </div>
+            <div class="game-title">Vocabulaire</div>
+            <div class="game-description">Enrichissez votre vocabulaire français</div>
+        </a>
+    </div>
+</body>
+</html>

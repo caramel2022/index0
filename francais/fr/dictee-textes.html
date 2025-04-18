@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictée de Textes - Français</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #3498db;
+            --current-color-dark: #2980b9;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .dictation-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .play-button {
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 24px;
+        }
+        
+        .play-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .play-count {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .input-container {
+            margin-bottom: 20px;
+        }
+        
+        .text-input {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            min-height: 150px;
+            font-family: 'Roboto', sans-serif;
+            resize: vertical;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: var(--current-color);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .result-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--current-color-dark);
+        }
+        
+        .correct-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .diff-display {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            line-height: 1.6;
+        }
+        
+        .diff-correct {
+            color: #2ecc71;
+        }
+        
+        .diff-incorrect {
+            color: #e74c3c;
+            text-decoration: line-through;
+        }
+        
+        .diff-missing {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .accuracy-meter {
+            margin-top: 15px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            height: 20px;
+            overflow: hidden;
+        }
+        
+        .accuracy-fill {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .accuracy-text {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 5px;
+            color: #555;
+        }
+        
+        .play-audio-btn {
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .play-audio-btn:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .difficulty-selector {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index3.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour aux Dictées
+            </a>
+            <h1>Dictée de Textes</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-texts">3</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="dictation-container">
+                    <div class="audio-controls">
+                        <button class="play-button" id="play-button">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="play-count">
+                            Écoutez le texte (<span id="play-count">0</span>/<span id="max-plays">3</span>)
+                        </div>
+                    </div>
+                    
+                    <div class="input-container">
+                        <textarea class="text-input" id="text-input" placeholder="Écrivez le texte que vous entendez..." rows="6"></textarea>
+                    </div>
+                    
+                    <div class="feedback" id="feedback"></div>
+                    
+                    <div class="accuracy-meter">
+                        <div class="accuracy-fill" id="accuracy-fill"></div>
+                    </div>
+                    <div class="accuracy-text" id="accuracy-text">0% de précision</div>
+                    
+                    <div class="result-container" id="result-container">
+                        <div class="result-title">Résultat:</div>
+                        <div class="correct-text" id="correct-text"></div>
+                        <div class="diff-display" id="diff-display"></div>
+                    </div>
+                    
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> La Dictée de Textes</h3>
+                <p>Cet exercice vous aide à améliorer votre compréhension orale et votre orthographe en travaillant sur des textes complets.</p>
+                
+                <h4>Comment faire l'exercice :</h4>
+                <ol>
+                    <li>Cliquez sur le bouton de lecture pour écouter le texte</li>
+                    <li>Écrivez le texte que vous entendez dans la zone de texte</li>
+                    <li>Cliquez sur "Vérifier" pour voir votre résultat</li>
+                    <li>Vous pouvez écouter chaque texte jusqu'à 3 fois</li>
+                </ol>
+                
+                <h4>Conseils pour réussir :</h4>
+                <ul>
+                    <li>Écoutez attentivement la prononciation et l'intonation</li>
+                    <li>Faites attention à la ponctuation</li>
+                    <li>Concentrez-vous sur les mots de liaison</li>
+                    <li>Relisez votre texte avant de le soumettre</li>
+                </ul>
+                
+                <p>La dictée de textes est un excellent moyen d'améliorer votre français écrit !</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    text: "Le chat dort sur le canapé. Il est très content et ronronne doucement. Sa maîtresse lui donne à manger tous les jours.",
+                    title: "Le chat"
+                },
+                {
+                    text: "J'aime beaucoup lire des livres. Ma bibliothèque est pleine de romans et de bandes dessinées. Je lis chaque soir avant de dormir.",
+                    title: "La lecture"
+                },
+                {
+                    text: "Le matin, je me lève à sept heures. Je prends mon petit déjeuner et je me prépare pour aller au travail. J'arrive toujours à l'heure.",
+                    title: "Ma routine"
+                },
+                {
+                    text: "En été, nous allons souvent à la plage. Nous nageons dans la mer et nous prenons le soleil. C'est très agréable et relaxant.",
+                    title: "Les vacances d'été"
+                },
+                {
+                    text: "Mon ami habite dans une grande maison avec un beau jardin. Il y a beaucoup de fleurs et d'arbres. J'aime visiter sa maison.",
+                    title: "La maison de mon ami"
+                }
+            ],
+            moyen: [
+                {
+                    text: "La pollution de l'air est un problème majeur dans les grandes villes. Les voitures et les usines rejettent des gaz toxiques qui nuisent à notre santé et à l'environnement.",
+                    title: "La pollution"
+                },
+                {
+                    text: "Les nouvelles technologies ont transformé notre façon de communiquer. Aujourd'hui, nous pouvons parler instantanément avec des personnes à l'autre bout du monde.",
+                    title: "La technologie"
+                },
+                {
+                    text: "Le réchauffement climatique est causé par les activités humaines. Il est important de réduire notre consommation d'énergie et de protéger les forêts pour limiter ce phénomène.",
+                    title: "Le climat"
+                },
+                {
+                    text: "La cuisine française est réputée dans le monde entier. Les chefs français utilisent des ingrédients de qualité et des techniques traditionnelles pour créer des plats délicieux.",
+                    title: "La cuisine française"
+                },
+                {
+                    text: "L'apprentissage d'une langue étrangère demande beaucoup de patience et de pratique. Il faut écouter, parler, lire et écrire régulièrement pour progresser.",
+                    title: "L'apprentissage des langues"
+                }
+            ],
+            difficile: [
+                {
+                    text: "La biodiversité est essentielle à l'équilibre des écosystèmes. Malheureusement, de nombreuses espèces animales et végétales sont menacées d'extinction à cause de la déforestation et de la pollution.",
+                    title: "La biodiversité"
+                },
+                {
+                    text: "L'intelligence artificielle révolutionne de nombreux secteurs d'activité. Les algorithmes d'apprentissage automatique permettent aux machines d'analyser des données complexes et de prendre des décisions autonomes.",
+                    title: "L'intelligence artificielle"
+                },
+                {
+                    text: "Les inégalités socio-économiques persistent dans notre société malgré les progrès réalisés. L'accès à l'éducation, aux soins de santé et à un logement décent reste difficile pour les populations défavorisées.",
+                    title: "Les inégalités"
+                },
+                {
+                    text: "La mondialisation a facilité les échanges commerciaux et culturels entre les pays. Cependant, elle a également accentué la concurrence économique et contribué à la standardisation des modes de vie.",
+                    title: "La mondialisation"
+                },
+                {
+                    text: "La préservation du patrimoine culturel est un enjeu majeur pour les générations futures. Les monuments historiques, les traditions et les langues régionales font partie de notre identité collective.",
+                    title: "Le patrimoine culturel"
+                }
+            ]
+        };
+        
+        // Game variables
+        let currentTextIndex = 0;
+        let score = 0;
+        let totalTexts = 3;
+        let currentDifficulty = 'facile';
+        let texts = [];
+        let playCount = 0;
+        let maxPlays = 3;
+        let speechSynthesisAvailable = false;
+        
+        // DOM elements
+        const playButton = document.getElementById('play-button');
+        const playCountDisplay = document.getElementById('play-count');
+        const maxPlaysDisplay = document.getElementById('max-plays');
+        const textInput = document.getElementById('text-input');
+        const submitButton = document.getElementById('submit-button');
+        const resultContainer = document.getElementById('result-container');
+        const correctText = document.getElementById('correct-text');
+        const diffDisplay = document.getElementById('diff-display');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalTextsDisplay = document.getElementById('total-texts');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const feedback = document.getElementById('feedback');
+        const accuracyFill = document.getElementById('accuracy-fill');
+        const accuracyText = document.getElementById('accuracy-text');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if speech synthesis is available
+            speechSynthesisAvailable = 'speechSynthesis' in window;
+            
+            if (!speechSynthesisAvailable) {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Cet exercice nécessite la synthèse vocale pour fonctionner correctement.');
+            }
+            
+            // Load voices when available (needed for some browsers)
+            if (speechSynthesisAvailable) {
+                window.speechSynthesis.onvoiceschanged = function() {
+                    // Voices loaded
+                };
+            }
+            
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            
+            playButton.addEventListener('click', playText);
+            submitButton.addEventListener('click', checkAnswer);
+            
+            // Allow pressing Ctrl+Enter to submit answer
+            textInput.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    checkAnswer();
+                }
+            });
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            currentTextIndex = 0;
+            score = 0;
+            
+            // Get texts for the current difficulty
+            texts = getRandomTexts(exerciseData[currentDifficulty], totalTexts);
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalTextsDisplay.textContent = totalTexts;
+            progressBar.style.width = '0%';
+            
+            // Show first text
+            showText();
+        }
+        
+        // Get random texts from the data
+        function getRandomTexts(data, count) {
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        // Show the current text
+        function showText() {
+            if (currentTextIndex >= texts.length) {
+                endGame();
+                return;
+            }
+            
+            // Reset play count
+            playCount = 0;
+            playCountDisplay.textContent = playCount;
+            maxPlaysDisplay.textContent = maxPlays;
+            
+            // Clear input
+            textInput.value = '';
+            textInput.disabled = false;
+            textInput.focus();
+            
+            // Hide result container and feedback
+            resultContainer.style.display = 'none';
+            feedback.style.display = 'none';
+            
+            // Reset accuracy meter
+            accuracyFill.style.width = '0%';
+            accuracyText.textContent = '0% de précision';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentTextIndex / totalTexts) * 100}%`;
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextText);
+            submitButton.addEventListener('click', checkAnswer);
+        }
+        
+        // Play the current text
+        function playText() {
+            if (playCount >= maxPlays) {
+                alert('Vous avez atteint le nombre maximum d\'écoutes pour ce texte.');
+                return;
+            }
+            
+            const text = texts[currentTextIndex].text;
+            
+            if (speechSynthesisAvailable) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.9; // Slightly slower than normal
+                
+                // Try to get a French voice
+                const voices = window.speechSynthesis.getVoices();
+                const frenchVoice = voices.find(voice => voice.lang.includes('fr'));
+                if (frenchVoice) {
+                    utterance.voice = frenchVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+                
+                playCount++;
+                playCountDisplay.textContent = playCount;
+            } else {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici le texte : ' + text);
+            }
+        }
+        
+        // Check the submitted answer
+        function checkAnswer() {
+            const userAnswer = textInput.value.trim();
+            
+            if (!userAnswer) {
+                alert('Veuillez écrire le texte que vous avez entendu.');
+                return;
+            }
+            
+            const correctTextContent = texts[currentTextIndex].text;
+            
+            // Calculate accuracy
+            const accuracy = calculateAccuracy(userAnswer, correctTextContent);
+            const accuracyPercentage = Math.round(accuracy * 100);
+            
+            // Update accuracy meter
+            accuracyFill.style.width = `${accuracyPercentage}%`;
+            accuracyText.textContent = `${accuracyPercentage}% de précision`;
+            
+            // Determine if answer is correct (80% accuracy or higher is considered correct)
+            const isCorrect = accuracy >= 0.8;
+            
+            // Show feedback
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.textContent = isCorrect 
+                ? 'Bien joué ! Votre réponse est correcte.' 
+                : 'Votre réponse contient des erreurs.';
+            feedback.style.display = 'block';
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+            }
+            
+            // Show result with audio button
+            correctText.innerHTML = `<strong>${texts[currentTextIndex].title}</strong>: "${correctTextContent}" 
+                <button class="play-audio-btn" onclick="playCorrectText()">
+                    <i class="fas fa-volume-up"></i> Écouter
+                </button>`;
+            diffDisplay.innerHTML = generateDiffHTML(userAnswer, correctTextContent);
+            resultContainer.style.display = 'block';
+            
+            // Disable input
+            textInput.disabled = true;
+            
+            // Change submit button to next button
+            submitButton.textContent = 'Texte Suivant';
+            submitButton.removeEventListener('click', checkAnswer);
+            submitButton.addEventListener('click', nextText);
+        }
+        
+        // Calculate the accuracy of the user's answer
+        function calculateAccuracy(userAnswer, correctAnswer) {
+            // Normalize both strings for comparison
+            const normalizedUser = normalizeString(userAnswer);
+            const normalizedCorrect = normalizeString(correctAnswer);
+            
+            // Use Levenshtein distance to calculate similarity
+            const distance = levenshteinDistance(normalizedUser, normalizedCorrect);
+            const maxLength = Math.max(normalizedUser.length, normalizedCorrect.length);
+            
+            // Calculate accuracy as 1 - (distance / maxLength)
+            return Math.max(0, 1 - (distance / maxLength));
+        }
+        
+        // Normalize string for comparison (lowercase, remove extra spaces)
+        function normalizeString(str) {
+            return str.toLowerCase().replace(/\s+/g, ' ').trim();
+        }
+        
+        // Calculate Levenshtein distance between two strings
+        function levenshteinDistance(a, b) {
+            const matrix = [];
+            
+            // Initialize matrix
+            for (let i = 0; i <= b.length; i++) {
+                matrix[i] = [i];
+            }
+            
+            for (let j = 0; j <= a.length; j++) {
+                matrix[0][j] = j;
+            }
+            
+            // Fill matrix
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1, // substitution
+                            matrix[i][j - 1] + 1,     // insertion
+                            matrix[i - 1][j] + 1      // deletion
+                        );
+                    }
+                }
+            }
+            
+            return matrix[b.length][a.length];
+        }
+        
+        // Generate HTML to display differences between user answer and correct answer
+        function generateDiffHTML(userAnswer, correctAnswer) {
+            // Split into words for comparison
+            const userWords = userAnswer.split(/\s+/);
+            const correctWords = correctAnswer.split(/\s+/);
+            
+            let html = '';
+            let userIndex = 0;
+            let correctIndex = 0;
+            
+            // Simple word-by-word comparison
+            while (correctIndex < correctWords.length) {
+                const correctWord = correctWords[correctIndex];
+                const userWord = userIndex < userWords.length ? userWords[userIndex] : null;
+                
+                if (!userWord) {
+                    // Missing words at the end
+                    html += `<span class="diff-missing">${correctWord}</span> `;
+                    correctIndex++;
+                } else if (normalizeString(userWord) === normalizeString(correctWord)) {
+                    // Words match
+                    html += `<span class="diff-correct">${correctWord}</span> `;
+                    userIndex++;
+                    correctIndex++;
+                } else {
+                    // Words don't match
+                    html += `<span class="diff-incorrect">${userWord}</span> `;
+                    html += `<span class="diff-missing">${correctWord}</span> `;
+                    userIndex++;
+                    correctIndex++;
+                }
+            }
+            
+            // Extra words from user
+            while (userIndex < userWords.length) {
+                html += `<span class="diff-incorrect">${userWords[userIndex]}</span> `;
+                userIndex++;
+            }
+            
+            return html;
+        }
+        
+        // Play the correct text audio
+        function playCorrectText() {
+            const text = texts[currentTextIndex].text;
+            
+            if (speechSynthesisAvailable) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.9; // Slightly slower than normal
+                
+                // Try to get a French voice
+                const voices = window.speechSynthesis.getVoices();
+                const frenchVoice = voices.find(voice => voice.lang.includes('fr'));
+                if (frenchVoice) {
+                    utterance.voice = frenchVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici le texte : ' + text);
+            }
+        }
+        
+        // Move to the next text
+        function nextText() {
+            currentTextIndex++;
+            showText();
+        }
+        
+        // End the game
+        function endGame() {
+            // Create result container
+            const resultElement = document.createElement('div');
+            resultElement.className = 'dictation-container';
+            
+            // Show final score
+            const scorePercentage = (score / totalTexts) * 100;
+            let message = '';
+            
+            if (scorePercentage >= 90) {
+                message = 'Excellent ! Vous avez une très bonne compréhension orale et une excellente orthographe.';
+            } else if (scorePercentage >= 70) {
+                message = 'Très bien ! Votre compréhension orale et votre orthographe sont bonnes.';
+            } else if (scorePercentage >= 50) {
+                message = 'Bien ! Continuez à pratiquer pour améliorer votre compréhension orale et votre orthographe.';
+            } else {
+                message = 'Continuez à pratiquer ! La dictée est un exercice difficile qui demande de la pratique régulière.';
+            }
+            
+            // Create result message
+            resultElement.innerHTML = `
+                <h2>Exercice terminé !</h2>
+                <p>Votre score : ${score}/${totalTexts} (${scorePercentage}%)</p>
+                <p>${message}</p>
+                <button class="submit-button" onclick="startNewGame()">Recommencer</button>
+            `;
+            
+            // Replace the dictation container with the result element
+            document.querySelector('.dictation-container').replaceWith(resultElement);
+            
+            // Update progress bar to show completion
+            progressBar.style.width = '100%';
+        }
+    </script>
+</body>
+</html>

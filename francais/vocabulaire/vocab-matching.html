@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Association Mots-Images - Vocabulaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        :root {
+            --current-color: #2ecc71;
+            --current-color-dark: #27ae60;
+        }
+        
+        .matching-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .matching-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .matching-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .matching-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            perspective: 1000px;
+        }
+        
+        .matching-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .matching-card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+        .card-front {
+            background-color: var(--current-color);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .card-back {
+            background-color: white;
+            transform: rotateY(180deg);
+        }
+        
+        .card-back.word {
+            font-size: 20px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .card-back.image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .matching-card.matched {
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.7);
+            pointer-events: none;
+        }
+        
+        .matching-card.matched .card-front {
+            background-color: var(--current-color-dark);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background-color: #f5f5f5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .category-selector {
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        .category-selector select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+        }
+        
+        .category-selector select:focus {
+            outline: none;
+            border-color: var(--current-color);
+        }
+        
+        .feedback-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .feedback-message.success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback-message.error {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index6.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour au Vocabulaire
+            </a>
+            <h1>Association Mots-Images</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <div class="game-interface">
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvelle Partie
+                </button>
+                <div class="difficulty-selector">
+                    <select id="difficulty-select">
+                        <option value="easy">Facile</option>
+                        <option value="medium">Moyen</option>
+                        <option value="hard">Difficile</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="category-selector">
+                <select id="category-select">
+                    <option value="fruits">Fruits</option>
+                    <option value="animals">Animaux</option>
+                    <option value="colors">Couleurs</option>
+                    <option value="household">Objets de la Maison</option>
+                    <option value="clothing">Vêtements</option>
+                </select>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="game-stats">
+                <div class="stat-item">Paires trouvées: <span id="pairs-found">0</span>/<span id="total-pairs">0</span></div>
+                <div class="stat-item">Essais: <span id="attempts">0</span></div>
+                <div class="stat-item">Temps: <span id="timer">00:00</span></div>
+            </div>
+            
+            <div class="game-content-area">
+                <div class="matching-container">
+                    <div class="matching-grid" id="matching-grid">
+                        <!-- Cards will be generated here -->
+                    </div>
+                    
+                    <div class="feedback-message" id="feedback-message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Game data
+        const vocabularyData = {
+            fruits: {
+                easy: [
+                    { word: "pomme", image: "../images/vocab/fruits/apple.jpg" },
+                    { word: "banane", image: "../images/vocab/fruits/banana.jpg" },
+                    { word: "orange", image: "../images/vocab/fruits/orange.jpg" },
+                    { word: "fraise", image: "../images/vocab/fruits/strawberry.jpg" }
+                ],
+                medium: [
+                    { word: "pomme", image: "../images/vocab/fruits/apple.jpg" },
+                    { word: "banane", image: "../images/vocab/fruits/banana.jpg" },
+                    { word: "orange", image: "../images/vocab/fruits/orange.jpg" },
+                    { word: "fraise", image: "../images/vocab/fruits/strawberry.jpg" },
+                    { word: "raisin", image: "../images/vocab/fruits/grape.jpg" },
+                    { word: "poire", image: "../images/vocab/fruits/pear.jpg" }
+                ],
+                hard: [
+                    { word: "pomme", image: "../images/vocab/fruits/apple.jpg" },
+                    { word: "banane", image: "../images/vocab/fruits/banana.jpg" },
+                    { word: "orange", image: "../images/vocab/fruits/orange.jpg" },
+                    { word: "fraise", image: "../images/vocab/fruits/strawberry.jpg" },
+                    { word: "raisin", image: "../images/vocab/fruits/grape.jpg" },
+                    { word: "poire", image: "../images/vocab/fruits/pear.jpg" },
+                    { word: "ananas", image: "../images/vocab/fruits/pineapple.jpg" },
+                    { word: "cerise", image: "../images/vocab/fruits/cherry.jpg" }
+                ]
+            },
+            animals: {
+                easy: [
+                    { word: "chat", image: "../images/vocab/animals/cat.jpg" },
+                    { word: "chien", image: "../images/vocab/animals/dog.jpg" },
+                    { word: "oiseau", image: "../images/vocab/animals/bird.jpg" },
+                    { word: "poisson", image: "../images/vocab/animals/fish.jpg" }
+                ],
+                medium: [
+                    { word: "chat", image: "../images/vocab/animals/cat.jpg" },
+                    { word: "chien", image: "../images/vocab/animals/dog.jpg" },
+                    { word: "oiseau", image: "../images/vocab/animals/bird.jpg" },
+                    { word: "poisson", image: "../images/vocab/animals/fish.jpg" },
+                    { word: "cheval", image: "../images/vocab/animals/horse.jpg" },
+                    { word: "lapin", image: "../images/vocab/animals/rabbit.jpg" }
+                ],
+                hard: [
+                    { word: "chat", image: "../images/vocab/animals/cat.jpg" },
+                    { word: "chien", image: "../images/vocab/animals/dog.jpg" },
+                    { word: "oiseau", image: "../images/vocab/animals/bird.jpg" },
+                    { word: "poisson", image: "../images/vocab/animals/fish.jpg" },
+                    { word: "cheval", image: "../images/vocab/animals/horse.jpg" },
+                    { word: "lapin", image: "../images/vocab/animals/rabbit.jpg" },
+                    { word: "éléphant", image: "../images/vocab/animals/elephant.jpg" },
+                    { word: "girafe", image: "../images/vocab/animals/giraffe.jpg" }
+                ]
+            },
+            colors: {
+                easy: [
+                    { word: "rouge", image: "../images/vocab/colors/red.jpg" },
+                    { word: "bleu", image: "../images/vocab/colors/blue.jpg" },
+                    { word: "vert", image: "../images/vocab/colors/green.jpg" },
+                    { word: "jaune", image: "../images/vocab/colors/yellow.jpg" }
+                ],
+                medium: [
+                    { word: "rouge", image: "../images/vocab/colors/red.jpg" },
+                    { word: "bleu", image: "../images/vocab/colors/blue.jpg" },
+                    { word: "vert", image: "../images/vocab/colors/green.jpg" },
+                    { word: "jaune", image: "../images/vocab/colors/yellow.jpg" },
+                    { word: "noir", image: "../images/vocab/colors/black.jpg" },
+                    { word: "blanc", image: "../images/vocab/colors/white.jpg" }
+                ],
+                hard: [
+                    { word: "rouge", image: "../images/vocab/colors/red.jpg" },
+                    { word: "bleu", image: "../images/vocab/colors/blue.jpg" },
+                    { word: "vert", image: "../images/vocab/colors/green.jpg" },
+                    { word: "jaune", image: "../images/vocab/colors/yellow.jpg" },
+                    { word: "noir", image: "../images/vocab/colors/black.jpg" },
+                    { word: "blanc", image: "../images/vocab/colors/white.jpg" },
+                    { word: "violet", image: "../images/vocab/colors/purple.jpg" },
+                    { word: "orange", image: "../images/vocab/colors/orange-color.jpg" }
+                ]
+            },
+            household: {
+                easy: [
+                    { word: "table", image: "../images/vocab/household/table.jpg" },
+                    { word: "chaise", image: "../images/vocab/household/chair.jpg" },
+                    { word: "lit", image: "../images/vocab/household/bed.jpg" },
+                    { word: "lampe", image: "../images/vocab/household/lamp.jpg" }
+                ],
+                medium: [
+                    { word: "table", image: "../images/vocab/household/table.jpg" },
+                    { word: "chaise", image: "../images/vocab/household/chair.jpg" },
+                    { word: "lit", image: "../images/vocab/household/bed.jpg" },
+                    { word: "lampe", image: "../images/vocab/household/lamp.jpg" },
+                    { word: "canapé", image: "../images/vocab/household/sofa.jpg" },
+                    { word: "télévision", image: "../images/vocab/household/tv.jpg" }
+                ],
+                hard: [
+                    { word: "table", image: "../images/vocab/household/table.jpg" },
+                    { word: "chaise", image: "../images/vocab/household/chair.jpg" },
+                    { word: "lit", image: "../images/vocab/household/bed.jpg" },
+                    { word: "lampe", image: "../images/vocab/household/lamp.jpg" },
+                    { word: "canapé", image: "../images/vocab/household/sofa.jpg" },
+                    { word: "télévision", image: "../images/vocab/household/tv.jpg" },
+                    { word: "réfrigérateur", image: "../images/vocab/household/fridge.jpg" },
+                    { word: "four", image: "../images/vocab/household/oven.jpg" }
+                ]
+            },
+            clothing: {
+                easy: [
+                    { word: "chemise", image: "../images/vocab/clothing/shirt.jpg" },
+                    { word: "pantalon", image: "../images/vocab/clothing/pants.jpg" },
+                    { word: "chaussures", image: "../images/vocab/clothing/shoes.jpg" },
+                    { word: "chapeau", image: "../images/vocab/clothing/hat.jpg" }
+                ],
+                medium: [
+                    { word: "chemise", image: "../images/vocab/clothing/shirt.jpg" },
+                    { word: "pantalon", image: "../images/vocab/clothing/pants.jpg" },
+                    { word: "chaussures", image: "../images/vocab/clothing/shoes.jpg" },
+                    { word: "chapeau", image: "../images/vocab/clothing/hat.jpg" },
+                    { word: "robe", image: "../images/vocab/clothing/dress.jpg" },
+                    { word: "veste", image: "../images/vocab/clothing/jacket.jpg" }
+                ],
+                hard: [
+                    { word: "chemise", image: "../images/vocab/clothing/shirt.jpg" },
+                    { word: "pantalon", image: "../images/vocab/clothing/pants.jpg" },
+                    { word: "chaussures", image: "../images/vocab/clothing/shoes.jpg" },
+                    { word: "chapeau", image: "../images/vocab/clothing/hat.jpg" },
+                    { word: "robe", image: "../images/vocab/clothing/dress.jpg" },
+                    { word: "veste", image: "../images/vocab/clothing/jacket.jpg" },
+                    { word: "écharpe", image: "../images/vocab/clothing/scarf.jpg" },
+                    { word: "gants", image: "../images/vocab/clothing/gloves.jpg" }
+                ]
+            }
+        };
+        
+        // Game variables
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+        let pairsFound = 0;
+        let totalPairs = 0;
+        let attempts = 0;
+        let timer = 0;
+        let timerInterval = null;
+        let currentCategory = 'fruits';
+        let currentDifficulty = 'easy';
+        
+        // DOM elements
+        const matchingGrid = document.getElementById('matching-grid');
+        const progressBar = document.getElementById('progress-bar');
+        const pairsFoundElement = document.getElementById('pairs-found');
+        const totalPairsElement = document.getElementById('total-pairs');
+        const attemptsElement = document.getElementById('attempts');
+        const timerElement = document.getElementById('timer');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const categorySelect = document.getElementById('category-select');
+        const feedbackMessage = document.getElementById('feedback-message');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', startNewGame);
+            categorySelect.addEventListener('change', startNewGame);
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            resetGame();
+            
+            // Get current settings
+            currentCategory = categorySelect.value;
+            currentDifficulty = difficultySelect.value;
+            
+            // Get vocabulary items for the current category and difficulty
+            const vocabularyItems = vocabularyData[currentCategory][currentDifficulty];
+            totalPairs = vocabularyItems.length;
+            
+            // Update UI
+            totalPairsElement.textContent = totalPairs;
+            
+            // Create cards
+            createCards(vocabularyItems);
+            
+            // Start timer
+            startTimer();
+        }
+        
+        // Reset game state
+        function resetGame() {
+            // Clear the grid
+            matchingGrid.innerHTML = '';
+            
+            // Reset variables
+            firstCard = null;
+            secondCard = null;
+            lockBoard = false;
+            pairsFound = 0;
+            attempts = 0;
+            
+            // Reset UI
+            pairsFoundElement.textContent = '0';
+            attemptsElement.textContent = '0';
+            progressBar.style.width = '0%';
+            
+            // Reset timer
+            clearInterval(timerInterval);
+            timer = 0;
+            timerElement.textContent = '00:00';
+            
+            // Hide feedback
+            feedbackMessage.style.display = 'none';
+        }
+        
+        // Create cards for the game
+        function createCards(vocabularyItems) {
+            // Create an array with words and images
+            const cards = [];
+            
+            vocabularyItems.forEach(item => {
+                // Add word card
+                cards.push({
+                    type: 'word',
+                    content: item.word,
+                    pairId: item.word
+                });
+                
+                // Add image card
+                cards.push({
+                    type: 'image',
+                    content: item.image,
+                    pairId: item.word
+                });
+            });
+            
+            // Shuffle cards
+            shuffleArray(cards);
+            
+            // Create card elements
+            cards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'matching-card';
+                cardElement.dataset.pairId = card.pairId;
+                
+                const cardInner = document.createElement('div');
+                cardInner.className = 'card-inner';
+                
+                const cardFront = document.createElement('div');
+                cardFront.className = 'card-front';
+                cardFront.innerHTML = '?';
+                
+                const cardBack = document.createElement('div');
+                cardBack.className = `card-back ${card.type}`;
+                
+                if (card.type === 'word') {
+                    cardBack.textContent = card.content;
+                } else {
+                    const img = document.createElement('img');
+                    img.src = card.content;
+                    img.alt = card.pairId;
+                    img.onerror = function() {
+                        this.src = 'https://via.placeholder.com/150?text=' + card.pairId;
+                    };
+                    cardBack.appendChild(img);
+                }
+                
+                cardInner.appendChild(cardFront);
+                cardInner.appendChild(cardBack);
+                cardElement.appendChild(cardInner);
+                
+                cardElement.addEventListener('click', flipCard);
+                matchingGrid.appendChild(cardElement);
+            });
+        }
+        
+        // Flip card when clicked
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+            
+            this.classList.add('flipped');
+            
+            if (!firstCard) {
+                // First card flipped
+                firstCard = this;
+                return;
+            }
+            
+            // Second card flipped
+            secondCard = this;
+            attempts++;
+            attemptsElement.textContent = attempts;
+            
+            checkForMatch();
+        }
+        
+        // Check if the two flipped cards match
+        function checkForMatch() {
+            const isMatch = firstCard.dataset.pairId === secondCard.dataset.pairId;
+            
+            if (isMatch) {
+                disableCards();
+                pairsFound++;
+                pairsFoundElement.textContent = pairsFound;
+                progressBar.style.width = `${(pairsFound / totalPairs) * 100}%`;
+                
+                // Check if game is complete
+                if (pairsFound === totalPairs) {
+                    endGame(true);
+                }
+            } else {
+                unflipCards();
+            }
+        }
+        
+        // Disable matched cards
+        function disableCards() {
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+            
+            resetBoard();
+        }
+        
+        // Unflip non-matching cards
+        function unflipCards() {
+            lockBoard = true;
+            
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                secondCard.classList.remove('flipped');
+                
+                resetBoard();
+            }, 1500);
+        }
+        
+        // Reset board after a pair is checked
+        function resetBoard() {
+            [firstCard, secondCard] = [null, null];
+            lockBoard = false;
+        }
+        
+        // Start the timer
+        function startTimer() {
+            clearInterval(timerInterval);
+            timer = 0;
+            timerElement.textContent = '00:00';
+            
+            timerInterval = setInterval(() => {
+                timer++;
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+        
+        // End the game
+        function endGame(success) {
+            clearInterval(timerInterval);
+            
+            if (success) {
+                feedbackMessage.className = 'feedback-message success';
+                feedbackMessage.textContent = `Félicitations ! Vous avez trouvé toutes les paires en ${attempts} essais et ${timerElement.textContent}.`;
+                feedbackMessage.style.display = 'block';
+            }
+        }
+        
+        // Shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+</html>

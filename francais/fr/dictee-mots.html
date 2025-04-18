@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictée de Mots - Français</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #3498db;
+            --current-color-dark: #2980b9;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .dictation-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .play-button {
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 24px;
+        }
+        
+        .play-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .play-button.playing {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .play-count {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .word-input-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .word-input {
+            padding: 12px 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        
+        .word-input:focus {
+            border-color: var(--current-color);
+            outline: none;
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .word-definition, .word-example {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .play-audio-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--current-color);
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        
+        .play-audio-btn:hover {
+            color: var(--current-color-dark);
+        }
+        
+        .correct-word {
+            font-weight: bold;
+            color: var(--current-color-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .difficulty-selector {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index3.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à la Dictée
+            </a>
+            <h1>Dictée de Mots</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-words">10</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="dictation-container">
+                    <div class="audio-controls">
+                        <button class="play-button" id="play-button">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="play-count">
+                            Écoutez le mot (<span id="play-count">0</span>/<span id="max-plays">3</span>)
+                        </div>
+                    </div>
+                    
+                    <div class="word-input-container">
+                        <input type="text" id="word-input" class="word-input" placeholder="Écrivez le mot que vous entendez" autocomplete="off">
+                    </div>
+                    
+                    <div class="feedback" id="feedback"></div>
+                    
+                    <div class="result-container" id="result-container">
+                        <div>Mot correct: <span id="correct-word" class="correct-word"></span></div>
+                        <div class="word-definition" id="word-definition"></div>
+                        <div class="word-example" id="word-example"></div>
+                    </div>
+                    
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> La Dictée de Mots en Français</h3>
+                <p>La dictée de mots est un exercice essentiel pour améliorer votre orthographe en français.</p>
+                
+                <h4>Comment faire l'exercice :</h4>
+                <ol>
+                    <li>Écoutez attentivement le mot prononcé (vous pouvez l'écouter jusqu'à 3 fois)</li>
+                    <li>Écrivez le mot dans la zone de texte</li>
+                    <li>Cliquez sur "Vérifier" pour voir si votre orthographe est correcte</li>
+                    <li>Consultez la définition et l'exemple pour mieux comprendre le mot</li>
+                </ol>
+                
+                <h4>Conseils pour améliorer votre orthographe :</h4>
+                <ul>
+                    <li>Faites attention aux accents (é, è, ê, etc.)</li>
+                    <li>Mémorisez les règles de base de l'orthographe française</li>
+                    <li>Pratiquez régulièrement avec différents niveaux de difficulté</li>
+                    <li>Lisez beaucoup en français pour vous familiariser avec l'orthographe des mots</li>
+                    <li>Utilisez un dictionnaire pour vérifier l'orthographe des mots difficiles</li>
+                </ul>
+                
+                <h4>Raccourcis clavier :</h4>
+                <ul>
+                    <li><strong>Espace</strong> : Écouter le mot</li>
+                    <li><strong>Entrée</strong> : Vérifier votre réponse ou passer au mot suivant</li>
+                </ul>
+                
+                <p>Une bonne orthographe est essentielle pour une communication écrite efficace en français !</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const scoreDisplay = document.getElementById('score');
+        const totalWordsDisplay = document.getElementById('total-words');
+        const progressBar = document.getElementById('progress-bar');
+        const playButton = document.getElementById('play-button');
+        const playCountDisplay = document.getElementById('play-count');
+        const maxPlaysDisplay = document.getElementById('max-plays');
+        const wordInput = document.getElementById('word-input');
+        const feedbackElement = document.getElementById('feedback');
+        const resultContainer = document.getElementById('result-container');
+        const correctWordElement = document.getElementById('correct-word');
+        const wordDefinitionElement = document.getElementById('word-definition');
+        const wordExampleElement = document.getElementById('word-example');
+        const submitButton = document.getElementById('submit-button');
+        
+        // Game variables
+        let words = [];
+        let currentWordIndex = 0;
+        let score = 0;
+        let totalSentences = 10;
+        let playCount = 0;
+        let maxPlays = 3;
+        let currentDifficulty = 'facile';
+        let speechSynthesisAvailable = false;
+        
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    word: "maison",
+                    definition: "Bâtiment d'habitation",
+                    example: "J'habite dans une grande maison."
+                },
+                {
+                    word: "chat",
+                    definition: "Animal domestique félin",
+                    example: "Mon chat aime dormir sur le canapé."
+                },
+                {
+                    word: "livre",
+                    definition: "Assemblage de pages imprimées",
+                    example: "J'ai lu un livre intéressant hier."
+                },
+                {
+                    word: "école",
+                    definition: "Établissement où l'on enseigne",
+                    example: "Les enfants vont à l'école tous les jours."
+                },
+                {
+                    word: "table",
+                    definition: "Meuble composé d'un plateau et de pieds",
+                    example: "Nous mangeons à la table."
+                },
+                {
+                    word: "jardin",
+                    definition: "Espace cultivé de fleurs, légumes ou arbres",
+                    example: "Il y a beaucoup de fleurs dans le jardin."
+                },
+                {
+                    word: "ami",
+                    definition: "Personne avec qui on a une relation d'amitié",
+                    example: "Mon ami m'a invité à sa fête d'anniversaire."
+                },
+                {
+                    word: "soleil",
+                    definition: "Étoile autour de laquelle tourne la Terre",
+                    example: "Le soleil brille aujourd'hui."
+                },
+                {
+                    word: "voiture",
+                    definition: "Véhicule automobile à quatre roues",
+                    example: "Nous allons au travail en voiture."
+                },
+                {
+                    word: "pain",
+                    definition: "Aliment fait de farine, d'eau et de levain",
+                    example: "J'achète du pain frais à la boulangerie."
+                },
+                {
+                    word: "eau",
+                    definition: "Liquide transparent, inodore et sans saveur",
+                    example: "Il faut boire beaucoup d'eau chaque jour."
+                },
+                {
+                    word: "fleur",
+                    definition: "Partie colorée et parfumée d'une plante",
+                    example: "Elle a reçu un bouquet de fleurs."
+                },
+                {
+                    word: "porte",
+                    definition: "Ouverture permettant d'entrer et de sortir",
+                    example: "Fermez la porte quand vous sortez."
+                },
+                {
+                    word: "fenêtre",
+                    definition: "Ouverture dans un mur pour laisser entrer la lumière",
+                    example: "Ouvre la fenêtre pour faire entrer de l'air frais."
+                },
+                {
+                    word: "arbre",
+                    definition: "Grande plante ligneuse avec un tronc et des branches",
+                    example: "Les oiseaux font leur nid dans l'arbre."
+                }
+            ],
+            moyen: [
+                {
+                    word: "château",
+                    definition: "Grande demeure fortifiée",
+                    example: "Nous avons visité un château médiéval."
+                },
+                {
+                    word: "hôpital",
+                    definition: "Établissement de soins médicaux",
+                    example: "Mon grand-père est à l'hôpital depuis trois jours."
+                },
+                {
+                    word: "bibliothèque",
+                    definition: "Lieu où sont conservés des livres",
+                    example: "J'emprunte souvent des livres à la bibliothèque."
+                },
+                {
+                    word: "restaurant",
+                    definition: "Établissement où l'on sert des repas",
+                    example: "Nous dînons au restaurant ce soir."
+                },
+                {
+                    word: "téléphone",
+                    definition: "Appareil permettant de communiquer à distance",
+                    example: "J'ai oublié mon téléphone à la maison."
+                },
+                {
+                    word: "ordinateur",
+                    definition: "Machine électronique de traitement de l'information",
+                    example: "Je travaille sur mon ordinateur tous les jours."
+                },
+                {
+                    word: "appartement",
+                    definition: "Logement faisant partie d'un immeuble",
+                    example: "Ils ont acheté un appartement au centre-ville."
+                },
+                {
+                    word: "montagne",
+                    definition: "Relief élevé de la surface terrestre",
+                    example: "Nous faisons du ski dans les montagnes en hiver."
+                },
+                {
+                    word: "pharmacie",
+                    definition: "Établissement où l'on vend des médicaments",
+                    example: "Je dois aller à la pharmacie pour acheter des médicaments."
+                },
+                {
+                    word: "vêtement",
+                    definition: "Ce qui sert à couvrir le corps",
+                    example: "Elle a acheté de nouveaux vêtements pour l'été."
+                },
+                {
+                    word: "médecin",
+                    definition: "Personne qui pratique la médecine",
+                    example: "J'ai rendez-vous chez le médecin demain."
+                },
+                {
+                    word: "anniversaire",
+                    definition: "Jour où l'on fête sa naissance",
+                    example: "C'est mon anniversaire aujourd'hui, j'ai 30 ans."
+                },
+                {
+                    word: "poisson",
+                    definition: "Animal vertébré aquatique",
+                    example: "Nous avons mangé du poisson au dîner."
+                },
+                {
+                    word: "légume",
+                    definition: "Plante potagère dont on consomme une partie",
+                    example: "Il faut manger des légumes tous les jours."
+                },
+                {
+                    word: "musique",
+                    definition: "Art de combiner des sons",
+                    example: "J'écoute de la musique classique le soir."
+                }
+            ],
+            difficile: [
+                {
+                    word: "encyclopédie",
+                    definition: "Ouvrage qui fait le tour de toutes les connaissances",
+                    example: "J'ai consulté une encyclopédie pour mon projet de recherche."
+                },
+                {
+                    word: "rhinocéros",
+                    definition: "Grand mammifère avec une ou deux cornes sur le nez",
+                    example: "Le rhinocéros est une espèce menacée."
+                },
+                {
+                    word: "chrysanthème",
+                    definition: "Fleur ornementale d'automne",
+                    example: "Les chrysanthèmes sont souvent associés à la Toussaint en France."
+                },
+                {
+                    word: "parallélépipède",
+                    definition: "Solide à six faces parallélogrammes",
+                    example: "La boîte a la forme d'un parallélépipède rectangle."
+                },
+                {
+                    word: "onomatopée",
+                    definition: "Mot imitant un son naturel",
+                    example: "\"Miaou\" est une onomatopée qui imite le cri du chat."
+                },
+                {
+                    word: "xylophone",
+                    definition: "Instrument de musique à percussion",
+                    example: "L'enfant joue du xylophone dans l'orchestre de l'école."
+                },
+                {
+                    word: "métamorphose",
+                    definition: "Changement complet de forme",
+                    example: "La chenille subit une métamorphose pour devenir papillon."
+                },
+                {
+                    word: "hémisphère",
+                    definition: "Moitié de la sphère terrestre",
+                    example: "La France se trouve dans l'hémisphère nord."
+                },
+                {
+                    word: "psychologie",
+                    definition: "Science qui étudie les comportements et processus mentaux",
+                    example: "Elle étudie la psychologie à l'université."
+                },
+                {
+                    word: "synchronisation",
+                    definition: "Action de faire se produire en même temps",
+                    example: "La synchronisation des montres est importante pour cette mission."
+                },
+                {
+                    word: "ambiguïté",
+                    definition: "Caractère de ce qui peut être compris de plusieurs façons",
+                    example: "Il y a une ambiguïté dans cette phrase."
+                },
+                {
+                    word: "chlorophylle",
+                    definition: "Pigment vert des plantes",
+                    example: "La chlorophylle permet aux plantes de réaliser la photosynthèse."
+                },
+                {
+                    word: "hypothèse",
+                    definition: "Supposition qu'on fait pour en tirer des conséquences",
+                    example: "Le scientifique a formulé une nouvelle hypothèse."
+                },
+                {
+                    word: "excentrique",
+                    definition: "Qui s'écarte de la norme, original",
+                    example: "Il est connu pour son style vestimentaire excentrique."
+                },
+                {
+                    word: "quintessence",
+                    definition: "Ce qu'il y a de plus raffiné, de plus pur",
+                    example: "Ce livre représente la quintessence de sa pensée."
+                }
+            ]
+        };
+        
+        // Function to start a new game
+        function startNewGame() {
+            // Reset game variables
+            currentWordIndex = 0;
+            score = 0;
+            
+            // Get words for current difficulty
+            words = [...exerciseData[currentDifficulty]];
+            
+            // Shuffle words
+            words = shuffleArray(words);
+            
+            // Limit to totalSentences
+            words = words.slice(0, totalSentences);
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalWordsDisplay.textContent = totalSentences;
+            progressBar.style.width = '0%';
+            
+            // Show first word
+            showWord();
+        }
+        
+        // Function to shuffle array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Function to show current word
+        function showWord() {
+            // Reset UI
+            playCount = 0;
+            playCountDisplay.textContent = playCount;
+            wordInput.value = '';
+            wordInput.focus();
+            
+            // Hide result container
+            resultContainer.style.display = 'none';
+            feedbackElement.style.display = 'none';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentWordIndex / totalSentences) * 100}%`;
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextWord);
+            submitButton.addEventListener('click', checkAnswer);
+        }
+        
+        // Function to play current word
+        function playWord() {
+            if (playCount >= maxPlays) {
+                alert('Vous avez atteint le nombre maximum d\'écoutes pour ce mot.');
+                return;
+            }
+            
+            const word = words[currentWordIndex].word;
+            
+            if (speechSynthesisAvailable) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.8; // Slower than normal for better clarity
+                
+                // Try to get a French voice
+                const voices = window.speechSynthesis.getVoices();
+                const frenchVoice = voices.find(voice => voice.lang.includes('fr'));
+                if (frenchVoice) {
+                    utterance.voice = frenchVoice;
+                }
+                
+                // Visual feedback during playback
+                playButton.innerHTML = '<i class="fas fa-pause"></i>';
+                playButton.classList.add('playing');
+                
+                utterance.onend = function() {
+                    playButton.innerHTML = '<i class="fas fa-play"></i>';
+                    playButton.classList.remove('playing');
+                };
+                
+                window.speechSynthesis.speak(utterance);
+                
+                playCount++;
+                playCountDisplay.textContent = playCount;
+            } else {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici le mot : ' + word);
+            }
+        }
+        
+        // Function to check user answer
+        function checkAnswer() {
+            const userAnswer = wordInput.value.trim().toLowerCase();
+            const correctAnswer = words[currentWordIndex].word.toLowerCase();
+            
+            // Show result
+            resultContainer.style.display = 'block';
+            correctWordElement.textContent = words[currentWordIndex].word;
+            wordDefinitionElement.textContent = words[currentWordIndex].definition;
+            wordExampleElement.textContent = words[currentWordIndex].example;
+            
+            // Add play button for correct word
+            const playCorrectWordBtn = document.createElement('button');
+            playCorrectWordBtn.className = 'play-audio-btn';
+            playCorrectWordBtn.innerHTML = '<i class="fas fa-volume-up"></i> Écouter';
+            playCorrectWordBtn.addEventListener('click', playCorrectWord);
+            correctWordElement.appendChild(playCorrectWordBtn);
+            
+            // Check if answer is correct
+            if (userAnswer === correctAnswer) {
+                score++;
+                scoreDisplay.textContent = score;
+                
+                feedbackElement.textContent = 'Correct ! Bravo !';
+                feedbackElement.className = 'feedback correct';
+                feedbackElement.style.display = 'block';
+            } else {
+                feedbackElement.textContent = 'Incorrect. La bonne réponse est : ' + correctAnswer;
+                feedbackElement.className = 'feedback incorrect';
+                feedbackElement.style.display = 'block';
+            }
+            
+            // Change submit button to next button
+            submitButton.textContent = 'Suivant';
+            submitButton.removeEventListener('click', checkAnswer);
+            submitButton.addEventListener('click', nextWord);
+        }
+        
+        // Function to play the correct word
+        function playCorrectWord() {
+            const word = words[currentWordIndex].word;
+            
+            if (speechSynthesisAvailable) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.7; // Even slower for better clarity when reviewing
+                
+                // Try to get a French voice
+                const voices = window.speechSynthesis.getVoices();
+                const frenchVoice = voices.find(voice => voice.lang.includes('fr'));
+                if (frenchVoice) {
+                    utterance.voice = frenchVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici le mot : ' + word);
+            }
+        }
+        
+        // Function to go to next word
+        function nextWord() {
+            currentWordIndex++;
+            
+            if (currentWordIndex >= words.length) {
+                endGame();
+            } else {
+                showWord();
+            }
+        }
+        
+        // Function to end the game
+        function endGame() {
+            // Calculate score percentage
+            const scorePercentage = Math.round((score / totalSentences) * 100);
+            
+            // Determine message based on score
+            let message = '';
+            if (scorePercentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez très bien l\'orthographe.';
+            } else if (scorePercentage >= 70) {
+                message = 'Très bien ! Continuez à pratiquer pour vous améliorer.';
+            } else if (scorePercentage >= 50) {
+                message = 'Bien ! Avec un peu plus de pratique, vous progresserez rapidement.';
+            } else {
+                message = 'Continuez à pratiquer régulièrement pour améliorer votre orthographe.';
+            }
+            
+            // Create result element
+            const resultElement = document.createElement('div');
+            resultElement.className = 'dictation-container';
+            resultElement.innerHTML = `
+                <h2>Exercice terminé !</h2>
+                <p>Votre score : ${score}/${totalSentences} (${scorePercentage}%)</p>
+                <p>${message}</p>
+                <button class="submit-button" id="restart-button">
+                    Recommencer
+                </button>
+            `;
+            
+            // Add event listener to restart button
+            resultElement.querySelector('#restart-button').addEventListener('click', startNewGame);
+            
+            // Replace the dictation container with the result element
+            document.querySelector('.dictation-container').replaceWith(resultElement);
+            
+            // Update progress bar to show completion
+            progressBar.style.width = '100%';
+            
+            // Save progress
+            saveProgress();
+            
+            // Adjust difficulty based on performance
+            adjustDifficulty();
+        }
+        
+        // Function to adjust difficulty based on user performance
+        function adjustDifficulty() {
+            const scorePercentage = (score / totalSentences) * 100;
+            
+            if (scorePercentage >= 90 && currentDifficulty !== 'difficile') {
+                // Suggest increasing difficulty
+                if (confirm('Excellent ! Voulez-vous essayer un niveau plus difficile ?')) {
+                    if (currentDifficulty === 'facile') {
+                        currentDifficulty = 'moyen';
+                    } else if (currentDifficulty === 'moyen') {
+                        currentDifficulty = 'difficile';
+                    }
+                    difficultySelect.value = currentDifficulty;
+                }
+            } else if (scorePercentage <= 30 && currentDifficulty !== 'facile') {
+                // Suggest decreasing difficulty
+                if (confirm('Cet exercice semble difficile. Voulez-vous essayer un niveau plus facile ?')) {
+                    if (currentDifficulty === 'difficile') {
+                        currentDifficulty = 'moyen';
+                    } else if (currentDifficulty === 'moyen') {
+                        currentDifficulty = 'facile';
+                    }
+                    difficultySelect.value = currentDifficulty;
+                }
+            }
+        }
+        
+        // Function to load user progress
+        function loadProgress() {
+            try {
+                const progress = JSON.parse(localStorage.getItem('dicteeMotsProgress'));
+                if (progress) {
+                    // Only load difficulty from saved progress
+                    difficultySelect.value = progress.difficulty;
+                    currentDifficulty = progress.difficulty;
+                    return true;
+                }
+            } catch (e) {
+                console.error('Could not load progress: ', e);
+            }
+            return false;
+        }
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Space bar to play audio
+            if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
+                e.preventDefault();
+                playWord();
+            }
+            
+            // Enter to check answer or go to next word
+            if (e.code === 'Enter') {
+                e.preventDefault();
+                if (submitButton.textContent === 'Vérifier') {
+                    checkAnswer();
+                } else if (submitButton.textContent === 'Suivant') {
+                    nextWord();
+                }
+            }
+        });
+        
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if speech synthesis is available
+            speechSynthesisAvailable = 'speechSynthesis' in window;
+            
+            // Set up event listeners
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            
+            playButton.addEventListener('click', playWord);
+            submitButton.addEventListener('click', checkAnswer);
+            wordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (submitButton.textContent === 'Vérifier') {
+                        checkAnswer();
+                    } else if (submitButton.textContent === 'Suivant') {
+                        nextWord();
+                    }
+                }
+            });
+            
+            // Load saved progress
+            loadProgress();
+            
+            // Initialize speech synthesis voices when available
+            if (speechSynthesisAvailable) {
+                if (window.speechSynthesis.getVoices().length > 0) {
+                    // Voices already loaded
+                } else {
+                    window.speechSynthesis.onvoiceschanged = function() {
+                        // Voices loaded
+                    };
+                }
+            }
+            
+            // Start a new game
+            startNewGame();
+        });
+    </script>
+</body>
+</html>

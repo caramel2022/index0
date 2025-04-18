@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles Définis et Indéfinis - Grammaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        :root {
+            --current-color: #f1c40f;
+            --current-color-dark: #f39c12;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .question-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .option-button {
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-button:hover {
+            border-color: var(--current-color);
+        }
+        
+        .option-button.selected {
+            background-color: var(--current-color);
+            color: white;
+            border-color: var(--current-color);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .explanation-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--current-color-dark);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .hint-button {
+            background: none;
+            border: none;
+            color: var(--current-color);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
+        
+        .hint-button:hover {
+            color: var(--current-color-dark);
+        }
+        
+        .hint-text {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
+            display: none;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .article-table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .article-table th, .article-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .article-table th {
+            background-color: #f5f5f5;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .options-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index5.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à la Grammaire
+            </a>
+            <h1>Articles Définis et Indéfinis</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-questions">10</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="question-container">
+                    <div class="question" id="question-text">
+                        <!-- Question will be displayed here -->
+                    </div>
+                    <div class="options-container" id="options-container">
+                        <!-- Options will be displayed here -->
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                    <button class="hint-button" id="hint-button">Indice</button>
+                    <div class="hint-text" id="hint-text">
+                        <!-- Hint will be displayed here -->
+                    </div>
+                    <div class="explanation" id="explanation">
+                        <div class="explanation-title">Explication:</div>
+                        <div id="explanation-text">
+                            <!-- Explanation will be displayed here -->
+                        </div>
+                    </div>
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Les Articles en Français</h3>
+                <p>En français, il existe deux types principaux d'articles :</p>
+                
+                <h4>Articles Définis</h4>
+                <p>Les articles définis sont utilisés pour parler de quelque chose de spécifique ou déjà connu.</p>
+                <table class="article-table">
+                    <tr>
+                        <th>Forme</th>
+                        <th>Utilisation</th>
+                        <th>Exemple</th>
+                    </tr>
+                    <tr>
+                        <td><strong>le</strong></td>
+                        <td>Masculin singulier</td>
+                        <td>Le livre est sur la table.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>la</strong></td>
+                        <td>Féminin singulier</td>
+                        <td>La pomme est rouge.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>l'</strong></td>
+                        <td>Devant une voyelle ou un h muet</td>
+                        <td>L'arbre est grand. / L'homme est grand.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>les</strong></td>
+                        <td>Pluriel (masculin et féminin)</td>
+                        <td>Les enfants jouent dans le parc.</td>
+                    </tr>
+                </table>
+                
+                <h4>Articles Indéfinis</h4>
+                <p>Les articles indéfinis sont utilisés pour parler de quelque chose de non spécifique ou mentionné pour la première fois.</p>
+                <table class="article-table">
+                    <tr>
+                        <th>Forme</th>
+                        <th>Utilisation</th>
+                        <th>Exemple</th>
+                    </tr>
+                    <tr>
+                        <td><strong>un</strong></td>
+                        <td>Masculin singulier</td>
+                        <td>J'ai acheté un livre.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>une</strong></td>
+                        <td>Féminin singulier</td>
+                        <td>Elle a une pomme.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>des</strong></td>
+                        <td>Pluriel (masculin et féminin)</td>
+                        <td>Il y a des chats dans le jardin.</td>
+                    </tr>
+                </table>
+                
+                <h4>Cas Particuliers</h4>
+                <ul>
+                    <li>Devant un adjectif au pluriel, "des" devient "de" : <em>des livres</em> mais <em>de beaux livres</em></li>
+                    <li>Après une négation, "un/une/des" devient "de" : <em>J'ai un chat</em> mais <em>Je n'ai pas de chat</em></li>
+                    <li>Avec les noms de pays : généralement pas d'article pour les pays masculins singuliers (<em>Je vais en France</em>) mais article défini pour les pays pluriels ou masculins avec consonne (<em>Je vais aux États-Unis, Je vais au Canada</em>)</li>
+                </ul>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    question: "J'ai acheté _____ livre intéressant.",
+                    options: ["un", "une", "le", "la"],
+                    answer: "un",
+                    explanation: "On utilise l'article indéfini 'un' car il s'agit d'un nom masculin singulier mentionné pour la première fois.",
+                    hint: "C'est un article indéfini masculin singulier."
+                },
+                {
+                    question: "_____ soleil brille aujourd'hui.",
+                    options: ["Le", "La", "Un", "Une"],
+                    answer: "Le",
+                    explanation: "On utilise l'article défini 'Le' car le soleil est unique et bien défini.",
+                    hint: "C'est un article défini masculin singulier."
+                },
+                {
+                    question: "Elle a acheté _____ pommes au marché.",
+                    options: ["des", "les", "de", "le"],
+                    answer: "des",
+                    explanation: "On utilise l'article indéfini 'des' car il s'agit de pommes non spécifiques mentionnées pour la première fois.",
+                    hint: "C'est un article indéfini pluriel."
+                },
+                {
+                    question: "_____ enfants jouent dans le parc.",
+                    options: ["Les", "Des", "Le", "La"],
+                    answer: "Les",
+                    explanation: "On utilise l'article défini 'Les' car on parle d'enfants spécifiques, déjà connus ou identifiés.",
+                    hint: "C'est un article défini pluriel."
+                },
+                {
+                    question: "J'aime _____ musique classique.",
+                    options: ["la", "une", "le", "des"],
+                    answer: "la",
+                    explanation: "On utilise l'article défini 'la' car la musique classique est un concept général et bien défini.",
+                    hint: "C'est un article défini féminin singulier."
+                },
+                {
+                    question: "Il y a _____ hôtel près de la gare.",
+                    options: ["un", "une", "l'", "le"],
+                    answer: "un",
+                    explanation: "On utilise l'article indéfini 'un' car 'hôtel' est masculin singulier. Le 'h' de 'hôtel' est aspiré, donc on n'utilise pas l'élision.",
+                    hint: "C'est un article indéfini masculin singulier. Attention au 'h' aspiré."
+                },
+                {
+                    question: "_____ amis de Pierre sont sympathiques.",
+                    options: ["Les", "Des", "L'", "Le"],
+                    answer: "Les",
+                    explanation: "On utilise l'article défini 'Les' car on parle d'amis spécifiques (ceux de Pierre).",
+                    hint: "C'est un article défini pluriel."
+                },
+                {
+                    question: "J'ai rencontré _____ femme intéressante hier.",
+                    options: ["une", "la", "un", "le"],
+                    answer: "une",
+                    explanation: "On utilise l'article indéfini 'une' car il s'agit d'une femme mentionnée pour la première fois.",
+                    hint: "C'est un article indéfini féminin singulier."
+                },
+                {
+                    question: "_____ eau de cette rivière est claire.",
+                    options: ["L'", "La", "Une", "Le"],
+                    answer: "L'",
+                    explanation: "On utilise l'article défini 'L'' (élision de 'La') car 'eau' commence par une voyelle et est un nom féminin singulier bien défini.",
+                    hint: "C'est un article défini avec élision devant une voyelle."
+                },
+                {
+                    question: "Il a _____ chiens et _____ chat.",
+                    options: ["des, un", "les, le", "des, le", "les, un"],
+                    answer: "des, un",
+                    explanation: "On utilise l'article indéfini 'des' pour les chiens (pluriel) et 'un' pour le chat (masculin singulier) car ces animaux sont mentionnés pour la première fois.",
+                    hint: "Ce sont des articles indéfinis."
+                }
+            ],
+            moyen: [
+                {
+                    question: "J'adore _____ chocolat noir.",
+                    options: ["le", "la", "un", "du"],
+                    answer: "le",
+                    explanation: "On utilise l'article défini 'le' car le chocolat noir est un concept général.",
+                    hint: "C'est un article défini masculin singulier."
+                },
+                {
+                    question: "Elle joue de _____ piano depuis son enfance.",
+                    options: ["du", "le", "un", "au"],
+                    answer: "du",
+                    explanation: "On utilise l'article partitif 'du' (contraction de 'de le') avec l'expression 'jouer de' suivie d'un instrument de musique.",
+                    hint: "C'est une contraction de la préposition 'de' et de l'article défini."
+                },
+                {
+                    question: "Nous allons _____ cinéma ce soir.",
+                    options: ["au", "à", "à le", "à la"],
+                    answer: "au",
+                    explanation: "On utilise l'article contracté 'au' (contraction de 'à le') car 'cinéma' est masculin singulier.",
+                    hint: "C'est une contraction de la préposition 'à' et de l'article défini."
+                },
+                {
+                    question: "Il n'a pas _____ amis dans cette ville.",
+                    options: ["d'", "des", "les", "de"],
+                    answer: "d'",
+                    explanation: "Après une négation, l'article indéfini 'des' devient 'de' (ou 'd'' devant une voyelle).",
+                    hint: "Pensez à la règle de négation avec les articles indéfinis."
+                },
+                {
+                    question: "Elle a acheté _____ belles fleurs pour sa mère.",
+                    options: ["de", "des", "les", "du"],
+                    answer: "de",
+                    explanation: "Devant un adjectif pluriel qui précède le nom, l'article indéfini 'des' devient 'de'.",
+                    hint: "Attention à la règle spéciale avec les adjectifs qui précèdent le nom au pluriel."
+                },
+                {
+                    question: "Nous avons visité _____ musée d'Orsay à Paris.",
+                    options: ["le", "la", "un", "du"],
+                    answer: "le",
+                    explanation: "On utilise l'article défini 'le' car le musée d'Orsay est un lieu spécifique et bien connu.",
+                    hint: "C'est un article défini masculin singulier pour un lieu spécifique."
+                },
+                {
+                    question: "J'ai besoin _____ informations sur ce sujet.",
+                    options: ["d'", "des", "les", "de l'"],
+                    answer: "d'",
+                    explanation: "Après l'expression 'avoir besoin de', on utilise 'de' (ou 'd'' devant une voyelle) suivi du nom sans article.",
+                    hint: "Pensez à la construction 'avoir besoin de'."
+                },
+                {
+                    question: "Il est professeur _____ université.",
+                    options: ["d'", "à l'", "dans l'", "en"],
+                    answer: "d'",
+                    explanation: "Pour indiquer la profession et le lieu de travail, on utilise la préposition 'de' (ou 'd'' devant une voyelle).",
+                    hint: "On utilise 'de' pour indiquer le lieu de travail avec une profession."
+                },
+                {
+                    question: "Nous parlons _____ politique.",
+                    options: ["de", "de la", "la", "une"],
+                    answer: "de",
+                    explanation: "Après le verbe 'parler', on utilise généralement la préposition 'de' sans article pour des sujets généraux.",
+                    hint: "Pensez à la construction du verbe 'parler'."
+                },
+                {
+                    question: "Elle vient _____ États-Unis.",
+                    options: ["des", "de", "les", "aux"],
+                    answer: "des",
+                    explanation: "Pour indiquer la provenance d'un pays pluriel, on utilise 'de + les = des'.",
+                    hint: "C'est une contraction de 'de' et de l'article défini pluriel."
+                }
+            ],
+            difficile: [
+                {
+                    question: "Je vais _____ France l'été prochain.",
+                    options: ["en", "à la", "au", "dans la"],
+                    answer: "en",
+                    explanation: "Pour les pays féminins singuliers, on utilise la préposition 'en' sans article.",
+                    hint: "La France est un pays féminin singulier."
+                },
+                {
+                    question: "Il a _____ courage de dire la vérité.",
+                    options: ["le", "du", "un", "de"],
+                    answer: "le",
+                    explanation: "On utilise l'article défini 'le' avec les qualités abstraites comme le courage.",
+                    hint: "C'est une qualité abstraite."
+                },
+                {
+                    question: "Nous avons mangé _____ poulet rôti hier soir.",
+                    options: ["du", "le", "un", "de"],
+                    answer: "du",
+                    explanation: "On utilise l'article partitif 'du' pour indiquer une partie indéterminée d'un aliment.",
+                    hint: "C'est un article partitif masculin singulier."
+                },
+                {
+                    question: "Elle joue _____ échecs tous les jours.",
+                    options: ["aux", "des", "les", "à"],
+                    answer: "aux",
+                    explanation: "Pour les jeux, on utilise généralement 'à + les = aux'.",
+                    hint: "C'est une contraction de 'à' et de l'article défini pluriel."
+                },
+                {
+                    question: "Il est considéré comme _____ meilleur joueur de l'équipe.",
+                    options: ["le", "un", "du", "au"],
+                    answer: "le",
+                    explanation: "Avec le superlatif 'meilleur', on utilise l'article défini 'le'.",
+                    hint: "C'est un superlatif."
+                },
+                {
+                    question: "Elle a _____ patience d'un saint.",
+                    options: ["la", "une", "de la", "en"],
+                    answer: "la",
+                    explanation: "On utilise l'article défini 'la' avec les qualités abstraites comme la patience.",
+                    hint: "C'est une qualité abstraite féminine."
+                },
+                {
+                    question: "Nous avons besoin _____ nouvelles compétences pour ce projet.",
+                    options: ["de", "des", "les", "de les"],
+                    answer: "de",
+                    explanation: "Après 'avoir besoin de' et avec un adjectif qui précède le nom au pluriel, on utilise simplement 'de'.",
+                    hint: "Pensez à la construction 'avoir besoin de' et à la règle avec les adjectifs qui précèdent le nom."
+                },
+                {
+                    question: "Il préfère _____ thé sans sucre.",
+                    options: ["le", "du", "un", "son"],
+                    answer: "le",
+                    explanation: "Avec les préférences spécifiques, on utilise généralement l'article défini 'le'.",
+                    hint: "C'est une préférence spécifique."
+                },
+                {
+                    question: "Elle est allergique _____ fruits de mer.",
+                    options: ["aux", "des", "les", "à"],
+                    answer: "aux",
+                    explanation: "Après l'adjectif 'allergique', on utilise 'à + les = aux' pour un nom pluriel.",
+                    hint: "C'est une contraction de 'à' et de l'article défini pluriel."
+                },
+                {
+                    question: "Je me souviens _____ jour où nous nous sommes rencontrés.",
+                    options: ["du", "le", "au", "un"],
+                    answer: "du",
+                    explanation: "Après le verbe pronominal 'se souvenir de', on utilise 'de + le = du'.",
+                    hint: "C'est une contraction de 'de' et de l'article défini masculin singulier."
+                }
+            ]
+        };
+        
+        // Game variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = 10;
+        let currentDifficulty = 'facile';
+        let questions = [];
+        let selectedOption = null;
+        
+        // DOM elements
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const submitButton = document.getElementById('submit-button');
+        const explanation = document.getElementById('explanation');
+        const explanationText = document.getElementById('explanation-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const hintButton = document.getElementById('hint-button');
+        const hintText = document.getElementById('hint-text');
+        const feedback = document.getElementById('feedback');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            submitButton.addEventListener('click', checkAnswer);
+            hintButton.addEventListener('click', showHint);
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // Get questions for the current difficulty
+            questions = getRandomQuestions(exerciseData[currentDifficulty], totalQuestions);
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalQuestionsDisplay.textContent = totalQuestions;
+            progressBar.style.width = '0%';
+            
+            // Show first question
+            showQuestion();
+        }
+        
+        // Get random questions from the data
+        function getRandomQuestions(data, count) {
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        // Show the current question
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            selectedOption = null;
+            
+            // Update question text
+            questionText.textContent = question.question;
+            
+            // Create option buttons
+            optionsContainer.innerHTML = '';
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.textContent = option;
+                button.addEventListener('click', () => selectOption(option, button));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Hide explanation and feedback
+            explanation.style.display = 'none';
+            feedback.style.display = 'none';
+            
+            // Hide hint
+            hintText.style.display = 'none';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentQuestionIndex / totalQuestions) * 100}%`;
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextQuestion);
+            submitButton.addEventListener('click', checkAnswer);
+        }
+        
+        // Select an option
+        function selectOption(option, button) {
+            // Remove selected class from all buttons
+            const buttons = optionsContainer.querySelectorAll('.option-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            // Add selected class to clicked button
+            button.classList.add('selected');
+            
+            // Update selected option
+            selectedOption = option;
+        }
+
+        // Check the answer
+        function checkAnswer() {
+            if (!selectedOption) return;
+
+            const question = questions[currentQuestionIndex];
+            feedback.style.display = 'block';
+
+            if (selectedOption === question.answer) {
+                feedback.textContent = "Bravo ! C'est la bonne réponse.";
+                feedback.className = 'feedback correct';
+                score++;
+                scoreDisplay.textContent = score;
+            } else {
+                feedback.textContent = "Incorrect. La bonne réponse était : " + question.answer;
+                feedback.className = 'feedback incorrect';
+            }
+
+            // Show explanation
+            explanationText.textContent = question.explanation;
+            explanation.style.display = 'block';
+
+            // Change submit button to "Suivant" if not last question, or "Voir le score" if last
+            if (currentQuestionIndex < totalQuestions - 1) {
+                submitButton.textContent = 'Suivant';
+                submitButton.removeEventListener('click', checkAnswer);
+                submitButton.addEventListener('click', nextQuestion);
+            } else {
+                submitButton.textContent = 'Voir le score';
+                submitButton.removeEventListener('click', checkAnswer);
+                submitButton.addEventListener('click', endGame);
+            }
+        }
+
+        // Show next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        // Show hint
+        function showHint() {
+            const question = questions[currentQuestionIndex];
+            hintText.textContent = question.hint;
+            hintText.style.display = 'block';
+        }
+
+        // End of game
+        function endGame() {
+            questionText.innerHTML = `<strong>Exercice terminé !</strong><br>Votre score : <span style="color:var(--current-color-dark);font-size:22px;">${score} / ${totalQuestions}</span>`;
+            optionsContainer.innerHTML = '';
+            feedback.style.display = 'none';
+            explanation.style.display = 'none';
+            hintText.style.display = 'none';
+            submitButton.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

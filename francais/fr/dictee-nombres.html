@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictée de Nombres - Français</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #e67e22;
+            --current-color-dark: #d35400;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .dictation-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .play-button {
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 24px;
+        }
+        
+        .play-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .play-count {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .input-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .number-input {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+        
+        .number-input:focus {
+            outline: none;
+            border-color: var(--current-color);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .result-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--current-color-dark);
+        }
+        
+        .correct-number {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .number-in-words {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .play-audio-btn {
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .play-audio-btn:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .difficulty-selector {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index3.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour aux Dictées
+            </a>
+            <h1>Dictée de Nombres</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-numbers">10</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="dictation-container">
+                    <div class="audio-controls">
+                        <button class="play-button" id="play-button">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="play-count">
+                            Écoutez le nombre (<span id="play-count">0</span>/<span id="max-plays">3</span>)
+                        </div>
+                    </div>
+                    
+                    <div class="input-container">
+                        <input type="text" class="number-input" id="number-input" placeholder="Écrivez le nombre en chiffres..." inputmode="numeric">
+                    </div>
+                    
+                    <div class="feedback" id="feedback"></div>
+                    
+                    <div class="result-container" id="result-container">
+                        <div class="result-title">Résultat:</div>
+                        <div class="correct-number" id="correct-number"></div>
+                        <div class="number-in-words" id="number-in-words"></div>
+                    </div>
+                    
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> La Dictée de Nombres</h3>
+                <p>Cet exercice vous aide à améliorer votre compréhension des nombres en français.</p>
+                
+                <h4>Comment faire l'exercice :</h4>
+                <ol>
+                    <li>Cliquez sur le bouton de lecture pour écouter le nombre</li>
+                    <li>Écrivez le nombre que vous entendez en chiffres (ex: 42, 1250, etc.)</li>
+                    <li>Cliquez sur "Vérifier" pour voir votre résultat</li>
+                    <li>Vous pouvez écouter chaque nombre jusqu'à 3 fois</li>
+                </ol>
+                
+                <h4>Conseils pour réussir :</h4>
+                <ul>
+                    <li>Écoutez attentivement les terminaisons des nombres</li>
+                    <li>Faites attention aux liaisons entre les mots</li>
+                    <li>Rappelez-vous que certains nombres ont des formes particulières en français (70, 80, 90)</li>
+                    <li>Prenez votre temps pour bien comprendre avant d'écrire</li>
+                </ul>
+                
+                <p>La dictée de nombres est un excellent moyen d'améliorer votre compréhension des chiffres en français !</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Number to words conversion for French
+        function numberToFrenchWords(number) {
+            const units = ['', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf'];
+            const tens = ['', 'dix', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'soixante', 'quatre-vingt', 'quatre-vingt'];
+            
+            if (number === 0) {
+                return 'zéro';
+            }
+            
+            if (number < 0) {
+                return 'moins ' + numberToFrenchWords(Math.abs(number));
+            }
+            
+            let words = '';
+            
+            if (Math.floor(number / 1000000) > 0) {
+                if (Math.floor(number / 1000000) === 1) {
+                    words += 'un million ';
+                } else {
+                    words += numberToFrenchWords(Math.floor(number / 1000000)) + ' millions ';
+                }
+                number %= 1000000;
+            }
+            
+            if (Math.floor(number / 1000) > 0) {
+                if (Math.floor(number / 1000) === 1) {
+                    words += 'mille ';
+                } else {
+                    words += numberToFrenchWords(Math.floor(number / 1000)) + ' mille ';
+                }
+                number %= 1000;
+            }
+            
+            if (Math.floor(number / 100) > 0) {
+                if (Math.floor(number / 100) === 1) {
+                    words += 'cent ';
+                } else {
+                    words += units[Math.floor(number / 100)] + ' cent ';
+                }
+                number %= 100;
+            }
+            
+            if (number > 0) {
+                if (words !== '') {
+                    words += ' ';
+                }
+                
+                if (number < 20) {
+                    words += units[number];
+                } else if (number < 70) {
+                    words += tens[Math.floor(number / 10)];
+                    if (number % 10 > 0) {
+                        words += '-' + units[number % 10];
+                    }
+                } else if (number < 80) {
+                    words += 'soixante';
+                    if (number % 10 === 1) {
+                        words += '-et-onze';
+                    } else if (number % 10 > 0) {
+                        words += '-' + units[10 + (number % 10)];
+                    } else {
+                        words += '-dix';
+                    }
+                } else if (number < 90) {
+                    words += 'quatre-vingt';
+                    if (number % 10 > 0) {
+                        words += '-' + units[number % 10];
+                    }
+                } else {
+                    words += 'quatre-vingt';
+                    if (number % 10 === 0) {
+                        words += '-dix';
+                    } else {
+                        words += '-' + units[10 + (number % 10)];
+                    }
+                }
+            }
+            
+            return words.trim();
+        }
+        
+        // Exercise data - number ranges for each difficulty
+        const exerciseData = {
+            facile: {
+                min: 1,
+                max: 100
+            },
+            moyen: {
+                min: 100,
+                max: 1000
+            },
+            difficile: {
+                min: 1000,
+                max: 1000000
+            }
+        };
+        
+        // Game variables
+        let currentNumberIndex = 0;
+        let score = 0;
+        let totalNumbers = 10;
+        let currentDifficulty = 'facile';
+        let numbers = [];
+        let playCount = 0;
+        let maxPlays = 3;
+        let speechSynthesisAvailable = false;
+        
+        // DOM elements
+        const playButton = document.getElementById('play-button');
+        const playCountDisplay = document.getElementById('play-count');
+        const maxPlaysDisplay = document.getElementById('max-plays');
+        const numberInput = document.getElementById('number-input');
+        const submitButton = document.getElementById('submit-button');
+        const resultContainer = document.getElementById('result-container');
+        const correctNumber = document.getElementById('correct-number');
+        const numberInWords = document.getElementById('number-in-words');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalNumbersDisplay = document.getElementById('total-numbers');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const feedback = document.getElementById('feedback');
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if speech synthesis is available
+            speechSynthesisAvailable = 'speechSynthesis' in window;
+            
+            if (!speechSynthesisAvailable) {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Cet exercice nécessite la synthèse vocale pour fonctionner correctement.');
+            }
+            
+            // Load voices when available (needed for some browsers)
+            if (speechSynthesisAvailable) {
+                window.speechSynthesis.onvoiceschanged = function() {
+                    // Voices loaded
+                };
+            }
+            
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            
+            playButton.addEventListener('click', playNumber);
+            submitButton.addEventListener('click', checkAnswer);
+            
+            // Allow pressing Enter to submit answer
+            numberInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    checkAnswer();
+                }
+            });
+            
+            startNewGame();
+        });
+        
+        // Start a new game
+        function startNewGame() {
+            // Reset game state
+            currentNumberIndex = 0;
+            score = 0;
+            
+            // Generate random numbers for the current difficulty
+            numbers = generateRandomNumbers(
+                exerciseData[currentDifficulty].min,
+                exerciseData[currentDifficulty].max,
+                totalNumbers
+            );
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalNumbersDisplay.textContent = totalNumbers;
+            progressBar.style.width = '0%';
+            
+            // Show first number
+            showNumber();
+        }
+        
+        // Generate random numbers within a range
+        function generateRandomNumbers(min, max, count) {
+            const numbers = [];
+            for (let i = 0; i < count; i++) {
+                const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+                numbers.push(randomNumber);
+            }
+            return numbers;
+        }
+        
+        // Show the current number
+        function showNumber() {
+            if (currentNumberIndex >= numbers.length) {
+                endGame();
+                return;
+            }
+            
+            // Reset play count
+            playCount = 0;
+            playCountDisplay.textContent = playCount;
+            maxPlaysDisplay.textContent = maxPlays;
+            
+            // Clear input
+            numberInput.value = '';
+            numberInput.disabled = false;
+            numberInput.focus();
+            
+            // Hide result container and feedback
+            resultContainer.style.display = 'none';
+            feedback.style.display = 'none';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentNumberIndex / totalNumbers) * 100}%`;
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextNumber);
+            submitButton.addEventListener('click', checkAnswer);
+        }
+        
+        // Play the current number
+        function playNumber() {
+            if (playCount >= maxPlays) {
+                alert('Vous avez atteint le nombre maximum d\'écoutes pour ce nombre.');
+                return;
+            }
+            
+            const number = numbers[currentNumberIndex];
+            const numberInWords = numberToFrenchWords(number);
+            
+            if (speechSynthesisAvailable) {
+                const utterance = new SpeechSynthesisUtterance(numberInWords);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.9; // Slightly slower than normal
+                
+                // Try to get a French voice
+                const voices = window.speechSynthesis.getVoices();
+                const frenchVoice = voices.find(voice => voice.lang.includes('fr'));
+                if (frenchVoice) {
+                    utterance.voice = frenchVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+                
+                playCount++;
+                playCountDisplay.textContent = playCount;
+            } else {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici le nombre : ' + numberInWords);
+            }
+        }
+        
+        // Check the submitted answer
+        function checkAnswer() {
+            const userAnswer = numberInput.value.trim();
+            
+            if (!userAnswer) {
+                alert('Veuillez écrire le nombre que vous avez entendu.');
+                return;
+            }
+            
+            // Remove spaces and non-numeric characters
+            const cleanUserAnswer = userAnswer.replace(/\s+/g, '').replace(/\D/g, '');
+            const correctNumberValue = numbers[currentNumberIndex];
+            
+            // Check if answer is correct
+            const isCorrect = parseInt(cleanUserAnswer) === correctNumberValue;
+            
+            // Show feedback
+            feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+            feedback.textContent = isCorrect 
+                ? 'Bien joué ! Votre réponse est correcte.' 
+                : 'Votre réponse est incorrecte.';
+            feedback.style.display = 'block';
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+            }
+            
+            // Show result with audio button
+            correctNumber.innerHTML = `${correctNumberValue} 
+                <button class="play-audio-btn" onclick="playCorrectNumber()">
+                    <i class="fas fa-volume-up"></i> Écouter
+                </button>`;
+            numberInWords.textContent = numberToFrenchWords(correctNumberValue);
+            resultContainer.style.display = 'block';
+            
+            // Disable input
+            numberInput.disabled = true;
+            
+            // Change submit button to next button
+            submitButton.textContent = 'Nombre Suivant';
+            submitButton.removeEventListener('click', checkAnswer);
+            submitButton.addEventListener('click', nextNumber);
+        }
+        
+        // Play the correct number audio
+        function playCorrectNumber() {
+            const number = numbers[currentNumberIndex];
+            const numberInWords = numberToFrenchWords(number);
+            
+            if (speechSynthesisAvailable) {
+                const utterance = new SpeechSynthesisUtterance(numberInWords);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.9; // Slightly slower than normal
+                
+                // Try to get a French voice
+                const voices = window.speechSynthesis.getVoices();
+                const frenchVoice = voices.find(voice => voice.lang.includes('fr'));
+                if (frenchVoice) {
+                    utterance.voice = frenchVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici le nombre : ' + numberInWords);
+            }
+        }
+        
+        // Move to the next number
+        function nextNumber() {
+            currentNumberIndex++;
+            showNumber();
+        }
+        
+        // End the game
+        function endGame() {
+            // Create result container
+            const resultElement = document.createElement('div');
+            resultElement.className = 'dictation-container';
+            
+            // Show final score
+            const scorePercentage = (score / totalNumbers) * 100;
+            let message = '';
+            
+            if (scorePercentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez parfaitement les nombres en français.';
+            } else if (scorePercentage >= 70) {
+                message = 'Très bien ! Votre compréhension des nombres en français est bonne.';
+            } else if (scorePercentage >= 50) {
+                message = 'Bien ! Continuez à pratiquer pour améliorer votre compréhension des nombres.';
+            } else {
+                message = 'Continuez à pratiquer ! Les nombres en français peuvent être difficiles, mais vous vous améliorerez avec de la pratique.';
+            }
+            
+            // Create result message
+            resultElement.innerHTML = `
+                <h2>Exercice terminé !</h2>
+                <p>Votre score : ${score}/${totalNumbers} (${scorePercentage}%)</p>
+                <p>${message}</p>
+                <button class="submit-button" onclick="startNewGame()">Recommencer</button>
+            `;
+            
+            // Replace the dictation container with the result element
+            document.querySelector('.dictation-container').replaceWith(resultElement);
+            
+            // Update progress bar to show completion
+            progressBar.style.width = '100%';
+        }
+    </script>
+</body>
+</html>

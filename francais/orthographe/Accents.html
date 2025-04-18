@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercices d'Accents | Apprendre le Français</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        :root {
+            --current-color: #3498db;
+            --current-color-dark: #2980b9;
+        }
+        
+        .exercise-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+        
+        .exercise-tab {
+            padding: 12px 25px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .exercise-tab:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .exercise-tab.active {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .exercise-content {
+            display: none;
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .exercise-content.active {
+            display: block;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .question-container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .option {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .option:hover {
+            border-color: var(--current-color);
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            border-color: var(--current-color);
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .option.correct {
+            border-color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.2);
+        }
+        
+        .option.incorrect {
+            border-color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.2);
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .submit-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .score-info {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--current-color);
+            margin-top: 15px;
+        }
+        
+        .result-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        
+        .result-container h2 {
+            color: var(--current-color);
+            margin-bottom: 20px;
+        }
+        
+        .result-container div {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        #result-message {
+            font-size: 20px;
+            font-weight: 500;
+            margin: 20px 0;
+        }
+        
+        /* Fill exercise styles */
+        .fill-text {
+            font-size: 18px;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .fill-blank {
+            display: inline-block;
+            width: 40px;
+            padding: 5px;
+            margin: 0 5px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .fill-blank:hover, .fill-blank.selected {
+            border-color: var(--current-color);
+        }
+        
+        .fill-blank.correct {
+            border-color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.2);
+        }
+        
+        .fill-blank.incorrect {
+            border-color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.2);
+        }
+        
+        .fill-options {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .fill-option {
+            padding: 8px 15px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .fill-option:hover {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .fill-option.selected {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        /* Match exercise styles */
+        .match-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .match-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .match-item {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .match-item:hover {
+            border-color: var(--current-color);
+            transform: translateY(-2px);
+        }
+        
+        .match-item.selected {
+            border-color: var(--current-color);
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .match-item.matched {
+            border-color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.2);
+            cursor: default;
+        }
+        
+        .match-line {
+            position: absolute;
+            background-color: var(--current-color);
+            height: 2px;
+            transform-origin: 0 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+  
+        
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à l'Orthographe
+            </a>
+            <h1>Exercices d'Accents</h1>
+            <div style="width: 100px;"></div>
+        </header>
+        <nav class="exercise-tabs">
+            <button class="exercise-tab active" data-exercise="quiz">Quiz</button>
+            <button class="exercise-tab" data-exercise="fill">Texte à trous</button>
+            <button class="exercise-tab" data-exercise="match">Association</button>
+        </nav>
+        <div class="exercise-content active" id="quiz-content">
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <div id="question-container"></div>
+            <div id="quiz-feedback" class="feedback"></div>
+            <button id="quiz-submit" class="submit-btn">Valider</button>
+            <div class="score-info">
+                Score : <span id="score">0</span> / <span id="total-questions">10</span>
+            </div>
+        </div>
+        <div class="exercise-content" id="fill-content">
+            <div class="progress-bar-container">
+                <div id="fill-progress-bar" class="progress-bar"></div>
+            </div>
+            <div id="fill-container"></div>
+            <div id="fill-feedback" class="feedback"></div>
+            <button id="fill-submit" class="submit-btn">Valider</button>
+        </div>
+        <div class="exercise-content" id="match-content">
+            <div class="progress-bar-container">
+                <div id="match-progress-bar" class="progress-bar"></div>
+            </div>
+            <div id="match-container"></div>
+            <div id="match-feedback" class="feedback"></div>
+            <button id="match-submit" class="submit-btn">Valider</button>
+        </div>
+        <div id="result-container" class="result-container" style="display:none;">
+            <h2>Résultat final</h2>
+            <div>Score : <span id="final-score"></span> / <span id="final-total"></span></div>
+            <div>Pourcentage : <span id="final-percentage"></span>%</div>
+            <div id="result-message"></div>
+            <button id="restart-button" class="submit-btn">Recommencer</button>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const exerciseTabs = document.querySelectorAll('.exercise-tab');
+        const exerciseContents = document.querySelectorAll('.exercise-content');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreDisplay = document.getElementById('score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const questionContainer = document.getElementById('question-container');
+        const quizFeedback = document.getElementById('quiz-feedback');
+        const quizSubmitButton = document.getElementById('quiz-submit');
+        const fillContainer = document.getElementById('fill-container');
+        const fillFeedback = document.getElementById('fill-feedback');
+        const fillSubmitButton = document.getElementById('fill-submit');
+        const matchContainer = document.getElementById('match-container');
+        const matchFeedback = document.getElementById('match-feedback');
+        const matchSubmitButton = document.getElementById('match-submit');
+        const resultContainer = document.getElementById('result-container');
+        const finalScore = document.getElementById('final-score');
+        const finalTotal = document.getElementById('final-total');
+        const finalPercentage = document.getElementById('final-percentage');
+        const resultMessage = document.getElementById('result-message');
+        const restartButton = document.getElementById('restart-button');
+        
+        // Game variables
+        let currentExercise = 'quiz';
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = 10;
+        let questions = [];
+        let selectedOption = null;
+        let selectedMatches = {left: null, right: null};
+        let matchedPairs = [];
+        let currentFillQuestion = null;
+        let selectedInput = null;
+        
+        // Exercise data
+        const exerciseData = {
+            quiz: [
+                {
+                    question: "Quel accent est utilisé dans le mot 'café' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ë)"],
+                    correctAnswer: 0,
+                    explanation: "Le mot 'café' utilise l'accent aigu (é) qui indique une prononciation fermée."
+                },
+                {question: "Quel accent est utilisé dans le mot 'élève' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ë)"],
+                    correctAnswer: 0,
+                    explanation: "Le mot 'élève' utilise l'accent aigu (é) sur le premier 'e'."
+                },
+                // Nouveaux exercices quiz
+                {question: "Quel accent est utilisé dans le mot 'où' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Accent grave (ù)", "Cédille (ç)"],
+                    correctAnswer: 2,
+                    explanation: "Le mot 'où' utilise l'accent grave (ù) pour distinguer du mot 'ou'."
+                },
+                {question: "Quel accent est utilisé dans le mot 'forêt' ?",
+                    options: ["Accent circonflexe (ê)", "Accent aigu (é)", "Accent grave (è)", "Tréma (ë)"],
+                    correctAnswer: 0,
+                    explanation: "Le mot 'forêt' utilise l'accent circonflexe (ê)."
+                },
+                {question: "Quel accent est utilisé dans le mot 'Noël' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Tréma (ë)", "Cédille (ç)"],
+                    correctAnswer: 2,
+                    explanation: "Le mot 'Noël' utilise le tréma (ë) pour séparer les voyelles."
+                },
+                {question: "Quel accent est utilisé dans le mot 'façade' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Cédille (ç)", "Tréma (ë)"],
+                    correctAnswer: 2,
+                    explanation: "Le mot 'façade' utilise la cédille (ç)."
+                },
+                {question: "Quel accent est utilisé dans le mot 'déjà' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (â)", "Tréma (ï)"],
+                    correctAnswer: 0,
+                    explanation: "Le mot 'déjà' utilise l'accent aigu (é)."
+                },
+                {question: "Quel accent est utilisé dans le mot 'naïf' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ï)"],
+                    correctAnswer: 3,
+                    explanation: "Le mot 'naïf' utilise le tréma (ï)."
+                },
+                {question: "Quel accent est utilisé dans le mot 'garçon' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Cédille (ç)", "Tréma (ë)"],
+                    correctAnswer: 2,
+                    explanation: "Le mot 'garçon' utilise la cédille (ç)."
+                },
+                {question: "Quel accent est utilisé dans le mot 'château' ?",
+                    options: ["Accent circonflexe (â)", "Accent aigu (é)", "Accent grave (è)", "Tréma (ë)"],
+                    correctAnswer: 0,
+                    explanation: "Le mot 'château' utilise l'accent circonflexe (â)."
+                },
+                {question: "Quel accent est utilisé dans le mot 'maïs' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ï)"],
+                    correctAnswer: 3,
+                    explanation: "Le mot 'maïs' utilise le tréma (ï)."
+                },
+                // Fin nouveaux exercices quiz
+                {"question": "Quel accent est utilisé dans le mot 'frère' ?",
+                    "options": ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ë)"],
+                    "correctAnswer": 1,
+                    "explanation": "Le mot 'frère' utilise l'accent grave (è) qui indique une prononciation ouverte."
+                },
+                {"question": "Quel accent est utilisé dans le mot 'forêt' ?",
+                    "options": ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ë)"],
+                    "correctAnswer": 2,
+                    "explanation": "Le mot 'forêt' utilise l'accent circonflexe (ê) qui remplace souvent un 's' historique (forest)."
+                },
+                {"question": "Quel accent est utilisé dans le mot 'Noël' ?",
+                    "options": ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ë)"],
+                    "correctAnswer": 3,
+                    "explanation": "Le mot 'Noël' utilise le tréma (ë) qui indique que les deux voyelles se prononcent séparément."
+                },
+                {"question": "Quel accent est utilisé dans le mot 'là' ?",
+                    "options": ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ë)"],
+                    "correctAnswer": 1,
+                    "explanation": "Le mot 'là' utilise l'accent grave (à) qui permet de distinguer l'adverbe de lieu du déterminant 'la'."
+                },
+                {"question": "Quel accent est utilisé dans le mot 'âge' ?",
+                    "options": ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (â)", "Tréma (ë)"],
+                    "correctAnswer": 2,
+                    "explanation": "Le mot 'âge' utilise l'accent circonflexe (â) qui remplace souvent un 's' historique (aage)."
+                },
+                {"question": "Quel accent est utilisé dans le mot 'théâtre' ?",
+                    "options": ["Accent aigu (é) uniquement", "Accent grave (è) uniquement", "Accent circonflexe (â) uniquement", "Accent aigu (é) et accent circonflexe (â)"],
+                    "correctAnswer": 3,
+                    "explanation": "Le mot 'théâtre' utilise à la fois l'accent aigu (é) et l'accent circonflexe (â)."
+                },
+                {"question": "Quel accent est utilisé dans le mot 'leçon' ?",
+                    "options": ["Accent aigu (é)", "Accent grave (è)", "Cédille (ç)", "Accent circonflexe (ê)"],
+                    "correctAnswer": 2,
+                    "explanation": "Le mot 'leçon' utilise la cédille (ç) qui donne au 'c' le son 's' devant la voyelle 'o'."
+                },
+                {
+                    question: "Quel accent est utilisé dans le mot 'façade' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Cédille (ç)", "Accent circonflexe (ê)"],
+                    correctAnswer: 2,
+                    explanation: "Le mot 'façade' utilise la cédille (ç) qui donne au 'c' le son 's' devant la voyelle 'a'."
+                },
+                {
+                    question: "Quel accent est utilisé dans le mot 'naïf' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ï)"],
+                    correctAnswer: 3,
+                    explanation: "Le mot 'naïf' utilise le tréma (ï) qui indique que les deux voyelles se prononcent séparément."
+                },
+                {
+                    question: "Quel accent est utilisé dans le mot 'déçu' ?",
+                    options: ["Accent aigu (é) uniquement", "Cédille (ç) uniquement", "Accent grave (è) uniquement", "Accent aigu (é) et cédille (ç)"],
+                    correctAnswer: 3,
+                    explanation: "Le mot 'déçu' utilise à la fois l'accent aigu (é) et la cédille (ç)."
+                },
+                {
+                    question: "Quel accent est utilisé dans le mot 'poème' ?",
+                    options: ["Accent aigu (é)", "Accent grave (è)", "Accent circonflexe (ê)", "Tréma (ë)"],
+                    correctAnswer: 2,
+                    explanation: "Le mot 'poème' utilise l'accent circonflexe (ê) qui remplace souvent un 's' historique (poesme)."
+                },
+                {
+                    question: "Quel accent est utilisé dans le mot 'où' ?",
+                    options: ["Accent aigu (ú)", "Accent grave (ù)", "Accent circonflexe (û)", "Tréma (ü)"],
+                    correctAnswer: 1,
+                    explanation: "Le mot 'où' utilise l'accent grave (ù) qui permet de distinguer l'adverbe de lieu de la conjonction 'ou'."
+                }
+            ],
+            fill: [
+                {
+                    text: "Le caf_ est une boisson populaire en France.",
+                    blanks: [2],
+                    answers: ["é"],
+                    explanation: "Le mot 'café' prend un accent aigu sur le 'e' pour indiquer une prononciation fermée."
+                },
+                {
+                    text: "Mon fr_re habite pr_s de l'école.",
+                    blanks: [3, 7],
+                    answers: ["è", "è"],
+                    explanation: "Les mots 'frère' et 'près' prennent un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    text: "La for_t est un écosyst_me fragile.",
+                    blanks: [4, 13],
+                    answers: ["ê", "è"],
+                    explanation: "Le mot 'forêt' prend un accent circonflexe sur le 'e', tandis que 'système' prend un accent grave."
+                },
+                {
+                    text: "No_l est une f_te importante en France.",
+                    blanks: [2, 7],
+                    answers: ["ë", "ê"],
+                    explanation: "Le mot 'Noël' prend un tréma sur le 'e' pour indiquer que les voyelles se prononcent séparément, tandis que 'fête' prend un accent circonflexe."
+                },
+                {
+                    text: "L_ o_ nous allons, il y a un ch_teau.",
+                    blanks: [0, 2, 19],
+                    answers: ["à", "ù", "â"],
+                    explanation: "'Là' prend un accent grave pour le distinguer de 'la', 'où' prend un accent grave, et 'château' prend un accent circonflexe."
+                },
+                {
+                    text: "Le ma_s pousse dans les champs en _t_.",
+                    blanks: [4, 24, 26],
+                    answers: ["ï", "é", "é"],
+                    explanation: "Le mot 'maïs' prend un tréma sur le 'i', et 'été' prend deux accents aigus."
+                }
+            ],
+            match: [
+                {
+                    left: ["café", "père", "forêt", "Noël", "là", "théâtre", "leçon", "maïs"],
+                    right: ["accent aigu (é)", "accent grave (è)", "accent circonflexe (ê)", "tréma (ë)", "accent grave (à)", "accent aigu (é) et accent circonflexe (â)", "cédille (ç)", "tréma (ï)"],
+                    pairs: [0, 1, 2, 3, 4, 5, 6, 7]
+                },
+                {
+                    left: ["âge", "œuvre", "où", "déjà", "naïf", "hôtel", "façade", "élève"],
+                    right: ["accent circonflexe (â)", "ligature (œ)", "accent grave (ù)", "accent aigu (é) et accent grave (à)", "tréma (ï)", "accent circonflexe (ô)", "cédille (ç)", "accent aigu (é)"],
+                    pairs: [0, 1, 2, 3, 4, 5, 6, 7]
+                },
+                {
+                    left: ["poème", "français", "garçon", "maïs", "château", "fête", "déçu", "coïncidence"],
+                    right: ["accent circonflexe (è)", "accent aigu (é) et cédille (ç)", "cédille (ç)", "tréma (ï)", "accent circonflexe (â)", "accent circonflexe (ê)", "accent aigu (é) et cédille (ç)", "tréma (ï)"],
+                    pairs: [0, 1, 2, 3, 4, 5, 6, 7]
+                }
+            ]
+        };
+
+        // Initialize the game
+function initGame() {
+            // Set up tab switching
+            exerciseTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Update active tab
+                    exerciseTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Update active content
+                    const exercise = tab.getAttribute('data-exercise');
+                    currentExercise = exercise;
+                    
+                    exerciseContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    document.getElementById(`${exercise}-content`).classList.add('active');
+                    
+                    // Reset and initialize the selected exercise
+                    resetExercise();
+                    initExercise();
+                });
+            });
+            
+            // Set up restart button
+            restartButton.addEventListener('click', () => {
+                resultContainer.style.display = 'none';
+                resetExercise();
+                initExercise();
+            });
+            
+            // Set up submit buttons
+            quizSubmitButton.addEventListener('click', submitQuizAnswer);
+            fillSubmitButton.addEventListener('click', submitFillAnswer);
+            matchSubmitButton.addEventListener('click', submitMatchAnswer);
+            
+            // Initialize the first exercise
+            resetExercise();
+            initExercise();
+        }
+        
+        // Reset the current exercise
+        function resetExercise() {
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedOption = null;
+            selectedMatches = {left: null, right: null};
+            matchedPairs = [];
+            currentFillQuestion = null;
+            selectedInput = null;
+            
+            // Reset UI elements
+            scoreDisplay.textContent = '0';
+            progressBar.style.width = '0%';
+            document.getElementById('fill-progress-bar').style.width = '0%';
+            document.getElementById('match-progress-bar').style.width = '0%';
+            
+            // Hide result container
+            resultContainer.style.display = 'none';
+        }
+        
+        // Initialize the current exercise
+        function initExercise() {
+            switch(currentExercise) {
+                case 'quiz':
+                    initQuiz();
+                    break;
+                case 'fill':
+                    initFill();
+                    break;
+                case 'match':
+                    initMatch();
+                    break;
+            }
+        }
+        
+        // QUIZ EXERCISE FUNCTIONS
+        function initQuiz() {
+            // Shuffle and select questions
+            questions = shuffleArray([...exerciseData.quiz]).slice(0, totalQuestions);
+            showQuizQuestion();
+        }
+        
+        function showQuizQuestion() {
+            const question = questions[currentQuestionIndex];
+            
+            // Create question container
+            questionContainer.innerHTML = `
+                <div class="question-container">
+                    <div class="question">${question.question}</div>
+                    <div class="options-container">
+                        ${question.options.map((option, index) => 
+                            `<div class="option" data-index="${index}">${option}</div>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners to options
+            const options = questionContainer.querySelectorAll('.option');
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Remove selected class from all options
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    option.classList.add('selected');
+                    
+                    // Update selected option
+                    selectedOption = parseInt(option.getAttribute('data-index'));
+                });
+            });
+            
+            // Update progress bar
+            const progress = (currentQuestionIndex / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        function submitQuizAnswer() {
+            // Check if an option is selected
+            if (selectedOption === null) {
+                quizFeedback.textContent = 'Veuillez sélectionner une réponse.';
+                quizFeedback.className = 'feedback incorrect';
+                quizFeedback.style.display = 'block';
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedOption === question.correctAnswer;
+            
+            // Show feedback
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+                quizFeedback.textContent = `Correct ! ${question.explanation}`;
+                quizFeedback.className = 'feedback correct';
+            } else {
+                quizFeedback.textContent = `Incorrect. La bonne réponse est : ${question.options[question.correctAnswer]}. ${question.explanation}`;
+                quizFeedback.className = 'feedback incorrect';
+            }
+            quizFeedback.style.display = 'block';
+            
+            // Highlight correct and incorrect answers
+            const options = questionContainer.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === question.correctAnswer) {
+                    option.classList.add('correct');
+                } else if (index === selectedOption && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Disable options
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                currentQuestionIndex++;
+                
+                if (currentQuestionIndex < totalQuestions) {
+                    selectedOption = null;
+                    quizFeedback.style.display = 'none';
+                    showQuizQuestion();
+                } else {
+                    // Show final result
+                    showResult();
+                }
+            }, 2000);
+        }
+        
+        // FILL EXERCISE FUNCTIONS
+        function initFill() {
+            // Shuffle and select questions
+            questions = shuffleArray([...exerciseData.fill]).slice(0, totalQuestions);
+            showFillQuestion();
+        }
+        
+        function showFillQuestion() {
+            currentFillQuestion = questions[currentQuestionIndex];
+            
+            // Create text with blanks
+            let textWithBlanks = currentFillQuestion.text;
+            const blanks = currentFillQuestion.blanks;
+            
+            // Replace blanks with input fields
+            for (let i = blanks.length - 1; i >= 0; i--) {
+                const pos = blanks[i];
+                const before = textWithBlanks.substring(0, pos);
+                const after = textWithBlanks.substring(pos + 1);
+                textWithBlanks = before + `<span class="fill-blank" data-index="${i}">_</span>` + after;
+            }
+            
+            // Create options
+            const options = shuffleArray([...currentFillQuestion.answers]);
+            
+            // Create HTML
+            fillContainer.innerHTML = `
+                <div class="fill-text">${textWithBlanks}</div>
+                <div class="fill-options">
+                    ${options.map(option => 
+                        `<div class="fill-option">${option}</div>`
+                    ).join('')}
+                </div>
+            `;
+            
+            // Add event listeners to blanks
+            const blankElements = fillContainer.querySelectorAll('.fill-blank');
+            blankElements.forEach(blank => {
+                blank.addEventListener('click', () => {
+                    // Remove selected class from all blanks
+                    blankElements.forEach(b => b.classList.remove('selected'));
+                    
+                    // Add selected class to clicked blank
+                    blank.classList.add('selected');
+                    
+                    // Update selected input
+                    selectedInput = parseInt(blank.getAttribute('data-index'));
+                });
+            });
+            
+            // Add event listeners to options
+            const optionElements = fillContainer.querySelectorAll('.fill-option');
+            optionElements.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Check if a blank is selected
+                    if (selectedInput === null) {
+                        fillFeedback.textContent = 'Veuillez d\'abord sélectionner un espace à remplir.';
+                        fillFeedback.className = 'feedback incorrect';
+                        fillFeedback.style.display = 'block';
+                        setTimeout(() => {
+                            fillFeedback.style.display = 'none';
+                        }, 2000);
+                        return;
+                    }
+                    
+                    // Fill the selected blank
+                    const selectedBlank = fillContainer.querySelector(`.fill-blank[data-index="${selectedInput}"]`);
+                    selectedBlank.textContent = option.textContent;
+                    selectedBlank.classList.remove('selected');
+                    
+                    // Remove the option
+                    option.style.display = 'none';
+                    
+                    // Reset selected input
+                    selectedInput = null;
+                });
+            });
+            
+            // Update progress bar
+            const progress = (currentQuestionIndex / totalQuestions) * 100;
+            document.getElementById('fill-progress-bar').style.width = `${progress}%`;
+        }
+        
+        function submitFillAnswer() {
+            // Get all blanks
+            const blanks = fillContainer.querySelectorAll('.fill-blank');
+            
+            // Check if all blanks are filled
+            let allFilled = true;
+            blanks.forEach(blank => {
+                if (blank.textContent === '_') {
+                    allFilled = false;
+                }
+            });
+            
+            if (!allFilled) {
+                fillFeedback.textContent = 'Veuillez remplir tous les espaces.';
+                fillFeedback.className = 'feedback incorrect';
+                fillFeedback.style.display = 'block';
+                return;
+            }
+            
+            // Check answers
+            let isCorrect = true;
+            blanks.forEach((blank, index) => {
+                const userAnswer = blank.textContent;
+                const correctAnswer = currentFillQuestion.answers[index];
+                
+                if (userAnswer !== correctAnswer) {
+                    isCorrect = false;
+                    blank.classList.add('incorrect');
+                } else {
+                    blank.classList.add('correct');
+                }
+            });
+            
+            // Show feedback
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+                fillFeedback.textContent = `Correct ! ${currentFillQuestion.explanation}`;
+                fillFeedback.className = 'feedback correct';
+            } else {
+                fillFeedback.textContent = `Incorrect. ${currentFillQuestion.explanation}`;
+                fillFeedback.className = 'feedback incorrect';
+            }
+            fillFeedback.style.display = 'block';
+            
+            // Disable options
+            const options = fillContainer.querySelectorAll('.fill-option');
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                currentQuestionIndex++;
+                
+                if (currentQuestionIndex < totalQuestions) {
+                    selectedInput = null;
+                    fillFeedback.style.display = 'none';
+                    showFillQuestion();
+                } else {
+                    // Show final result
+                    showResult();
+                }
+            }, 2000);
+        }
+        
+        // MATCH EXERCISE FUNCTIONS
+        function initMatch() {
+            // Select a random match set
+            const matchIndex = Math.floor(Math.random() * exerciseData.match.length);
+            const matchSet = exerciseData.match[matchIndex];
+            
+            // Shuffle the right column
+            const rightItems = shuffleArray([...matchSet.right]);
+            
+            // Create HTML
+            matchContainer.innerHTML = `
+                <div class="match-container">
+                    <div class="match-column left-column">
+                        ${matchSet.left.map((item, index) => 
+                            `<div class="match-item left-item" data-index="${index}">${item}</div>`
+                        ).join('')}
+                    </div>
+                    <div class="match-column right-column">
+                        ${rightItems.map((item, index) => 
+                            `<div class="match-item right-item" data-index="${index}">${item}</div>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Store the correct pairs
+            questions = [{
+                left: matchSet.left,
+                right: rightItems,
+                pairs: matchSet.pairs
+            }];
+            
+            // Add event listeners to left items
+            const leftItems = matchContainer.querySelectorAll('.left-item');
+            leftItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // If already matched, do nothing
+                    if (item.classList.contains('matched')) return;
+                    
+                    // Remove selected class from all left items
+                    leftItems.forEach(i => {
+                        if (!i.classList.contains('matched')) {
+                            i.classList.remove('selected');
+                        }
+                    });
+                    
+                    // Add selected class to clicked item
+                    item.classList.add('selected');
+                    
+                    // Update selected match
+                    selectedMatches.left = parseInt(item.getAttribute('data-index'));
+                    
+                    // Check if both sides are selected
+                    checkMatch();
+                });
+            });
+            
+            // Add event listeners to right items
+            const rightItems = matchContainer.querySelectorAll('.right-item');
+            rightItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // If already matched, do nothing
+                    if (item.classList.contains('matched')) return;
+                    
+                    // Remove selected class from all right items
+                    rightItems.forEach(i => {
+                        if (!i.classList.contains('matched')) {
+                            i.classList.remove('selected');
+                        }
+                    });
+                    
+                    // Add selected class to clicked item
+                    item.classList.add('selected');
+                    
+                    // Update selected match
+                    selectedMatches.right = parseInt(item.getAttribute('data-index'));
+                    
+                    // Check if both sides are selected
+                    checkMatch();
+                });
+            });
+            
+            // Reset matched pairs
+            matchedPairs = [];
+            
+            // Update progress bar
+            updateMatchProgress();
+        }
+        
+        function checkMatch() {
+            // Check if both sides are selected
+            if (selectedMatches.left === null || selectedMatches.right === null) return;
+            
+            const leftIndex = selectedMatches.left;
+            const rightIndex = selectedMatches.right;
+            
+            // Get the correct pair for the selected left item
+            const correctRightIndex = questions[0].pairs[leftIndex];
+            
+            // Check if the match is correct
+            const isCorrect = rightIndex === correctRightIndex;
+            
+            if (isCorrect) {
+                // Add to matched pairs
+                matchedPairs.push({left: leftIndex, right: rightIndex});
+                
+                // Mark items as matched
+                const leftItem = matchContainer.querySelector(`.left-item[data-index="${leftIndex}"]`);
+                const rightItem = matchContainer.querySelector(`.right-item[data-index="${rightIndex}"]`);
+                
+                leftItem.classList.remove('selected');
+                rightItem.classList.remove('selected');
+                
+                leftItem.classList.add('matched');
+                rightItem.classList.add('matched');
+                
+                // Update progress
+                updateMatchProgress();
+                
+                // Check if all pairs are matched
+                if (matchedPairs.length === questions[0].left.length) {
+                    // All matched, show success message
+                    matchFeedback.textContent = 'Bravo ! Vous avez correctement associé tous les éléments.';
+                    matchFeedback.className = 'feedback correct';
+                    matchFeedback.style.display = 'block';
+                    
+                    // Update score
+                    score = 10; // Full score for completing the match
+                    scoreDisplay.textContent = score;
+                    
+                    // Show result after delay
+                    setTimeout(() => {
+                        showResult();
+                    }, 2000);
+                }
+            } else {
+                // Show error message
+                matchFeedback.textContent = 'Cette association n\'est pas correcte. Essayez une autre combinaison.';
+                matchFeedback.className = 'feedback incorrect';
+                matchFeedback.style.display = 'block';
+                
+                // Reset selection after delay
+                setTimeout(() => {
+                    const leftItem = matchContainer.querySelector(`.left-item[data-index="${leftIndex}"]`);
+                    const rightItem = matchContainer.querySelector(`.right-item[data-index="${rightIndex}"]`);
+                    
+                    leftItem.classList.remove('selected');
+                    rightItem.classList.remove('selected');
+                    
+                    selectedMatches.left = null;
+                    selectedMatches.right = null;
+                    
+                    matchFeedback.style.display = 'none';
+                }, 1500);
+            }
+        }
+        
+        function updateMatchProgress() {
+            const progress = (matchedPairs.length / questions[0].left.length) * 100;
+            document.getElementById('match-progress-bar').style.width = `${progress}%`;
+        }
+        
+        function submitMatchAnswer() {
+            // This is handled automatically when all pairs are matched
+            // But we can add a hint feature here
+            if (matchedPairs.length < questions[0].left.length) {
+                matchFeedback.textContent = 'Continuez à associer les éléments. Vous pouvez le faire !';
+                matchFeedback.className = 'feedback';
+                matchFeedback.style.display = 'block';
+                
+                setTimeout(() => {
+                    matchFeedback.style.display = 'none';
+                }, 2000);
+            }
+        }
+        
+        // COMMON FUNCTIONS
+        function showResult() {
+            // Hide exercise contents
+            exerciseContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show result container
+            resultContainer.style.display = 'block';
+            
+            // Update result information
+            finalScore.textContent = score;
+            finalTotal.textContent = totalQuestions;
+            
+            const percentage = Math.round((score / totalQuestions) * 100);
+            finalPercentage.textContent = percentage;
+            
+            // Set result message based on score
+            let message;
+            if (percentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez parfaitement les accents en français !';
+            } else if (percentage >= 70) {
+                message = 'Très bien ! Vous avez une bonne maîtrise des accents.';
+            } else if (percentage >= 50) {
+                message = 'Bien ! Continuez à pratiquer pour améliorer votre maîtrise des accents.';
+            } else {
+                message = 'Continuez à pratiquer pour améliorer votre connaissance des accents en français.';
+            }
+            
+            resultMessage.textContent = message;
+        }
+        
+        // Utility function to shuffle an array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialize the game when the page loads
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>

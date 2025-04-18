@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictée d'Accents - Français</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --current-color: #9b59b6;
+            --current-color-dark: #8e44ad;
+        }
+        
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .dictation-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .play-button {
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 24px;
+        }
+        
+        .play-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .play-button.playing {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .play-count {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .word-display {
+            font-size: 24px;
+            text-align: center;
+            margin: 20px 0;
+            letter-spacing: 1px;
+        }
+        
+        .accent-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .accent-button {
+            padding: 10px 15px;
+            font-size: 18px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .accent-button:hover {
+            background-color: #e9ecef;
+        }
+        
+        .accent-button.selected {
+            background-color: var(--current-color);
+            color: white;
+            border-color: var(--current-color-dark);
+        }
+        
+        .submit-button {
+            padding: 12px 30px;
+            background-color: var(--current-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--current-color);
+            display: none;
+        }
+        
+        .word-explanation {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--current-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .score-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--current-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--current-color-dark);
+        }
+        
+        .difficulty-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-selector select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        .letter-container {
+            display: inline-block;
+            position: relative;
+            margin: 0 2px;
+        }
+        
+        .letter {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0 2px;
+            transition: all 0.2s;
+        }
+        
+        .letter:hover {
+            color: var(--current-color);
+        }
+        
+        .letter.selected {
+            color: var(--current-color);
+            font-weight: bold;
+        }
+        
+        .letter.correct {
+            color: #27ae60;
+        }
+        
+        .letter.incorrect {
+            color: #c0392b;
+        }
+        
+        .accent-popup {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            padding: 5px;
+            display: none;
+            z-index: 10;
+        }
+        
+        .accent-option {
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .accent-option:hover {
+            background-color: #f0f0f0;
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .difficulty-selector {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index3.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour à la Dictée
+            </a>
+            <h1>Dictée d'Accents</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        
+        <main>
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Nouvel Exercice
+                </button>
+                <div class="difficulty-selector">
+                    <label for="difficulty-select">Difficulté:</label>
+                    <select id="difficulty-select">
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="score-display">Score: <span id="score">0</span>/<span id="total-words">10</span></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="exercise-container">
+                <div class="dictation-container">
+                    <div class="audio-controls">
+                        <button class="play-button" id="play-button">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="play-count">
+                            Écoutez le mot (<span id="play-count">0</span>/<span id="max-plays">3</span>)
+                        </div>
+                    </div>
+                    
+                    <div class="word-display" id="word-display"></div>
+                    
+                    <div class="accent-buttons" id="accent-buttons">
+                        <button class="accent-button" data-accent="é">é</button>
+                        <button class="accent-button" data-accent="è">è</button>
+                        <button class="accent-button" data-accent="ê">ê</button>
+                        <button class="accent-button" data-accent="ë">ë</button>
+                        <button class="accent-button" data-accent="à">à</button>
+                        <button class="accent-button" data-accent="â">â</button>
+                        <button class="accent-button" data-accent="ù">ù</button>
+                        <button class="accent-button" data-accent="û">û</button>
+                        <button class="accent-button" data-accent="ï">ï</button>
+                        <button class="accent-button" data-accent="î">î</button>
+                        <button class="accent-button" data-accent="ç">ç</button>
+                        <button class="accent-button" data-accent="ô">ô</button>
+                        <button class="accent-button" data-accent="œ">œ</button>
+                        <button class="accent-button" data-accent="æ">æ</button>
+                    </div>
+                    
+                    <div class="feedback" id="feedback"></div>
+                    
+                    <div class="result-container" id="result-container">
+                        <div>Mot correct: <span id="correct-word" class="correct-word"></span></div>
+                        <div class="word-explanation" id="word-explanation"></div>
+                    </div>
+                    
+                    <button class="submit-button" id="submit-button">Vérifier</button>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> La Dictée d'Accents en Français</h3>
+                <p>La dictée d'accents est un exercice essentiel pour maîtriser l'orthographe française et ses accents.</p>
+                
+                <h4>Comment faire l'exercice :</h4>
+                <ol>
+                    <li>Écoutez attentivement le mot prononcé (vous pouvez l'écouter jusqu'à 3 fois)</li>
+                    <li>Cliquez sur les lettres qui nécessitent un accent</li>
+                    <li>Sélectionnez l'accent approprié parmi les options proposées</li>
+                    <li>Cliquez sur "Vérifier" pour voir si votre réponse est correcte</li>
+                </ol>
+                
+                <h4>Les accents en français :</h4>
+                <ul>
+                    <li><strong>L'accent aigu (é)</strong> : indique une prononciation fermée (café, été)</li>
+                    <li><strong>L'accent grave (è, à, ù)</strong> : indique une prononciation ouverte (père, là, où)</li>
+                    <li><strong>L'accent circonflexe (ê, â, ô)</strong> : souvent remplace un 's' historique (forêt, pâte, hôpital)</li>
+                    <li><strong>Le tréma (ë, ï)</strong> : indique que deux voyelles se prononcent séparément (Noël, maïs)</li>
+                    <li><strong>La cédille (ç)</strong> : donne au 'c' le son 's' devant a, o, u (façade, leçon)</li>
+                </ul>
+                
+                <h4>Raccourcis clavier :</h4>
+                <ul>
+                    <li><strong>Espace</strong> : Écouter le mot</li>
+                    <li><strong>Entrée</strong> : Vérifier votre réponse ou passer au mot suivant</li>
+                </ul>
+                
+                <p>Maîtriser les accents est essentiel pour une orthographe correcte en français !</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
+        </footer>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const newGameBtn = document.getElementById('new-game-btn');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const scoreDisplay = document.getElementById('score');
+        const totalWordsDisplay = document.getElementById('total-words');
+        const progressBar = document.getElementById('progress-bar');
+        const playButton = document.getElementById('play-button');
+        const playCountDisplay = document.getElementById('play-count');
+        const maxPlaysDisplay = document.getElementById('max-plays');
+        const wordDisplay = document.getElementById('word-display');
+        const accentButtons = document.getElementById('accent-buttons');
+        const feedbackElement = document.getElementById('feedback');
+        const resultContainer = document.getElementById('result-container');
+        const correctWordElement = document.getElementById('correct-word');
+        const wordExplanationElement = document.getElementById('word-explanation');
+        const submitButton = document.getElementById('submit-button');
+        
+        // Game variables
+        let words = [];
+        let currentWordIndex = 0;
+        let score = 0;
+        let totalWords = 10;
+        let playCount = 0;
+        let maxPlays = 3;
+        let currentDifficulty = 'facile';
+        let speechSynthesisAvailable = false;
+        let selectedLetter = null;
+        let userAnswer = '';
+        
+        // Exercise data
+        const exerciseData = {
+            facile: [
+                {
+                    word: "café",
+                    display: "cafe",
+                    explanation: "Le mot 'café' prend un accent aigu sur le 'e' pour indiquer une prononciation fermée."
+                },
+                {
+                    word: "élève",
+                    display: "eleve",
+                    explanation: "Le mot 'élève' prend un accent aigu sur le premier 'e' et un accent grave sur le deuxième 'e'."
+                },
+                {
+                    word: "père",
+                    display: "pere",
+                    explanation: "Le mot 'père' prend un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    word: "frère",
+                    display: "frere",
+                    explanation: "Le mot 'frère' prend un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    word: "école",
+                    display: "ecole",
+                    explanation: "Le mot 'école' prend un accent aigu sur le 'e' pour indiquer une prononciation fermée."
+                },
+                {
+                    word: "hôpital",
+                    display: "hopital",
+                    explanation: "Le mot 'hôpital' prend un accent circonflexe sur le 'o', remplaçant un 's' historique (hospital)."
+                },
+                {
+                    word: "âge",
+                    display: "age",
+                    explanation: "Le mot 'âge' prend un accent circonflexe sur le 'a', remplaçant un 's' historique (aage)."
+                },
+                {
+                    word: "là",
+                    display: "la",
+                    explanation: "Le mot 'là' (adverbe de lieu) prend un accent grave pour le distinguer de 'la' (article)."
+                },
+                {
+                    word: "déjà",
+                    display: "deja",
+                    explanation: "Le mot 'déjà' prend un accent aigu sur le 'e' et un accent grave sur le 'a'."
+                },
+                {
+                    word: "voilà",
+                    display: "voila",
+                    explanation: "Le mot 'voilà' prend un accent grave sur le 'a'."
+                },
+                {
+                    word: "après",
+                    display: "apres",
+                    explanation: "Le mot 'après' prend un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    word: "très",
+                    display: "tres",
+                    explanation: "Le mot 'très' prend un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    word: "même",
+                    display: "meme",
+                    explanation: "Le mot 'même' prend un accent circonflexe sur le premier 'e' et un accent grave sur le deuxième 'e'."
+                },
+                {
+                    word: "être",
+                    display: "etre",
+                    explanation: "Le mot 'être' prend un accent circonflexe sur le premier 'e' et un accent grave sur le deuxième 'e'."
+                },
+                {
+                    word: "théâtre",
+                    display: "theatre",
+                    explanation: "Le mot 'théâtre' prend un accent aigu sur le 'e' et un accent circonflexe sur le 'a'."
+                }
+            ],
+            moyen: [
+                {
+                    word: "différent",
+                    display: "different",
+                    explanation: "Le mot 'différent' prend un accent aigu sur le 'e' pour indiquer une prononciation fermée."
+                },
+                {
+                    word: "préféré",
+                    display: "prefere",
+                    explanation: "Le mot 'préféré' prend des accents aigus sur les trois 'e' pour indiquer une prononciation fermée."
+                },
+                {
+                    word: "cinéma",
+                    display: "cinema",
+                    explanation: "Le mot 'cinéma' prend un accent aigu sur le 'e' pour indiquer une prononciation fermée."
+                },
+                {
+                    word: "télévision",
+                    display: "television",
+                    explanation: "Le mot 'télévision' prend des accents aigus sur les deux 'e' pour indiquer une prononciation fermée."
+                },
+                {
+                    word: "hôtel",
+                    display: "hotel",
+                    explanation: "Le mot 'hôtel' prend un accent circonflexe sur le 'o', remplaçant un 's' historique (hostel)."
+                },
+                {
+                    word: "forêt",
+                    display: "foret",
+                    explanation: "Le mot 'forêt' prend un accent circonflexe sur le 'e', remplaçant un 's' historique (forest)."
+                },
+                {
+                    word: "château",
+                    display: "chateau",
+                    explanation: "Le mot 'château' prend un accent circonflexe sur le 'a', remplaçant un 's' historique (chasteau)."
+                },
+                {
+                    word: "intéressant",
+                    display: "interessant",
+                    explanation: "Le mot 'intéressant' prend un accent aigu sur le deuxième 'e' pour indiquer une prononciation fermée."
+                },
+                {
+                    word: "première",
+                    display: "premiere",
+                    explanation: "Le mot 'première' prend un accent grave sur le deuxième 'e' et un accent aigu sur le premier 'e'."
+                },
+                {
+                    word: "français",
+                    display: "francais",
+                    explanation: "Le mot 'français' prend un accent aigu sur le 'c' (cédille) pour lui donner le son 's' devant le 'a'."
+                },
+                {
+                    word: "leçon",
+                    display: "lecon",
+                    explanation: "Le mot 'leçon' prend une cédille sous le 'c' pour lui donner le son 's' devant le 'o'."
+                },
+                {
+                    word: "façon",
+                    display: "facon",
+                    explanation: "Le mot 'façon' prend une cédille sous le 'c' pour lui donner le son 's' devant le 'o'."
+                },
+                {
+                    word: "Noël",
+                    display: "Noel",
+                    explanation: "Le mot 'Noël' prend un tréma sur le 'e' pour indiquer que les voyelles 'o' et 'e' se prononcent séparément."
+                },
+                {
+                    word: "maïs",
+                    display: "mais",
+                    explanation: "Le mot 'maïs' prend un tréma sur le 'i' pour indiquer que les voyelles 'a' et 'i' se prononcent séparément."
+                },
+                {
+                    word: "naïf",
+                    display: "naif",
+                    explanation: "Le mot 'naïf' prend un tréma sur le 'i' pour indiquer que les voyelles 'a' et 'i' se prononcent séparément."
+                }
+            ],
+            difficile: [
+                {
+                    word: "bénéfice",
+                    display: "benefice",
+                    explanation: "Le mot 'bénéfice' prend des accents aigus sur les deux 'e' pour indiquer une prononciation fermée."
+                },
+                {
+                    word: "phénomène",
+                    display: "phenomene",
+                    explanation: "Le mot 'phénomène' prend des accents aigus sur les deux premiers 'e' et un accent grave sur le dernier 'e'."
+                },
+                {
+                    word: "célèbre",
+                    display: "celebre",
+                    explanation: "Le mot 'célèbre' prend un accent aigu sur le premier 'e' et un accent grave sur le deuxième 'e'."
+                },
+                {
+                    word: "événement",
+                    display: "evenement",
+                    explanation: "Le mot 'événement' prend des accents aigus sur les deux premiers 'e' et un accent grave sur le troisième 'e'."
+                },
+                {
+                    word: "théorème",
+                    display: "theoreme",
+                    explanation: "Le mot 'théorème' prend un accent aigu sur le premier 'e' et un accent grave sur le deuxième 'e'."
+                },
+                {
+                    word: "problème",
+                    display: "probleme",
+                    explanation: "Le mot 'problème' prend un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    word: "système",
+                    display: "systeme",
+                    explanation: "Le mot 'système' prend un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    word: "poème",
+                    display: "poeme",
+                    explanation: "Le mot 'poème' prend un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    word: "scène",
+                    display: "scene",
+                    explanation: "Le mot 'scène' prend un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    word: "enquête",
+                    display: "enquete",
+                    explanation: "Le mot 'enquête' prend un accent circonflexe sur le 'e', remplaçant un 's' historique (enqueste)."
+                },
+                {
+                    word: "arrière",
+                    display: "arriere",
+                    explanation: "Le mot 'arrière' prend un accent grave sur le 'e' pour indiquer une prononciation ouverte."
+                },
+                {
+                    word: "coïncidence",
+                    display: "coincidence",
+                    explanation: "Le mot 'coïncidence' prend un tréma sur le 'i' pour indiquer que les voyelles 'o' et 'i' se prononcent séparément."
+                },
+                {
+                    word: "ambiguïté",
+                    display: "ambiguite",
+                    explanation: "Le mot 'ambiguïté' prend un tréma sur le 'i' et un accent aigu sur le 'e'."
+                },
+                {
+                    word: "héroïque",
+                    display: "heroique",
+                    explanation: "Le mot 'héroïque' prend un accent aigu sur le 'e' et un tréma sur le 'i'."
+                },
+                {
+                    word: "œuvre",
+                    display: "oeuvre",
+                    explanation: "Le mot 'œuvre' utilise la ligature 'œ' pour combiner les lettres 'o' et 'e'."
+                }
+            ]
+        };
+        
+        // Function to start a new game
+        function startNewGame() {
+            // Reset game variables
+            currentWordIndex = 0;
+            score = 0;
+            
+            // Get words for current difficulty
+            words = [...exerciseData[currentDifficulty]];
+            
+            // Shuffle words
+            words = shuffleArray(words);
+            
+            // Limit to totalWords
+            words = words.slice(0, totalWords);
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            totalWordsDisplay.textContent = totalWords;
+            progressBar.style.width = '0%';
+            
+            // Show first word
+            showWord();
+        }
+        
+        // Function to shuffle array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Function to show current word
+        function showWord() {
+            // Reset UI
+            playCount = 0;
+            playCountDisplay.textContent = playCount;
+            selectedLetter = null;
+            userAnswer = words[currentWordIndex].display;
+            
+            // Hide result container
+            resultContainer.style.display = 'none';
+            feedbackElement.style.display = 'none';
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentWordIndex / totalWords) * 100}%`;
+            
+            // Display word with clickable letters
+            wordDisplay.innerHTML = '';
+            const wordToDisplay = words[currentWordIndex].display;
+            
+            for (let i = 0; i < wordToDisplay.length; i++) {
+                const letterContainer = document.createElement('div');
+                letterContainer.className = 'letter-container';
+                
+                const letter = document.createElement('span');
+                letter.className = 'letter';
+                letter.textContent = wordToDisplay[i];
+                letter.dataset.index = i;
+                letter.dataset.original = wordToDisplay[i];
+                
+                letter.addEventListener('click', function() {
+                    // Remove selected class from all letters
+                    document.querySelectorAll('.letter').forEach(l => l.classList.remove('selected'));
+                    
+                    // Add selected class to clicked letter
+                    this.classList.add('selected');
+                    
+                    // Update selected letter
+                    selectedLetter = this;
+                });
+                
+                letterContainer.appendChild(letter);
+                wordDisplay.appendChild(letterContainer);
+            }
+            
+            // Set up accent buttons
+            setupAccentButtons();
+            
+            // Reset submit button
+            submitButton.textContent = 'Vérifier';
+            submitButton.removeEventListener('click', nextWord);
+            submitButton.addEventListener('click', checkAnswer);
+        }
+        
+        // Function to set up accent buttons
+        function setupAccentButtons() {
+            // Clear previous event listeners
+            const buttons = document.querySelectorAll('.accent-button');
+            buttons.forEach(button => {
+                button.classList.remove('selected');
+                
+                // Remove old event listeners by cloning and replacing
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+                
+                // Add new event listener
+                newButton.addEventListener('click', function() {
+                    if (!selectedLetter) {
+                        alert('Veuillez d\'abord sélectionner une lettre.');
+                        return;
+                    }
+                    
+                    // Get the accent
+                    const accent = this.dataset.accent;
+                    
+                    // Get the base letter from the selected letter
+                    const baseLetter = selectedLetter.dataset.original;
+                    
+                    // Check if the accent is applicable to this letter
+                    if (!isAccentApplicable(baseLetter, accent)) {
+                        alert(`L'accent ${accent} ne peut pas être appliqué à la lettre ${baseLetter}.`);
+                        return;
+                    }
+                    
+                    // Update the letter with the accent
+                    selectedLetter.textContent = accent;
+                    
+                    // Update user answer
+                    updateUserAnswer();
+                    
+                    // Remove selected class
+                    selectedLetter.classList.remove('selected');
+                    selectedLetter = null;
+                });
+            });
+        }
+        
+        // Function to check if an
+        
+        // Function to check if an accent is applicable to a letter
+        function isAccentApplicable(letter, accent) {
+            const accentMap = {
+                'e': ['é', 'è', 'ê', 'ë'],
+                'a': ['à', 'â'],
+                'u': ['ù', 'û'],
+                'i': ['ï', 'î'],
+                'o': ['ô'],
+                'c': ['ç'],
+                'oe': ['œ'],
+                'ae': ['æ']
+            };
+            
+            return accentMap[letter] && accentMap[letter].includes(accent);
+        }
+        
+        // Function to update user answer
+        function updateUserAnswer() {
+            userAnswer = '';
+            const letters = document.querySelectorAll('.letter');
+            letters.forEach(letter => {
+                userAnswer += letter.textContent;
+            });
+        }
+        
+        // Function to check user answer
+        function checkAnswer() {
+            const correctAnswer = words[currentWordIndex].word;
+            
+            // Show result
+            resultContainer.style.display = 'block';
+            correctWordElement.textContent = correctAnswer;
+            wordExplanationElement.textContent = words[currentWordIndex].explanation;
+            
+            // Check if answer is correct
+            if (userAnswer === correctAnswer) {
+                score++;
+                scoreDisplay.textContent = score;
+                
+                feedbackElement.textContent = 'Correct ! Bravo !';
+                feedbackElement.className = 'feedback correct';
+                feedbackElement.style.display = 'block';
+                
+                // Mark all letters as correct
+                document.querySelectorAll('.letter').forEach(letter => {
+                    letter.classList.add('correct');
+                });
+            } else {
+                feedbackElement.textContent = 'Incorrect. La bonne réponse est : ' + correctAnswer;
+                feedbackElement.className = 'feedback incorrect';
+                feedbackElement.style.display = 'block';
+                
+                // Mark incorrect letters
+                const userLetters = document.querySelectorAll('.letter');
+                for (let i = 0; i < userLetters.length; i++) {
+                    if (i < correctAnswer.length && userLetters[i].textContent !== correctAnswer[i]) {
+                        userLetters[i].classList.add('incorrect');
+                    } else if (i < correctAnswer.length) {
+                        userLetters[i].classList.add('correct');
+                    }
+                }
+            }
+            
+            // Change submit button to next button
+            submitButton.textContent = 'Suivant';
+            submitButton.removeEventListener('click', checkAnswer);
+            submitButton.addEventListener('click', nextWord);
+        }
+        
+        // Function to play current word
+        function playWord() {
+            if (playCount >= maxPlays) {
+                alert('Vous avez atteint le nombre maximum d\'écoutes pour ce mot.');
+                return;
+            }
+            
+            const word = words[currentWordIndex].word;
+            
+            if (speechSynthesisAvailable) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.8; // Slower than normal for better clarity
+                
+                // Try to get a French voice
+                const voices = window.speechSynthesis.getVoices();
+                const frenchVoice = voices.find(voice => voice.lang.includes('fr'));
+                if (frenchVoice) {
+                    utterance.voice = frenchVoice;
+                }
+                
+                // Visual feedback during playback
+                playButton.innerHTML = '<i class="fas fa-pause"></i>';
+                playButton.classList.add('playing');
+                
+                utterance.onend = function() {
+                    playButton.innerHTML = '<i class="fas fa-play"></i>';
+                    playButton.classList.remove('playing');
+                };
+                
+                window.speechSynthesis.speak(utterance);
+                
+                playCount++;
+                playCountDisplay.textContent = playCount;
+            } else {
+                alert('Votre navigateur ne prend pas en charge la synthèse vocale. Voici le mot : ' + word);
+            }
+        }
+        
+        // Function to go to next word
+        function nextWord() {
+            currentWordIndex++;
+            
+            if (currentWordIndex >= words.length) {
+                endGame();
+            } else {
+                showWord();
+            }
+        }
+        
+        // Function to end the game
+        function endGame() {
+            // Calculate score percentage
+            const scorePercentage = Math.round((score / totalWords) * 100);
+            
+            // Determine message based on score
+            let message = '';
+            if (scorePercentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez très bien les accents français.';
+            } else if (scorePercentage >= 70) {
+                message = 'Très bien ! Continuez à pratiquer pour vous améliorer.';
+            } else if (scorePercentage >= 50) {
+                message = 'Bien ! Avec un peu plus de pratique, vous progresserez rapidement.';
+            } else {
+                message = 'Continuez à pratiquer régulièrement pour améliorer votre maîtrise des accents.';
+            }
+            
+            // Create result element
+            const resultElement = document.createElement('div');
+            resultElement.className = 'dictation-container';
+            resultElement.innerHTML = `
+                <h2>Exercice terminé !</h2>
+                <p>Votre score : ${score}/${totalWords} (${scorePercentage}%)</p>
+                <p>${message}</p>
+                <button class="submit-button" id="restart-button">
+                    Recommencer
+                </button>
+            `;
+            
+            // Add event listener to restart button
+            resultElement.querySelector('#restart-button').addEventListener('click', startNewGame);
+            
+            // Replace the dictation container with the result element
+            document.querySelector('.dictation-container').replaceWith(resultElement);
+            
+            // Update progress bar to show completion
+            progressBar.style.width = '100%';
+            
+            // Save progress
+            saveProgress();
+            
+            // Adjust difficulty based on performance
+            adjustDifficulty();
+        }
+        
+        // Function to adjust difficulty based on user performance
+        function adjustDifficulty() {
+            const scorePercentage = (score / totalWords) * 100;
+            
+            if (scorePercentage >= 90 && currentDifficulty !== 'difficile') {
+                // Suggest increasing difficulty
+                if (confirm('Excellent ! Voulez-vous essayer un niveau plus difficile ?')) {
+                    if (currentDifficulty === 'facile') {
+                        currentDifficulty = 'moyen';
+                    } else if (currentDifficulty === 'moyen') {
+                        currentDifficulty = 'difficile';
+                    }
+                    difficultySelect.value = currentDifficulty;
+                }
+            } else if (scorePercentage <= 30 && currentDifficulty !== 'facile') {
+                // Suggest decreasing difficulty
+                if (confirm('Cet exercice semble difficile. Voulez-vous essayer un niveau plus facile ?')) {
+                    if (currentDifficulty === 'difficile') {
+                        currentDifficulty = 'moyen';
+                    } else if (currentDifficulty === 'moyen') {
+                        currentDifficulty = 'facile';
+                    }
+                    difficultySelect.value = currentDifficulty;
+                }
+            }
+        }
+        
+        // Function to save user progress
+        function saveProgress() {
+            try {
+                const progress = {
+                    difficulty: currentDifficulty,
+                    lastScore: score,
+                    totalWords: totalWords,
+                    date: new Date().toISOString()
+                };
+                localStorage.setItem('dicteeAccentsProgress', JSON.stringify(progress));
+            } catch (e) {
+                console.error('Could not save progress: ', e);
+            }
+        }
+        
+        // Function to load user progress
+        function loadProgress() {
+            try {
+                const progress = JSON.parse(localStorage.getItem('dicteeAccentsProgress'));
+                if (progress) {
+                    // Only load difficulty from saved progress
+                    difficultySelect.value = progress.difficulty;
+                    currentDifficulty = progress.difficulty;
+                    return true;
+                }
+            } catch (e) {
+                console.error('Could not load progress: ', e);
+            }
+            return false;
+        }
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Space bar to play audio
+            if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
+                e.preventDefault();
+                playWord();
+            }
+            
+            // Enter to check answer or go to next word
+            if (e.code === 'Enter') {
+                e.preventDefault();
+                if (submitButton.textContent === 'Vérifier') {
+                    checkAnswer();
+                } else if (submitButton.textContent === 'Suivant') {
+                    nextWord();
+                }
+            }
+        });
+        
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if speech synthesis is available
+            speechSynthesisAvailable = 'speechSynthesis' in window;
+            
+            // Set up event listeners
+            newGameBtn.addEventListener('click', startNewGame);
+            difficultySelect.addEventListener('change', function() {
+                currentDifficulty = this.value;
+                startNewGame();
+            });
+            
+            playButton.addEventListener('click', playWord);
+            submitButton.addEventListener('click', checkAnswer);
+            
+            // Load saved progress
+            loadProgress();
+            
+            // Initialize speech synthesis voices when available
+            if (speechSynthesisAvailable) {
+                if (window.speechSynthesis.getVoices().length > 0) {
+                    // Voices already loaded
+                } else {
+                    window.speechSynthesis.onvoiceschanged = function() {
+                        // Voices loaded
+                    };
+                }
+            }
+            
+            // Start a new game
+            startNewGame();
+        });
+    </script>
+</body>
+</html>
