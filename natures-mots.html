@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homonymes - Exercices</title>
+    <title>Natures des Mots - Exercices</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -29,7 +29,7 @@
             background-color: #d4ac0d;
         }
         .container {
-            max-width: 650px;
+            max-width: 600px;
             margin: 40px auto;
             background: white;
             border-radius: 18px;
@@ -115,8 +115,8 @@
 <body>
     <a href="index5.html" class="back-button">← Retour</a>
     <div class="container">
-        <h1>Homonymes</h1>
-        <div class="subtitle">Choisissez le bon homonyme pour compléter chaque phrase.</div>
+        <h1>Natures des Mots</h1>
+        <div class="subtitle">Choisissez la nature du mot en gras dans chaque phrase.</div>
         <div class="exercise" id="exercise">
             <div class="question" id="question"></div>
             <div class="choices" id="choices"></div>
@@ -127,54 +127,54 @@
     <script>
         const exercises = [
             {
-                question: 'Il faut (verre / vert / vers) de l\'eau pour la plante.',
-                correct: 'vers',
-                choices: ['verre', 'vert', 'vers']
+                question: 'Le <b><span style="color:#f1c40f">chien</span></b> court dans le jardin.',
+                correct: 'Nom',
+                choices: ['Nom', 'Verbe', 'Adjectif', 'Pronom']
             },
             {
-                question: 'Elle a acheté un (seau / saut / sceau) pour jouer à la plage.',
-                correct: 'seau',
-                choices: ['seau', 'saut', 'sceau']
+                question: 'Elle <b><span style="color:#f1c40f">parle</span></b> très bien anglais.',
+                correct: 'Verbe',
+                choices: ['Nom', 'Verbe', 'Adverbe', 'Préposition']
             },
             {
-                question: 'Le (sang / sans / cent) coule dans les veines.',
-                correct: 'sang',
-                choices: ['sang', 'sans', 'cent']
+                question: 'Le ciel est <b><span style="color:#f1c40f">bleu</span></b>.',
+                correct: 'Adjectif',
+                choices: ['Adjectif', 'Nom', 'Verbe', 'Conjonction']
             },
             {
-                question: 'Il a (peu / peut / peux) de temps pour finir.',
-                correct: 'peu',
-                choices: ['peu', 'peut', 'peux']
+                question: 'Nous <b><span style="color:#f1c40f">avons</span></b> fini nos devoirs.',
+                correct: 'Verbe',
+                choices: ['Verbe', 'Nom', 'Adjectif', 'Pronom']
             },
             {
-                question: 'Elle va (voir / voire / voix) sa grand-mère demain.',
-                correct: 'voir',
-                choices: ['voir', 'voire', 'voix']
+                question: 'Marie aime <b><span style="color:#f1c40f">lire</span></b>.',
+                correct: 'Verbe',
+                choices: ['Nom', 'Verbe', 'Adverbe', 'Préposition']
             },
             {
-                question: 'Le (pain / pin / peint) est frais ce matin.',
-                correct: 'pain',
-                choices: ['pain', 'pin', 'peint']
+                question: 'Il est parti <b><span style="color:#f1c40f">parce que</span></b> tu étais en retard.',
+                correct: 'Conjonction',
+                choices: ['Conjonction', 'Nom', 'Verbe', 'Adverbe']
             },
             {
-                question: 'Il a mis son (maire / mère / mer) dans la voiture.',
-                correct: 'mère',
-                choices: ['maire', 'mère', 'mer']
+                question: 'Elle est arrivée <b><span style="color:#f1c40f">rapidement</span></b>.',
+                correct: 'Adverbe',
+                choices: ['Adverbe', 'Nom', 'Verbe', 'Adjectif']
             },
             {
-                question: 'Le (loup / loue / lou) hurle à la lune.',
-                correct: 'loup',
-                choices: ['loup', 'loue', 'lou']
+                question: 'Donne-moi <b><span style="color:#f1c40f">ceci</span></b> s\'il te plaît.',
+                correct: 'Pronom',
+                choices: ['Pronom', 'Nom', 'Verbe', 'Adjectif']
             },
             {
-                question: 'Elle a (cour / court / cours) de français aujourd\'hui.',
-                correct: 'cours',
-                choices: ['cour', 'court', 'cours']
+                question: 'Le chat est <b><span style="color:#f1c40f">sous</span></b> la table.',
+                correct: 'Préposition',
+                choices: ['Préposition', 'Nom', 'Verbe', 'Adverbe']
             },
             {
-                question: 'Il a (été / étai / étais) malade la semaine dernière.',
-                correct: 'été',
-                choices: ['été', 'étai', 'étais']
+                question: 'Il a acheté <b><span style="color:#f1c40f">trois</span></b> pommes.',
+                correct: 'Déterminant',
+                choices: ['Déterminant', 'Nom', 'Verbe', 'Adjectif']
             }
         ];
         let current = 0;

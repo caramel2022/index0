@@ -3,255 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercices de Dictée - Français</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Grammaire - Français</title>
     <style>
-        :root {
-            --current-color: #9b59b6;
-            --current-color-dark: #8e44ad;
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f5f5f5 100%);
+            min-height: 100vh;
         }
-        
-        .section-title {
-            color: var(--current-color);
+        header {
             text-align: center;
-            margin-bottom: 40px;
-            font-size: 32px;
+            margin: 40px 0 30px 0;
         }
-        
-        .exercises-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-        
-        .exercise-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .exercise-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        .exercise-image {
-            height: 180px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-        
-        .exercise-image::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-        }
-        
-        .exercise-content {
-            padding: 20px;
-        }
-        
-        .exercise-title {
-            font-size: 20px;
-            font-weight: 700;
+        h1 {
+            color: #222;
+            font-size: 42px;
             margin-bottom: 10px;
-            color: #333;
+            letter-spacing: 2px;
         }
-        
-        .exercise-description {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.5;
+        .subtitle {
+            color: #555;
+            font-size: 20px;
+            margin-bottom: 0;
         }
-        
-        .exercise-link {
+        .back-button {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: var(--current-color);
+            margin: 30px 0 0 30px;
+            padding: 10px 18px;
+            background-color: #f1c40f;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 6px;
             font-weight: 500;
-            transition: background-color 0.3s;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(241, 196, 15, 0.08);
+            transition: background 0.3s;
         }
-        
-        .exercise-link:hover {
-            background-color: var(--current-color-dark);
+        .back-button:hover {
+            background-color: #d4ac0d;
         }
-        
-        .difficulty {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 15px;
+        .main-bg {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 60vh;
         }
-        
-        .difficulty.easy {
-            background-color: rgba(46, 204, 113, 0.2);
-            color: #27ae60;
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 10px 60px 10px;
         }
-        
-        .difficulty.medium {
-            background-color: rgba(241, 196, 15, 0.2);
-            color: #f39c12;
+        .game-card {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 6px 24px rgba(44, 62, 80, 0.08);
+            padding: 36px 28px 28px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
         }
-        
-        .difficulty.hard {
-            background-color: rgba(231, 76, 60, 0.2);
-            color: #c0392b;
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 32px rgba(44, 62, 80, 0.13);
         }
-        
-        .section-description {
+        .game-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #fff;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .game-title {
+            font-size: 26px;
+            color: #222;
+            margin-bottom: 12px;
+            font-weight: 600;
             text-align: center;
-            max-width: 800px;
-            margin: 0 auto 40px;
-            color: #555;
-            line-height: 1.6;
+        }
+        .game-description {
+            color: #666;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 22px;
+            min-height: 60px;
+        }
+        .game-button {
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: #f1c40f;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(241, 196, 15, 0.08);
+            transition: background 0.3s;
+        }
+        .game-button:hover {
+            background-color: #d4ac0d;
+        }
+        @media (max-width: 900px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .main-bg {
+                padding: 0 10px;
+            }
+        }
+        @media (max-width: 600px) {
+            .game-card {
+                padding: 24px 10px 18px 10px;
+            }
+            .game-title {
+                font-size: 22px;
+            }
+            .game-description {
+                font-size: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a href="../index.html" class="back-button">
-                <i class="fas fa-arrow-left"></i> Retour à l'Accueil
-            </a>
-            <h1>Dictée</h1>
-            <div style="width: 100px;"></div> <!-- Spacer for centering -->
-        </header>
-        
-        <main>
-            <h2 class="section-title">Exercices de Dictée</h2>
-            
-            <p class="section-description">
-                Améliorez votre orthographe et votre compréhension orale avec nos exercices de dictée interactifs. 
-                Choisissez parmi différents niveaux de difficulté et types d'exercices pour progresser à votre rythme.
-            </p>
-            
-            <div class="exercises-grid">
-                <div class="exercise-card">
-                    <div class="exercise-image" style="background-image: url('../images/dictee-mots.jpg');"></div>
-                    <div class="exercise-content">
-                        <span class="difficulty easy">Facile à Difficile</span>
-                        <h3 class="exercise-title">Dictée de Mots</h3>
-                        <p class="exercise-description">
-                            Écoutez et écrivez correctement des mots français de différents niveaux de difficulté. 
-                            Parfait pour améliorer votre orthographe et votre vocabulaire.
-                        </p>
-                        <a href="dictee-mots.html" class="exercise-link">Commencer</a>
-                    </div>
+    <a href="../index.html" class="back-button">← Retour à l'accueil</a>
+    <header>
+        <h1>Grammaire</h1>
+        <p class="subtitle">Apprenez les règles grammaticales</p>
+    </header>
+    <div class="main-bg">
+        <div class="games-grid">
+            <div class="game-card">
+                <div class="game-icon" style="background: #f1c40f;">
+                    <span>🔤</span>
                 </div>
-                
-                <div class="exercise-card">
-                    <div class="exercise-image" style="background-image: url('../images/dictee-phrases.jpg');"></div>
-                    <div class="exercise-content">
-                        <span class="difficulty medium">Moyen</span>
-                        <h3 class="exercise-title">Dictée de Phrases</h3>
-                        <p class="exercise-description">
-                            Écoutez et écrivez des phrases complètes en français. Cet exercice vous aide à maîtriser 
-                            la grammaire et la structure des phrases.
-                        </p>
-                        <a href="dictee-phrases.html" class="exercise-link">Commencer</a>
-                    </div>
-                </div>
-                
-                <div class="exercise-card">
-                    <div class="exercise-image" style="background-image: url('../images/dictee-textes.jpg');"></div>
-                    <div class="exercise-content">
-                        <span class="difficulty hard">Difficile</span>
-                        <h3 class="exercise-title">Dictée de Textes</h3>
-                        <p class="exercise-description">
-                            Relevez le défi d'écrire des textes complets dictés. Idéal pour les apprenants avancés 
-                            qui souhaitent perfectionner leur français écrit.
-                        </p>
-                        <a href="dictee-textes.html" class="exercise-link">Commencer</a>
-                    </div>
-                </div>
-                
-                <div class="exercise-card">
-                    <div class="exercise-image" style="background-image: url('../images/dictee-nombres.jpg');"></div>
-                    <div class="exercise-content">
-                        <span class="difficulty easy">Facile</span>
-                        <h3 class="exercise-title">Dictée de Nombres</h3>
-                        <p class="exercise-description">
-                            Entraînez-vous à écrire correctement les nombres en français. Un excellent exercice pour 
-                            maîtriser les règles spécifiques des nombres français.
-                        </p>
-                        <a href="dictee-nombres.html" class="exercise-link">Commencer</a>
-                    </div>
-                </div>
-                
-                <div class="exercise-card">
-                    <div class="exercise-image" style="background-image: url('../images/dictee-homonymes.jpg');"></div>
-                    <div class="exercise-content">
-                        <span class="difficulty medium">Moyen</span>
-                        <h3 class="exercise-title">Dictée d'Homonymes</h3>
-                        <p class="exercise-description">
-                            Distinguez les mots qui se prononcent de la même façon mais s'écrivent différemment. 
-                            Un défi pour améliorer votre précision orthographique.
-                        </p>
-                        <a href="dictee-homonymes.html" class="exercise-link">Commencer</a>
-                    </div>
-                </div>
-                
-                <div class="exercise-card">
-                    <div class="exercise-image" style="background-image: url('../images/dictee-accents.jpg');"></div>
-                    <div class="exercise-content">
-                        <span class="difficulty medium">Moyen</span>
-                        <h3 class="exercise-title">Dictée d'Accents</h3>
-                        <p class="exercise-description">
-                            Concentrez-vous sur le placement correct des accents en français. Un exercice essentiel 
-                            pour maîtriser cette particularité de la langue française.
-                        </p>
-                        <a href="dictee-accents.html" class="exercise-link">Commencer</a>
-                    </div>
-                </div>
+                <h2 class="game-title">Natures des Mots</h2>
+                <p class="game-description">Apprenez à identifier les différentes natures de mots : noms, verbes, adjectifs, etc.</p>
+                <a href="natures-mots.html" class="game-button">S'entraîner sur les Natures des Mots</a>
             </div>
-            
-            <div class="info-box">
-                <h3><i class="fas fa-lightbulb"></i> Conseils pour la Dictée</h3>
-                <ul>
-                    <li>Écoutez attentivement avant de commencer à écrire</li>
-                    <li>Faites attention aux liaisons entre les mots</li>
-                    <li>Concentrez-vous sur les accents et les lettres muettes</li>
-                    <li>Relisez votre texte pour vérifier la cohérence</li>
-                    <li>Pratiquez régulièrement pour améliorer votre oreille</li>
-                </ul>
+            <div class="game-card">
+                <div class="game-icon" style="background: #e67e22;">
+                    <span>🧩</span>
+                </div>
+                <h2 class="game-title">Fonctions Grammaticales</h2>
+                <p class="game-description">Maîtrisez les fonctions grammaticales : sujet, COD, COI, attribut, etc.</p>
+                <a href="fonctions-grammaticales.html" class="game-button">S'entraîner sur les Fonctions</a>
             </div>
-        </main>
-        
-        <footer>
-            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
-        </footer>
+            <div class="game-card">
+                <div class="game-icon" style="background: #2980b9;">
+                    <span>📝</span>
+                </div>
+                <h2 class="game-title">Phrases Complexes</h2>
+                <p class="game-description">Apprenez à construire et analyser des phrases complexes avec des propositions subordonnées.</p>
+                <a href="phrases-complexes.html" class="game-button">S'entraîner sur les Phrases Complexes</a>
+            </div>
+            <div class="game-card">
+                <div class="game-icon" style="background: #16a085;">
+                    <span>❗</span>
+                </div>
+                <h2 class="game-title">Ponctuation</h2>
+                <p class="game-description">Maîtrisez les règles de ponctuation en français pour améliorer votre expression écrite.</p>
+                <a href="ponctuation.html" class="game-button">S'entraîner sur la Ponctuation</a>
+            </div>
+            <!-- Articles -->
+            <div class="game-card">
+                <div class="game-icon" style="background: #8e44ad;">
+                    <span>📚</span>
+                </div>
+                <h2 class="game-title">Articles</h2>
+                <p class="game-description">Entraînez-vous à utiliser correctement les articles définis, indéfinis et partitifs.</p>
+                <a href="articles.html" class="game-button">S'entraîner sur les Articles</a>
+            </div>
+
+            <!-- Pronoms -->
+            <div class="game-card">
+                <div class="game-icon" style="background: #c0392b;">
+                    <span>👤</span>
+                </div>
+                <h2 class="game-title">Pronoms</h2>
+                <p class="game-description">Apprenez à reconnaître et utiliser les différents types de pronoms en français.</p>
+                <a href="pronoms.html" class="game-button">S'entraîner sur les Pronoms</a>
+            </div>
+        </div>
     </div>
-    
-    <script>
-        // You can add JavaScript functionality here if needed
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if images exist, if not, use placeholders
-            document.querySelectorAll('.exercise-image').forEach(img => {
-                const url = img.style.backgroundImage.slice(4, -1).replace(/"/g, "");
-                const image = new Image();
-                image.src = url;
-                
-                image.onerror = function() {
-                    // If image doesn't exist, use a placeholder
-                    img.style.backgroundImage = `url('https://via.placeholder.com/300x180?text=Dictée+Exercise')`;
-                };
-            });
-        });
-    </script>
 </body>
 </html>

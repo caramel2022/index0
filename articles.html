@@ -182,7 +182,7 @@
 <body>
     <div class="container">
         <header>
-            <a href="index.html" class="back-button">
+            <a href="index5.html" class="back-button">
                 <i class="fas fa-arrow-left"></i> Retour à la Grammaire
             </a>
             <h1>Articles Définis et Indéfinis</h1>
@@ -636,3 +636,63 @@
             
             // Update selected option
             selectedOption = option;
+        }
+
+        // Check the answer
+        function checkAnswer() {
+            if (!selectedOption) return;
+
+            const question = questions[currentQuestionIndex];
+            feedback.style.display = 'block';
+
+            if (selectedOption === question.answer) {
+                feedback.textContent = "Bravo ! C'est la bonne réponse.";
+                feedback.className = 'feedback correct';
+                score++;
+                scoreDisplay.textContent = score;
+            } else {
+                feedback.textContent = "Incorrect. La bonne réponse était : " + question.answer;
+                feedback.className = 'feedback incorrect';
+            }
+
+            // Show explanation
+            explanationText.textContent = question.explanation;
+            explanation.style.display = 'block';
+
+            // Change submit button to "Suivant" if not last question, or "Voir le score" if last
+            if (currentQuestionIndex < totalQuestions - 1) {
+                submitButton.textContent = 'Suivant';
+                submitButton.removeEventListener('click', checkAnswer);
+                submitButton.addEventListener('click', nextQuestion);
+            } else {
+                submitButton.textContent = 'Voir le score';
+                submitButton.removeEventListener('click', checkAnswer);
+                submitButton.addEventListener('click', endGame);
+            }
+        }
+
+        // Show next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        // Show hint
+        function showHint() {
+            const question = questions[currentQuestionIndex];
+            hintText.textContent = question.hint;
+            hintText.style.display = 'block';
+        }
+
+        // End of game
+        function endGame() {
+            questionText.innerHTML = `<strong>Exercice terminé !</strong><br>Votre score : <span style="color:var(--current-color-dark);font-size:22px;">${score} / ${totalQuestions}</span>`;
+            optionsContainer.innerHTML = '';
+            feedback.style.display = 'none';
+            explanation.style.display = 'none';
+            hintText.style.display = 'none';
+            submitButton.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

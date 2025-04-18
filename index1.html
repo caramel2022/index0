@@ -3,203 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocabulaire Français</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Jeux de Lettres - Français</title>
     <style>
-        :root {
-            --current-color: #e74c3c;
-            --current-color-dark: #c0392b;
-        }
-        
-        .vocab-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .vocab-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .vocab-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-        
-        .vocab-card-header {
-            background-color: var(--current-color);
-            color: white;
-            padding: 15px 20px;
-        }
-        
-        .vocab-card-header h3 {
-            margin: 0;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .vocab-card-header i {
-            margin-right: 10px;
-        }
-        
-        .vocab-card-body {
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: #f5f5f5;
         }
         
-        .vocab-card-body p {
-            margin: 0 0 15px;
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
             color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
         }
         
-        .vocab-card-footer {
-            padding: 0 20px 20px;
-            text-align: right;
-        }
-        
-        .btn {
+        .back-button {
             display: inline-block;
-            padding: 8px 16px;
-            background-color: var(--current-color);
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #4a90e2;
             color: white;
-            border-radius: 5px;
             text-decoration: none;
-            font-weight: 500;
+            border-radius: 5px;
             transition: background-color 0.3s;
         }
         
-        .btn:hover {
-            background-color: var(--current-color-dark);
+        .back-button:hover {
+            background-color: #357abd;
         }
         
-        .difficulty {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin-left: 10px;
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
         
-        .difficulty.easy {
-            background-color: rgba(46, 204, 113, 0.2);
-            color: #27ae60;
-        }
-        
-        .difficulty.medium {
-            background-color: rgba(241, 196, 15, 0.2);
-            color: #f39c12;
-        }
-        
-        .difficulty.hard {
-            background-color: rgba(231, 76, 60, 0.2);
-            color: #c0392b;
-        }
-        
-        .info-box {
-            background-color: #f8f9fa;
+        .game-card {
+            background-color: #fff;
             border-radius: 10px;
-            padding: 20px;
-            margin-top: 30px;
-            border-left: 4px solid var(--current-color);
-        }
-        
-        .info-box h3 {
-            margin-top: 0;
-            color: var(--current-color-dark);
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            height: 180px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            justify-content: flex-end;
+            cursor: pointer;
+            text-decoration: none;
         }
         
-        .info-box h3 i {
-            margin-right: 10px;
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .game-card.anagrammes {
+            background-color: #4a90e2;
+        }
+        
+        .game-card.mots-meles {
+            background-color: #2ecc71;
+        }
+        
+        .game-card.mots-croises {
+            background-color: #9b59b6;
+        }
+        
+        .game-icon {
+            text-align: center;
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+        }
+        
+        .game-title {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+        .game-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            text-align: center;
+            padding: 0 15px 15px;
         }
         
         @media (max-width: 768px) {
-            .vocab-cards {
+            .games-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .games-container {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a href="../index.html" class="back-button">
-                <i class="fas fa-arrow-left"></i> Retour à l'Accueil
-            </a>
-            <h1>Vocabulaire Français</h1>
-            <div style="width: 100px;"></div> <!-- Spacer for centering -->
-        </header>
-        
-        <main>
-            <div class="info-box">
-                <h3><i class="fas fa-info-circle"></i> Enrichir son Vocabulaire</h3>
-                <p>Le vocabulaire est l'ensemble des mots que l'on connaît et que l'on utilise. Enrichir son vocabulaire est essentiel pour mieux s'exprimer en français.</p>
-                <p>Choisissez un sujet ci-dessous pour commencer à pratiquer :</p>
+    <a href="../index.html" class="back-button">← Retour à l'accueil</a>
+    
+    <header>
+        <h1>Jeux de Lettres</h1>
+        <p class="subtitle">Formez des mots et enrichissez votre vocabulaire</p>
+    </header>
+    
+    <div class="games-container">
+        <a href="scrabble.html" class="game-card anagrammes">
+            <div class="game-icon">
+                <span>🟦</span>
             </div>
-            
-            <div class="vocab-cards">
-                <div class="vocab-card">
-                    <div class="vocab-card-header">
-                        <h3><i class="fas fa-exchange-alt"></i> Les Homonymes <span class="difficulty easy">Facile à Difficile</span></h3>
-                    </div>
-                    <div class="vocab-card-body">
-                        <p>Apprenez à distinguer les mots qui se prononcent de la même façon mais qui ont des significations différentes. Cet exercice vous aidera à éviter les confusions courantes.</p>
-                    </div>
-                    <div class="vocab-card-footer">
-                        <a href="homonymes.html" class="btn">Commencer l'exercice</a>
-                    </div>
-                </div>
-                
-                <!-- Placeholder for future vocabulary exercises -->
-                <div class="vocab-card">
-                    <div class="vocab-card-header">
-                        <h3><i class="fas fa-not-equal"></i> Les Synonymes <span class="difficulty medium">Moyen</span></h3>
-                    </div>
-                    <div class="vocab-card-body">
-                        <p>Enrichissez votre vocabulaire en apprenant des mots qui ont des significations similaires mais des nuances différentes.</p>
-                    </div>
-                    <div class="vocab-card-footer">
-                        <a href="#" class="btn" style="background-color: #95a5a6;">Bientôt disponible</a>
-                    </div>
-                </div>
-                
-                <div class="vocab-card">
-                    <div class="vocab-card-header">
-                        <h3><i class="fas fa-arrows-alt-h"></i> Les Antonymes <span class="difficulty medium">Moyen</span></h3>
-                    </div>
-                    <div class="vocab-card-body">
-                        <p>Apprenez les mots qui ont des significations opposées pour enrichir votre expression et votre compréhension.</p>
-                    </div>
-                    <div class="vocab-card-footer">
-                        <a href="#" class="btn" style="background-color: #95a5a6;">Bientôt disponible</a>
-                    </div>
-                </div>
-                
-                <div class="vocab-card">
-                    <div class="vocab-card-header">
-                        <h3><i class="fas fa-language"></i> Expressions Idiomatiques <span class="difficulty hard">Difficile</span></h3>
-                    </div>
-                    <div class="vocab-card-body">
-                        <p>Découvrez les expressions typiquement françaises dont le sens ne peut pas être déduit littéralement des mots qui les composent.</p>
-                    </div>
-                    <div class="vocab-card-footer">
-                        <a href="#" class="btn" style="background-color: #95a5a6;">Bientôt disponible</a>
-                    </div>
-                </div>
-            </div>
-        </main>
+            <div class="game-title">Scrabble</div>
+            <div class="game-description">Formez des mots sur le plateau pour marquer des points</div>
+        </a>
         
-        <footer>
-            <p>&copy; 2023 Apprendre le Français - Tous droits réservés</p>
-        </footer>
+        <a href="pendule.html" class="game-card mots-meles">
+            <div class="game-icon">
+                <span>🔔</span>
+            </div>
+            <div class="game-title">Pendule</div>
+            <div class="game-description">Devinez le mot avant que le pendule ne tombe</div>
+        </a>
+        
+        <a href="mots-croises.html" class="game-card mots-croises">
+            <div class="game-icon">
+                <span>📝</span>
+            </div>
+            <div class="game-title">Mots Croisés</div>
+            <div class="game-description">Complétez la grille en trouvant les mots correspondant aux définitions</div>
+        </a>
+        
+        <a href="anagrammes.html" class="game-card anagrammes">
+            <div class="game-icon">
+                <span>🔤</span>
+            </div>
+            <div class="game-title">Anagrammes</div>
+            <div class="game-description">Réorganisez les lettres pour former des mots corrects</div>
+        </a>
+        
+        <a href="mots-meles.html" class="game-card mots-meles">
+            <div class="game-icon">
+                <span>🔍</span>
+            </div>
+            <div class="game-title">Mots Mêlés</div>
+            <div class="game-description">Trouvez les mots cachés dans une grille de lettres</div>
+        </a>
     </div>
 </body>
 </html>

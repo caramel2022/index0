@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homonymes - Exercices</title>
+    <title>Ponctuation - Exercices</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -115,8 +115,8 @@
 <body>
     <a href="index5.html" class="back-button">← Retour</a>
     <div class="container">
-        <h1>Homonymes</h1>
-        <div class="subtitle">Choisissez le bon homonyme pour compléter chaque phrase.</div>
+        <h1>Ponctuation</h1>
+        <div class="subtitle">Choisissez la ponctuation correcte pour chaque phrase.</div>
         <div class="exercise" id="exercise">
             <div class="question" id="question"></div>
             <div class="choices" id="choices"></div>
@@ -127,54 +127,54 @@
     <script>
         const exercises = [
             {
-                question: 'Il faut (verre / vert / vers) de l\'eau pour la plante.',
-                correct: 'vers',
-                choices: ['verre', 'vert', 'vers']
+                question: 'Complétez : Où vas-tu',
+                correct: '?',
+                choices: ['.', '?', '!', ',']
             },
             {
-                question: 'Elle a acheté un (seau / saut / sceau) pour jouer à la plage.',
-                correct: 'seau',
-                choices: ['seau', 'saut', 'sceau']
+                question: 'Complétez : Attention',
+                correct: '!',
+                choices: ['.', '?', '!', ';']
             },
             {
-                question: 'Le (sang / sans / cent) coule dans les veines.',
-                correct: 'sang',
-                choices: ['sang', 'sans', 'cent']
+                question: 'Complétez : Il aime lire',
+                correct: '.',
+                choices: ['.', '?', '!', ':']
             },
             {
-                question: 'Il a (peu / peut / peux) de temps pour finir.',
-                correct: 'peu',
-                choices: ['peu', 'peut', 'peux']
+                question: 'Complétez : Bonjour comment ça va',
+                correct: ' ?',
+                choices: [' !', ' ?', ' .', ' ,']
             },
             {
-                question: 'Elle va (voir / voire / voix) sa grand-mère demain.',
-                correct: 'voir',
-                choices: ['voir', 'voire', 'voix']
+                question: 'Complétez : Elle a dit Je viendrai demain',
+                correct: ' : ',
+                choices: [' . ', ' : ', ' , ', ' ; ']
             },
             {
-                question: 'Le (pain / pin / peint) est frais ce matin.',
-                correct: 'pain',
-                choices: ['pain', 'pin', 'peint']
+                question: 'Complétez : Il fait beau aujourd\'hui',
+                correct: '.',
+                choices: ['.', '?', '!', ',']
             },
             {
-                question: 'Il a mis son (maire / mère / mer) dans la voiture.',
-                correct: 'mère',
-                choices: ['maire', 'mère', 'mer']
+                question: 'Complétez : Silence',
+                correct: '!',
+                choices: ['.', '?', '!', ';']
             },
             {
-                question: 'Le (loup / loue / lou) hurle à la lune.',
-                correct: 'loup',
-                choices: ['loup', 'loue', 'lou']
+                question: 'Complétez : Peux-tu m\'aider',
+                correct: '?',
+                choices: ['.', '?', '!', ',']
             },
             {
-                question: 'Elle a (cour / court / cours) de français aujourd\'hui.',
-                correct: 'cours',
-                choices: ['cour', 'court', 'cours']
+                question: 'Complétez : Il a acheté du pain du lait et du fromage',
+                correct: ',',
+                choices: ['.', '?', '!', ',']
             },
             {
-                question: 'Il a (été / étai / étais) malade la semaine dernière.',
-                correct: 'été',
-                choices: ['été', 'étai', 'étais']
+                question: 'Complétez : Il a dit Je suis fatigué',
+                correct: ' : ',
+                choices: [' . ', ' : ', ' , ', ' ; ']
             }
         ];
         let current = 0;

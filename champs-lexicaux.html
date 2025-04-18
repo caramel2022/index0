@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homonymes - Exercices</title>
+    <title>Champs Lexicaux - Exercices</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -113,10 +113,10 @@
     </style>
 </head>
 <body>
-    <a href="index5.html" class="back-button">← Retour</a>
+    <a href="index6.html" class="back-button">← Retour</a>
     <div class="container">
-        <h1>Homonymes</h1>
-        <div class="subtitle">Choisissez le bon homonyme pour compléter chaque phrase.</div>
+        <h1>Champs Lexicaux</h1>
+        <div class="subtitle">Associez chaque mot à son champ lexical.</div>
         <div class="exercise" id="exercise">
             <div class="question" id="question"></div>
             <div class="choices" id="choices"></div>
@@ -127,54 +127,54 @@
     <script>
         const exercises = [
             {
-                question: 'Il faut (verre / vert / vers) de l\'eau pour la plante.',
-                correct: 'vers',
-                choices: ['verre', 'vert', 'vers']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">hôpital</span></b> ?',
+                correct: 'Santé',
+                choices: ['Santé', 'École', 'Cuisine', 'Sport']
             },
             {
-                question: 'Elle a acheté un (seau / saut / sceau) pour jouer à la plage.',
-                correct: 'seau',
-                choices: ['seau', 'saut', 'sceau']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">fourchette</span></b> ?',
+                correct: 'Cuisine',
+                choices: ['Cuisine', 'Santé', 'École', 'Voyage']
             },
             {
-                question: 'Le (sang / sans / cent) coule dans les veines.',
-                correct: 'sang',
-                choices: ['sang', 'sans', 'cent']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">professeur</span></b> ?',
+                correct: 'École',
+                choices: ['École', 'Santé', 'Sport', 'Nature']
             },
             {
-                question: 'Il a (peu / peut / peux) de temps pour finir.',
-                correct: 'peu',
-                choices: ['peu', 'peut', 'peux']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">arbre</span></b> ?',
+                correct: 'Nature',
+                choices: ['Nature', 'Santé', 'Cuisine', 'Voyage']
             },
             {
-                question: 'Elle va (voir / voire / voix) sa grand-mère demain.',
-                correct: 'voir',
-                choices: ['voir', 'voire', 'voix']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">avion</span></b> ?',
+                correct: 'Voyage',
+                choices: ['Voyage', 'Santé', 'École', 'Cuisine']
             },
             {
-                question: 'Le (pain / pin / peint) est frais ce matin.',
-                correct: 'pain',
-                choices: ['pain', 'pin', 'peint']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">ballon</span></b> ?',
+                correct: 'Sport',
+                choices: ['Sport', 'Cuisine', 'Santé', 'Nature']
             },
             {
-                question: 'Il a mis son (maire / mère / mer) dans la voiture.',
-                correct: 'mère',
-                choices: ['maire', 'mère', 'mer']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">infirmier</span></b> ?',
+                correct: 'Santé',
+                choices: ['Santé', 'Voyage', 'École', 'Nature']
             },
             {
-                question: 'Le (loup / loue / lou) hurle à la lune.',
-                correct: 'loup',
-                choices: ['loup', 'loue', 'lou']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">couteau</span></b> ?',
+                correct: 'Cuisine',
+                choices: ['Cuisine', 'Santé', 'Sport', 'Voyage']
             },
             {
-                question: 'Elle a (cour / court / cours) de français aujourd\'hui.',
-                correct: 'cours',
-                choices: ['cour', 'court', 'cours']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">forêt</span></b> ?',
+                correct: 'Nature',
+                choices: ['Nature', 'Voyage', 'Cuisine', 'École']
             },
             {
-                question: 'Il a (été / étai / étais) malade la semaine dernière.',
-                correct: 'été',
-                choices: ['été', 'étai', 'étais']
+                question: 'À quel champ lexical appartient le mot <b><span style="color:#f1c40f">train</span></b> ?',
+                correct: 'Voyage',
+                choices: ['Voyage', 'Santé', 'Nature', 'Sport']
             }
         ];
         let current = 0;

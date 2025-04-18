@@ -476,8 +476,6 @@
             guessLetter(key);
         }
     });
-    
-    // ... existing code ...
 </script>
 
 <style>
@@ -746,3 +744,54 @@
         }
     }
 </style>
+
+<body>
+    <div class="container">
+        <header>
+            <a href="index1.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour aux Jeux de Lettres
+            </a>
+            <h1>Pendu</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for centering -->
+        </header>
+        <div class="word-container">
+            <div id="word-display" class="word-display"></div>
+            <div id="word-hint" class="word-hint"></div>
+        </div>
+        <div class="keyboard-container" id="keyboard-container"></div>
+        <div class="game-info">
+            <div class="score-display">Score: <span id="score">0</span></div>
+            <div class="mistakes-display">Erreurs: <span id="mistakes">0</span>/<span id="max-mistakes">6</span></div>
+        </div>
+        <div id="message" class="message"></div>
+        <div class="game-actions">
+            <button id="hint-btn" class="btn btn-secondary"><i class="fas fa-lightbulb"></i> Indice</button>
+            <button id="skip-btn" class="btn btn-warning"><i class="fas fa-forward"></i> Passer</button>
+        </div>
+        <div id="result-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2 id="result-title"></h2>
+                <p id="result-message"></p>
+                <div class="result-stats">
+                    <div>Score final: <span id="final-score"></span></div>
+                    <div>Mots devinés: <span id="words-guessed"></span></div>
+                    <div>Indices utilisés: <span id="hints-used"></span></div>
+                </div>
+                <button id="play-again-btn" class="btn btn-primary">Rejouer</button>
+            </div>
+        </div>
+    </div>
+    <div id="result-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="result-title"></h2>
+            <p id="result-message"></p>
+            <div class="result-stats">
+                <div>Score final: <span id="final-score"></span></div>
+                <div>Mots devinés: <span id="words-guessed"></span></div>
+                <div>Indices utilisés: <span id="hints-used"></span></div>
+            </div>
+            <button id="play-again-btn" class="btn btn-primary">Rejouer</button>
+        </div>
+    </div>

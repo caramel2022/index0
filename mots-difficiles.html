@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homonymes - Exercices</title>
+    <title>Mots Difficiles - Exercices</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -115,8 +115,8 @@
 <body>
     <a href="index5.html" class="back-button">← Retour</a>
     <div class="container">
-        <h1>Homonymes</h1>
-        <div class="subtitle">Choisissez le bon homonyme pour compléter chaque phrase.</div>
+        <h1>Mots Difficiles</h1>
+        <div class="subtitle">Choisissez la bonne orthographe ou la bonne signification du mot difficile.</div>
         <div class="exercise" id="exercise">
             <div class="question" id="question"></div>
             <div class="choices" id="choices"></div>
@@ -127,54 +127,74 @@
     <script>
         const exercises = [
             {
-                question: 'Il faut (verre / vert / vers) de l\'eau pour la plante.',
-                correct: 'vers',
-                choices: ['verre', 'vert', 'vers']
+                question: 'Quelle est la bonne orthographe ?<br><b><span style="color:#f1c40f">accommodation</span></b>',
+                correct: 'accommodation',
+                choices: ['accomodation', 'accommodation', 'accomodassion', 'accomadation']
             },
             {
-                question: 'Elle a acheté un (seau / saut / sceau) pour jouer à la plage.',
-                correct: 'seau',
-                choices: ['seau', 'saut', 'sceau']
+                question: 'Quelle est la bonne orthographe ?<br><b><span style="color:#f1c40f">parmi</span></b>',
+                correct: 'parmi',
+                choices: ['parmis', 'parmi', 'parmie', 'parmis']
             },
             {
-                question: 'Le (sang / sans / cent) coule dans les veines.',
-                correct: 'sang',
-                choices: ['sang', 'sans', 'cent']
+                question: 'Quelle est la signification de <b><span style="color:#f1c40f">ubiquité</span></b> ?',
+                correct: 'Le fait d\'être partout à la fois',
+                choices: [
+                    'Un objet précieux',
+                    'Le fait d\'être partout à la fois',
+                    'Un animal rare',
+                    'Une maladie'
+                ]
             },
             {
-                question: 'Il a (peu / peut / peux) de temps pour finir.',
-                correct: 'peu',
-                choices: ['peu', 'peut', 'peux']
+                question: 'Quelle est la bonne orthographe ?<br><b><span style="color:#f1c40f">apparemment</span></b>',
+                correct: 'apparemment',
+                choices: ['apparement', 'apparemment', 'apparrement', 'apparément']
             },
             {
-                question: 'Elle va (voir / voire / voix) sa grand-mère demain.',
-                correct: 'voir',
-                choices: ['voir', 'voire', 'voix']
+                question: 'Quelle est la signification de <b><span style="color:#f1c40f">subreptice</span></b> ?',
+                correct: 'Qui se fait de façon discrète, en cachette',
+                choices: [
+                    'Qui est bruyant',
+                    'Qui se fait de façon discrète, en cachette',
+                    'Qui est rapide',
+                    'Qui est dangereux'
+                ]
             },
             {
-                question: 'Le (pain / pin / peint) est frais ce matin.',
-                correct: 'pain',
-                choices: ['pain', 'pin', 'peint']
+                question: 'Quelle est la bonne orthographe ?<br><b><span style="color:#f1c40f">interruption</span></b>',
+                correct: 'interruption',
+                choices: ['interuption', 'interruption', 'interuption', 'interuption']
             },
             {
-                question: 'Il a mis son (maire / mère / mer) dans la voiture.',
-                correct: 'mère',
-                choices: ['maire', 'mère', 'mer']
+                question: 'Quelle est la signification de <b><span style="color:#f1c40f">antinomie</span></b> ?',
+                correct: 'Contradiction réelle ou apparente entre deux idées',
+                choices: [
+                    'Un synonyme',
+                    'Contradiction réelle ou apparente entre deux idées',
+                    'Un animal',
+                    'Un médicament'
+                ]
             },
             {
-                question: 'Le (loup / loue / lou) hurle à la lune.',
-                correct: 'loup',
-                choices: ['loup', 'loue', 'lou']
+                question: 'Quelle est la bonne orthographe ?<br><b><span style="color:#f1c40f">rythme</span></b>',
+                correct: 'rythme',
+                choices: ['rythme', 'rythmme', 'ritme', 'rithme']
             },
             {
-                question: 'Elle a (cour / court / cours) de français aujourd\'hui.',
-                correct: 'cours',
-                choices: ['cour', 'court', 'cours']
+                question: 'Quelle est la signification de <b><span style="color:#f1c40f">altruisme</span></b> ?',
+                correct: 'Souci désintéressé du bien d\'autrui',
+                choices: [
+                    'Égoïsme',
+                    'Souci désintéressé du bien d\'autrui',
+                    'Colère',
+                    'Courage'
+                ]
             },
             {
-                question: 'Il a (été / étai / étais) malade la semaine dernière.',
-                correct: 'été',
-                choices: ['été', 'étai', 'étais']
+                question: 'Quelle est la bonne orthographe ?<br><b><span style="color:#f1c40f">embarras</span></b>',
+                correct: 'embarras',
+                choices: ['embara', 'embarras', 'embarats', 'embarras']
             }
         ];
         let current = 0;

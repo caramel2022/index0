@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homonymes - Exercices</title>
+    <title>Phrases Complexes - Exercices</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -115,8 +115,8 @@
 <body>
     <a href="index5.html" class="back-button">← Retour</a>
     <div class="container">
-        <h1>Homonymes</h1>
-        <div class="subtitle">Choisissez le bon homonyme pour compléter chaque phrase.</div>
+        <h1>Phrases Complexes</h1>
+        <div class="subtitle">Identifiez le type de proposition ou la structure de la phrase complexe.</div>
         <div class="exercise" id="exercise">
             <div class="question" id="question"></div>
             <div class="choices" id="choices"></div>
@@ -127,54 +127,104 @@
     <script>
         const exercises = [
             {
-                question: 'Il faut (verre / vert / vers) de l\'eau pour la plante.',
-                correct: 'vers',
-                choices: ['verre', 'vert', 'vers']
+                question: 'Identifiez la proposition subordonnée :<br>Je partirai <b><span style="color:#f1c40f">quand tu arriveras</span></b>.',
+                correct: 'Proposition subordonnée circonstancielle',
+                choices: [
+                    'Proposition principale',
+                    'Proposition subordonnée relative',
+                    'Proposition subordonnée circonstancielle',
+                    'Proposition subordonnée complétive'
+                ]
             },
             {
-                question: 'Elle a acheté un (seau / saut / sceau) pour jouer à la plage.',
-                correct: 'seau',
-                choices: ['seau', 'saut', 'sceau']
+                question: 'Quel est le type de phrase ?<br><b><span style="color:#f1c40f">Bien qu\'il fasse froid</span></b>, il sort sans manteau.',
+                correct: 'Phrase complexe',
+                choices: [
+                    'Phrase simple',
+                    'Phrase complexe',
+                    'Phrase interrogative',
+                    'Phrase impérative'
+                ]
             },
             {
-                question: 'Le (sang / sans / cent) coule dans les veines.',
-                correct: 'sang',
-                choices: ['sang', 'sans', 'cent']
+                question: 'Identifiez la proposition principale :<br><b><span style="color:#f1c40f">Je pense</span></b> que tu as raison.',
+                correct: 'Proposition principale',
+                choices: [
+                    'Proposition principale',
+                    'Proposition subordonnée relative',
+                    'Proposition subordonnée circonstancielle',
+                    'Proposition subordonnée complétive'
+                ]
             },
             {
-                question: 'Il a (peu / peut / peux) de temps pour finir.',
-                correct: 'peu',
-                choices: ['peu', 'peut', 'peux']
+                question: 'Quel est le rôle de la subordonnée ?<br>Il lit le livre <b><span style="color:#f1c40f">que tu lui as offert</span></b>.',
+                correct: 'Proposition subordonnée relative',
+                choices: [
+                    'Proposition subordonnée relative',
+                    'Proposition subordonnée circonstancielle',
+                    'Proposition principale',
+                    'Proposition subordonnée complétive'
+                ]
             },
             {
-                question: 'Elle va (voir / voire / voix) sa grand-mère demain.',
-                correct: 'voir',
-                choices: ['voir', 'voire', 'voix']
+                question: 'Quel est le type de phrase ?<br>Il pleut et le vent souffle.',
+                correct: 'Phrase composée',
+                choices: [
+                    'Phrase simple',
+                    'Phrase composée',
+                    'Phrase complexe',
+                    'Phrase impérative'
+                ]
             },
             {
-                question: 'Le (pain / pin / peint) est frais ce matin.',
-                correct: 'pain',
-                choices: ['pain', 'pin', 'peint']
+                question: 'Identifiez la subordonnée complétive :<br>Je veux <b><span style="color:#f1c40f">que tu viennes</span></b>.',
+                correct: 'Proposition subordonnée complétive',
+                choices: [
+                    'Proposition subordonnée relative',
+                    'Proposition subordonnée circonstancielle',
+                    'Proposition principale',
+                    'Proposition subordonnée complétive'
+                ]
             },
             {
-                question: 'Il a mis son (maire / mère / mer) dans la voiture.',
-                correct: 'mère',
-                choices: ['maire', 'mère', 'mer']
+                question: 'Quel est le type de phrase ?<br>Le chat dort.',
+                correct: 'Phrase simple',
+                choices: [
+                    'Phrase simple',
+                    'Phrase composée',
+                    'Phrase complexe',
+                    'Phrase interrogative'
+                ]
             },
             {
-                question: 'Le (loup / loue / lou) hurle à la lune.',
-                correct: 'loup',
-                choices: ['loup', 'loue', 'lou']
+                question: 'Quel est le type de phrase ?<br>Il travaille parce qu\'il veut réussir.',
+                correct: 'Phrase complexe',
+                choices: [
+                    'Phrase simple',
+                    'Phrase composée',
+                    'Phrase complexe',
+                    'Phrase impérative'
+                ]
             },
             {
-                question: 'Elle a (cour / court / cours) de français aujourd\'hui.',
-                correct: 'cours',
-                choices: ['cour', 'court', 'cours']
+                question: 'Identifiez la proposition subordonnée :<br>La maison <b><span style="color:#f1c40f">où il habite</span></b> est grande.',
+                correct: 'Proposition subordonnée relative',
+                choices: [
+                    'Proposition subordonnée relative',
+                    'Proposition subordonnée circonstancielle',
+                    'Proposition principale',
+                    'Proposition subordonnée complétive'
+                ]
             },
             {
-                question: 'Il a (été / étai / étais) malade la semaine dernière.',
-                correct: 'été',
-                choices: ['été', 'étai', 'étais']
+                question: 'Quel est le type de phrase ?<br>Viens ici !',
+                correct: 'Phrase impérative',
+                choices: [
+                    'Phrase simple',
+                    'Phrase composée',
+                    'Phrase complexe',
+                    'Phrase impérative'
+                ]
             }
         ];
         let current = 0;

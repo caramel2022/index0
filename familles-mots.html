@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homonymes - Exercices</title>
+    <title>Familles de Mots - Exercices</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -113,10 +113,10 @@
     </style>
 </head>
 <body>
-    <a href="index5.html" class="back-button">← Retour</a>
+    <a href="index6.html" class="back-button">← Retour</a>
     <div class="container">
-        <h1>Homonymes</h1>
-        <div class="subtitle">Choisissez le bon homonyme pour compléter chaque phrase.</div>
+        <h1>Familles de Mots</h1>
+        <div class="subtitle">Trouvez le mot qui appartient à la même famille que le mot en gras.</div>
         <div class="exercise" id="exercise">
             <div class="question" id="question"></div>
             <div class="choices" id="choices"></div>
@@ -127,54 +127,54 @@
     <script>
         const exercises = [
             {
-                question: 'Il faut (verre / vert / vers) de l\'eau pour la plante.',
-                correct: 'vers',
-                choices: ['verre', 'vert', 'vers']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">chanteur</span></b> ?',
+                correct: 'chanter',
+                choices: ['chanter', 'danseur', 'musique', 'parler']
             },
             {
-                question: 'Elle a acheté un (seau / saut / sceau) pour jouer à la plage.',
-                correct: 'seau',
-                choices: ['seau', 'saut', 'sceau']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">lecture</span></b> ?',
+                correct: 'lire',
+                choices: ['livre', 'lire', 'écrire', 'lettre']
             },
             {
-                question: 'Le (sang / sans / cent) coule dans les veines.',
-                correct: 'sang',
-                choices: ['sang', 'sans', 'cent']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">peintre</span></b> ?',
+                correct: 'peindre',
+                choices: ['peindre', 'dessin', 'artiste', 'papier']
             },
             {
-                question: 'Il a (peu / peut / peux) de temps pour finir.',
-                correct: 'peu',
-                choices: ['peu', 'peut', 'peux']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">cuisine</span></b> ?',
+                correct: 'cuisinier',
+                choices: ['cuisinier', 'fourchette', 'manger', 'table']
             },
             {
-                question: 'Elle va (voir / voire / voix) sa grand-mère demain.',
-                correct: 'voir',
-                choices: ['voir', 'voire', 'voix']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">jardinage</span></b> ?',
+                correct: 'jardinier',
+                choices: ['jardinier', 'fleur', 'arbre', 'pelouse']
             },
             {
-                question: 'Le (pain / pin / peint) est frais ce matin.',
-                correct: 'pain',
-                choices: ['pain', 'pin', 'peint']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">écriture</span></b> ?',
+                correct: 'écrire',
+                choices: ['écrire', 'livre', 'lecture', 'lettre']
             },
             {
-                question: 'Il a mis son (maire / mère / mer) dans la voiture.',
-                correct: 'mère',
-                choices: ['maire', 'mère', 'mer']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">vendeur</span></b> ?',
+                correct: 'vendre',
+                choices: ['vendre', 'magasin', 'acheter', 'client']
             },
             {
-                question: 'Le (loup / loue / lou) hurle à la lune.',
-                correct: 'loup',
-                choices: ['loup', 'loue', 'lou']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">chaleur</span></b> ?',
+                correct: 'chaud',
+                choices: ['chaud', 'froid', 'été', 'soleil']
             },
             {
-                question: 'Elle a (cour / court / cours) de français aujourd\'hui.',
-                correct: 'cours',
-                choices: ['cour', 'court', 'cours']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">coureur</span></b> ?',
+                correct: 'courir',
+                choices: ['courir', 'marcher', 'sport', 'vitesse']
             },
             {
-                question: 'Il a (été / étai / étais) malade la semaine dernière.',
-                correct: 'été',
-                choices: ['été', 'étai', 'étais']
+                question: 'Quel mot appartient à la même famille que <b><span style="color:#f1c40f">pêcheur</span></b> ?',
+                correct: 'pêcher',
+                choices: ['pêcher', 'poisson', 'eau', 'rivière']
             }
         ];
         let current = 0;

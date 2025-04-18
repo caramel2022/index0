@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homonymes - Exercices</title>
+    <title>Fonctions Grammaticales - Exercices</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -29,7 +29,7 @@
             background-color: #d4ac0d;
         }
         .container {
-            max-width: 650px;
+            max-width: 600px;
             margin: 40px auto;
             background: white;
             border-radius: 18px;
@@ -115,8 +115,8 @@
 <body>
     <a href="index5.html" class="back-button">← Retour</a>
     <div class="container">
-        <h1>Homonymes</h1>
-        <div class="subtitle">Choisissez le bon homonyme pour compléter chaque phrase.</div>
+        <h1>Fonctions Grammaticales</h1>
+        <div class="subtitle">Choisissez la fonction grammaticale du mot ou groupe de mots en gras.</div>
         <div class="exercise" id="exercise">
             <div class="question" id="question"></div>
             <div class="choices" id="choices"></div>
@@ -127,54 +127,54 @@
     <script>
         const exercises = [
             {
-                question: 'Il faut (verre / vert / vers) de l\'eau pour la plante.',
-                correct: 'vers',
-                choices: ['verre', 'vert', 'vers']
+                question: ' <b><span style="color:#f1c40f">Le chat</span></b> mange la souris.',
+                correct: 'Sujet',
+                choices: ['Sujet', 'COD', 'COI', 'Attribut']
             },
             {
-                question: 'Elle a acheté un (seau / saut / sceau) pour jouer à la plage.',
-                correct: 'seau',
-                choices: ['seau', 'saut', 'sceau']
+                question: 'Paul donne un cadeau à <b><span style="color:#f1c40f">son ami</span></b>.',
+                correct: 'COI',
+                choices: ['COD', 'COI', 'Sujet', 'Complément circonstanciel']
             },
             {
-                question: 'Le (sang / sans / cent) coule dans les veines.',
-                correct: 'sang',
-                choices: ['sang', 'sans', 'cent']
+                question: 'Elle trouve <b><span style="color:#f1c40f">le livre</span></b> intéressant.',
+                correct: 'COD',
+                choices: ['COD', 'Sujet', 'Attribut', 'Complément du nom']
             },
             {
-                question: 'Il a (peu / peut / peux) de temps pour finir.',
-                correct: 'peu',
-                choices: ['peu', 'peut', 'peux']
+                question: 'Cet enfant est <b><span style="color:#f1c40f">gentil</span></b>.',
+                correct: 'Attribut',
+                choices: ['Attribut', 'Sujet', 'COD', 'COI']
             },
             {
-                question: 'Elle va (voir / voire / voix) sa grand-mère demain.',
-                correct: 'voir',
-                choices: ['voir', 'voire', 'voix']
+                question: 'Nous partons <b><span style="color:#f1c40f">demain</span></b>.',
+                correct: 'Complément circonstanciel',
+                choices: ['Complément circonstanciel', 'COD', 'Sujet', 'COI']
             },
             {
-                question: 'Le (pain / pin / peint) est frais ce matin.',
-                correct: 'pain',
-                choices: ['pain', 'pin', 'peint']
+                question: 'La maison <b><span style="color:#f1c40f">de mon oncle</span></b> est grande.',
+                correct: 'Complément du nom',
+                choices: ['Complément du nom', 'COD', 'Sujet', 'Attribut']
             },
             {
-                question: 'Il a mis son (maire / mère / mer) dans la voiture.',
-                correct: 'mère',
-                choices: ['maire', 'mère', 'mer']
+                question: 'Il parle <b><span style="color:#f1c40f">à sa sœur</span></b>.',
+                correct: 'COI',
+                choices: ['COI', 'COD', 'Sujet', 'Complément circonstanciel']
             },
             {
-                question: 'Le (loup / loue / lou) hurle à la lune.',
-                correct: 'loup',
-                choices: ['loup', 'loue', 'lou']
+                question: ' <b><span style="color:#f1c40f">Les enfants</span></b> jouent dans le parc.',
+                correct: 'Sujet',
+                choices: ['Sujet', 'COD', 'COI', 'Attribut']
             },
             {
-                question: 'Elle a (cour / court / cours) de français aujourd\'hui.',
-                correct: 'cours',
-                choices: ['cour', 'court', 'cours']
+                question: 'Elle regarde <b><span style="color:#f1c40f">la télévision</span></b>.',
+                correct: 'COD',
+                choices: ['COD', 'Sujet', 'COI', 'Complément circonstanciel']
             },
             {
-                question: 'Il a (été / étai / étais) malade la semaine dernière.',
-                correct: 'été',
-                choices: ['été', 'étai', 'étais']
+                question: 'Il est devenu <b><span style="color:#f1c40f">médecin</span></b>.',
+                correct: 'Attribut',
+                choices: ['Attribut', 'Sujet', 'COD', 'Complément du nom']
             }
         ];
         let current = 0;

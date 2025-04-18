@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homonymes - Exercices</title>
+    <title>Synonymes et Antonymes - Exercices</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -29,7 +29,7 @@
             background-color: #d4ac0d;
         }
         .container {
-            max-width: 650px;
+            max-width: 600px;
             margin: 40px auto;
             background: white;
             border-radius: 18px;
@@ -113,10 +113,10 @@
     </style>
 </head>
 <body>
-    <a href="index5.html" class="back-button">← Retour</a>
+    <a href="index6.html" class="back-button">← Retour</a>
     <div class="container">
-        <h1>Homonymes</h1>
-        <div class="subtitle">Choisissez le bon homonyme pour compléter chaque phrase.</div>
+        <h1>Synonymes et Antonymes</h1>
+        <div class="subtitle">Choisissez le synonyme ou l'antonyme du mot en gras.</div>
         <div class="exercise" id="exercise">
             <div class="question" id="question"></div>
             <div class="choices" id="choices"></div>
@@ -127,54 +127,54 @@
     <script>
         const exercises = [
             {
-                question: 'Il faut (verre / vert / vers) de l\'eau pour la plante.',
-                correct: 'vers',
-                choices: ['verre', 'vert', 'vers']
+                question: 'Choisissez le synonyme de : <b><span style="color:#f1c40f">rapide</span></b>',
+                correct: 'vite',
+                choices: ['lent', 'vite', 'faible', 'court']
             },
             {
-                question: 'Elle a acheté un (seau / saut / sceau) pour jouer à la plage.',
-                correct: 'seau',
-                choices: ['seau', 'saut', 'sceau']
+                question: 'Choisissez l\'antonyme de : <b><span style="color:#f1c40f">grand</span></b>',
+                correct: 'petit',
+                choices: ['haut', 'petit', 'large', 'gros']
             },
             {
-                question: 'Le (sang / sans / cent) coule dans les veines.',
-                correct: 'sang',
-                choices: ['sang', 'sans', 'cent']
+                question: 'Choisissez le synonyme de : <b><span style="color:#f1c40f">content</span></b>',
+                correct: 'heureux',
+                choices: ['triste', 'heureux', 'fâché', 'calme']
             },
             {
-                question: 'Il a (peu / peut / peux) de temps pour finir.',
-                correct: 'peu',
-                choices: ['peu', 'peut', 'peux']
+                question: 'Choisissez l\'antonyme de : <b><span style="color:#f1c40f">facile</span></b>',
+                correct: 'difficile',
+                choices: ['simple', 'rapide', 'difficile', 'possible']
             },
             {
-                question: 'Elle va (voir / voire / voix) sa grand-mère demain.',
-                correct: 'voir',
-                choices: ['voir', 'voire', 'voix']
+                question: 'Choisissez le synonyme de : <b><span style="color:#f1c40f">parler</span></b>',
+                correct: 'discuter',
+                choices: ['écouter', 'discuter', 'regarder', 'écrire']
             },
             {
-                question: 'Le (pain / pin / peint) est frais ce matin.',
-                correct: 'pain',
-                choices: ['pain', 'pin', 'peint']
+                question: 'Choisissez l\'antonyme de : <b><span style="color:#f1c40f">noir</span></b>',
+                correct: 'blanc',
+                choices: ['sombre', 'gris', 'blanc', 'bleu']
             },
             {
-                question: 'Il a mis son (maire / mère / mer) dans la voiture.',
-                correct: 'mère',
-                choices: ['maire', 'mère', 'mer']
+                question: 'Choisissez le synonyme de : <b><span style="color:#f1c40f">commencer</span></b>',
+                correct: 'débuter',
+                choices: ['finir', 'débuter', 'arrêter', 'continuer']
             },
             {
-                question: 'Le (loup / loue / lou) hurle à la lune.',
-                correct: 'loup',
-                choices: ['loup', 'loue', 'lou']
+                question: 'Choisissez l\'antonyme de : <b><span style="color:#f1c40f">chaud</span></b>',
+                correct: 'froid',
+                choices: ['froid', 'tiède', 'brûlant', 'doux']
             },
             {
-                question: 'Elle a (cour / court / cours) de français aujourd\'hui.',
-                correct: 'cours',
-                choices: ['cour', 'court', 'cours']
+                question: 'Choisissez le synonyme de : <b><span style="color:#f1c40f">beau</span></b>',
+                correct: 'joli',
+                choices: ['laid', 'joli', 'grand', 'vieux']
             },
             {
-                question: 'Il a (été / étai / étais) malade la semaine dernière.',
-                correct: 'été',
-                choices: ['été', 'étai', 'étais']
+                question: 'Choisissez l\'antonyme de : <b><span style="color:#f1c40f">ouvrir</span></b>',
+                correct: 'fermer',
+                choices: ['fermer', 'cacher', 'montrer', 'laisser']
             }
         ];
         let current = 0;

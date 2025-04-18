@@ -200,7 +200,7 @@
 <body>
     <div class="container">
         <header>
-            <a href="index.html" class="back-button">
+            <a href="index5.html" class="back-button">
                 <i class="fas fa-arrow-left"></i> Retour à la Grammaire
             </a>
             <h1>Pronoms Personnels</h1>
@@ -615,4 +615,102 @@
             submitButton.addEventListener('click', checkAnswer);
             hintButton.addEventListener('click', showHint);
             
-            start
+            startNewGame();
+        });
+
+        function startNewGame() {
+            // Shuffle and select questions for the chosen difficulty
+            questions = shuffleArray([...exerciseData[currentDifficulty]]);
+            questions = questions.slice(0, totalQuestions);
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreDisplay.textContent = score;
+            totalQuestionsDisplay.textContent = totalQuestions;
+            updateProgressBar();
+            showQuestion();
+            feedback.style.display = 'none';
+            explanation.style.display = 'none';
+            hintText.style.display = 'none';
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestionIndex];
+            questionText.innerHTML = q.question;
+            optionsContainer.innerHTML = '';
+            selectedOption = null;
+            q.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-button';
+                btn.textContent = option;
+                btn.onclick = () => selectOption(btn, option);
+                optionsContainer.appendChild(btn);
+            });
+            feedback.style.display = 'none';
+            explanation.style.display = 'none';
+            hintText.style.display = 'none';
+        }
+
+        function selectOption(btn, option) {
+            // Deselect all
+            Array.from(optionsContainer.children).forEach(child => child.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedOption = option;
+        }
+
+        function checkAnswer() {
+            if (!selectedOption) return;
+            const q = questions[currentQuestionIndex];
+            feedback.style.display = 'block';
+            if (selectedOption === q.answer) {
+                feedback.textContent = "Bravo ! C'est la bonne réponse.";
+                feedback.className = 'feedback correct';
+                score++;
+                scoreDisplay.textContent = score;
+            } else {
+                feedback.textContent = "Incorrect. La bonne réponse était : " + q.answer;
+                feedback.className = 'feedback incorrect';
+            }
+            explanationText.textContent = q.explanation;
+            explanation.style.display = 'block';
+
+            // Next question after a short delay, or end game
+            setTimeout(() => {
+                currentQuestionIndex++;
+                updateProgressBar();
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showEndScreen();
+                }
+            }, 1800);
+        }
+
+        function showHint() {
+            const q = questions[currentQuestionIndex];
+            hintText.textContent = q.hint;
+            hintText.style.display = 'block';
+        }
+
+        function updateProgressBar() {
+            progressBar.style.width = ((currentQuestionIndex / totalQuestions) * 100) + '%';
+        }
+
+        function showEndScreen() {
+            questionText.innerHTML = `<strong>Exercice terminé !</strong><br>Votre score : <span style="color:var(--current-color-dark);font-size:22px;">${score} / ${totalQuestions}</span>`;
+            optionsContainer.innerHTML = '';
+            feedback.style.display = 'none';
+            explanation.style.display = 'none';
+            hintText.style.display = 'none';
+        }
+
+        // Utility: Shuffle array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+</html>
