@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon imagier</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f5f5f5 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 420px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(44, 62, 80, 0.08);
+            padding: 32px 24px 24px 24px;
+            text-align: center;
+        }
+        h1 {
+            color: #5d7bf3;
+            margin-bottom: 24px;
+        }
+        .image-box {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 24px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 18px;
+            border: 1.5px solid #5d7bf3;
+            border-radius: 6px;
+            width: 80%;
+            margin-bottom: 12px;
+        }
+        button {
+            padding: 10px 24px;
+            background: #5d7bf3;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #4a69e2;
+        }
+        .feedback {
+            margin-top: 12px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .success {
+            color: #27ae60;
+        }
+        .error {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" style="display:inline-block;margin:20px 0 0 20px;padding:10px 22px;background:#5d7bf3;color:#fff;text-decoration:none;border-radius:6px;font-size:16px;transition:background 0.2s;">⬅ Retour à l'accueil</a>
+    <div class="container">
+        <h1>Mon imagier</h1>
+        <div class="image-box">
+            <img id="imagier-img" src="chat.png" alt="Image à deviner">
+        </div>
+        <form id="answer-form" autocomplete="off">
+            <input type="text" id="user-answer" placeholder="Écris le nom de l'image..." autofocus>
+            <br>
+            <button type="submit">Valider</button>
+        </form>
+        <div class="feedback" id="feedback"></div>
+    </div>
+    <script>
+        // Array of images and their correct answers (now using the "mon imagier" folder)
+        const images = [
+            {src: "https://j.top4top.io/p_3396l6b5p1.png", answer: "boeuf"},
+            {src: "https://k.top4top.io/p_3396h8ftr2.png", answer: "cheuveux"},
+            {src: "https://l.top4top.io/p_3396m9jkd3.png", answer: "coeur"},
+            {src: "https://a.top4top.io/p_33967pd7u4.png", answer: "déjeuner"},
+            {src: "https://b.top4top.io/p_3396cd2vu5.png", answer: "docteur"},
+            {src: "https://j.top4top.io/p_3396xk51w1.png", answer: "famille"},
+            {src: "https://k.top4top.io/p_3396ip0il2.png", answer: "fleur"},
+            {src: "https://l.top4top.io/p_339628dii3.png", answer: "oeuf"},
+            {src: "https://k.top4top.io/p_3396mklo13.png", answer: "noeud"},
+            {src: "https://a.top4top.io/p_33964j2jm4.png", answer: "petit-déjeuner"},
+            {src: "https://j.top4top.io/p_3396kkr3e2.png", answer: "grands-parents"},
+            {src: "https://a.top4top.io/p_33960e1865.png", answer: "tante"},
+            {src: "https://l.top4top.io/p_33961cqxs4.png", answer: "photo"},
+            {src: "https://i.top4top.io/p_33963vx1j1.png", answer: "heure"}
+        ];
+
+        let current = 0;
+
+        const imgElement = document.getElementById('imagier-img');
+        const form = document.getElementById('answer-form');
+        const input = document.getElementById('user-answer');
+        const feedback = document.getElementById('feedback');
+
+        function showImage(index) {
+            imgElement.src = images[index].src;
+            imgElement.alt = "Image " + (index + 1);
+            input.value = "";
+            feedback.textContent = "";
+            input.focus();
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userValue = input.value.trim().toLowerCase();
+            const correct = images[current].answer.toLowerCase();
+            if (userValue === correct) {
+                feedback.textContent = "Bravo !";
+                feedback.className = "feedback success";
+                setTimeout(() => {
+                    current = (current + 1) % images.length;
+                    showImage(current);
+                }, 1000);
+            } else {
+                feedback.textContent = "Essaie encore !";
+                feedback.className = "feedback error";
+            }
+        });
+
+        // Initialize
+        showImage(current);
+    </script>
+</body>
+</html>
